@@ -203,6 +203,40 @@ const unplot = async (params, credentials, plantId, plot) => {
     }
 }
 
+const createHarvest = async (params, credentials, plantId, harvest) => {
+    try {
+        let response = await fetch('/api/plants/harvest/', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({ userId: params.userId, plantId: plantId, harvest: harvest })
+        })
+        return await response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const unHarvest = async (params, credentials, plantId, harvest) => {
+    try {
+        let response = await fetch('/api/plants/unharvest/', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({ userId: params.userId, plantId: plantId, harvest: harvest })
+        })
+        return await response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 export {
     listPlants,
@@ -215,6 +249,8 @@ export {
     comment,
     uncomment,
     plot,
-    unplot
+    unplot,
+    createHarvest,
+    unHarvest
 }
 

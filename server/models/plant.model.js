@@ -23,6 +23,12 @@ const plantSchema = new Schema({
     created: { type: Date, default: Date.now },
     postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
   }],
+  harvests: [{
+    observations: { type: String },
+    yield: { type: Number },
+    created: { type: Date, default: Date.now },
+    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+  }],
   comments: [{
     text: String,
     created: { type: Date, default: Date.now },

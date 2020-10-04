@@ -32,6 +32,11 @@ router.route('/api/plants/plot')
 router.route('/api/plants/unplot')
     .put(authCtrl.requireSignin, plantCtrl.unplot)
 
+router.route('/api/plants/harvest')
+    .put(authCtrl.requireSignin, plantCtrl.harvest)
+router.route('/api/plants/unharvest')
+    .put(authCtrl.requireSignin, plantCtrl.unharvest)
+
 router.route('/api/plants/getone/:plantId')
     .get(plantCtrl.getOne)
 

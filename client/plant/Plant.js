@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import { like, remove, unlike } from './api-plant.js'
 import Comments from './Comments'
+import Harvests from './harvests'
 import Plots from './Plots'
 
 const useStyles = makeStyles(theme => ({
@@ -63,8 +64,10 @@ export default function Plant(props) {
     likes: props.plant.likes.length,
     comments: props.plant.comments,
     plots: props.plant.plots,
+    harvests: props.plant.harvests,
     commentsView: false,
-    plotsView: false
+    plotsView: false,
+    harvestsView: false
   })
 
   // const [commentsView, showCommentList] = useState(false)
@@ -98,6 +101,10 @@ export default function Plant(props) {
     setValues({ ...values, plots: plots })
   }
 
+  const updateHarvests = (harvests) => {
+    setValues({ ...values, harvests: harvests })
+  }
+
   const deletePlant = () => {
     remove({
       plantId: props.plant._id
@@ -120,6 +127,10 @@ export default function Plant(props) {
 
   const showPlots = () => {
     setValues({ ...values, plotsView: !values.plotsView })
+  }
+
+  const showHarvests = () => {
+    setValues({ ...values, harvestsView: !values.harvestsView })
   }
 
   return (
@@ -169,14 +180,20 @@ export default function Plant(props) {
           </Link>
         </IconButton>
         <button onClick={showPlots}>Plots</button>
+        <button onClick={showHarvests}>Harvests</button>
       </CardActions>
       <Divider />
       {values.commentsView ?
         <Comments plantId={props.plant._id} comments={values.comments} updateComments={updateComments} showComments={showComments} />
         : null}
       <Divider />
+      {/* <Divider> */}
       {values.plotsView ?
         <Plots plantId={props.plant._id} plots={values.plots} updatePlots={updatePlots} />
+        : null}
+      {/* </Divider> */}
+      {values.harvestsView ?
+        <Harvests plantId={props.plant._id} harvests={values.harvests} updateHarvests={updateHarvests} />
         : null}
     </Card>
   )

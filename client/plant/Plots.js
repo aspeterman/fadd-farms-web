@@ -51,7 +51,7 @@ export default function Plots(props) {
         prePlantGerminatedDate: '',
         seedsTransferredDate: '',
         error: '',
-        user: {}
+        user: {},
     })
     const jwt = auth.isAuthenticated()
     const handleChange = name => event => {

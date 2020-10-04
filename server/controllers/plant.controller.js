@@ -128,6 +128,16 @@ const unlike = async (req, res) => {
     }
 }
 
+const isPoster = (req, res, next) => {
+    let isPoster = req.plant && req.auth && req.plant.postedBy._id == req.auth._id
+    if (!isPoster) {
+        return res.status('403').json({
+            error: "User is not authorized"
+        })
+    }
+    next()
+}
+
 const comment = async (req, res) => {
     let comment = req.body.comment
     comment.postedBy = req.body.userId
@@ -187,14 +197,41 @@ const unplot = async (req, res) => {
     }
 }
 
-const isPoster = (req, res, next) => {
-    let isPoster = req.plant && req.auth && req.plant.postedBy._id == req.auth._id
-    if (!isPoster) {
-        return res.status('403').json({
-            error: "User is not authorized"
+const harvest = async (req, res) => {
+    let harvest = req.body.harvest
+    harvest.postedBy = req.body.userId
+    try {
+        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { harvests: harvest } }, { new: true })
+            .populate({
+                path: 'plots',
+                populate: {
+                    path: 'harvests'
+                }
+            })
+            .populate('harvests.postedBy', '_id name')
+            .populate('postedBy', '_id name')
+            .exec()
+        res.json(result)
+    } catch (err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
         })
     }
-    next()
+}
+
+const unharvest = async (req, res) => {
+    let harvest = req.body.harvest
+    try {
+        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $pull: { harvests: { _id: harvest._id } } }, { new: true })
+            .populate('harvests.postedBy', '_id name')
+            .populate('postedBy', '_id name')
+            .exec()
+        res.json(result)
+    } catch (err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        })
+    }
 }
 
 export default {
@@ -211,5 +248,7 @@ export default {
     uncomment,
     plot,
     unplot,
-    isPoster
+    isPoster,
+    harvest,
+    unharvest
 }
