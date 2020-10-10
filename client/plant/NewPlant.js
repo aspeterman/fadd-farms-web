@@ -212,7 +212,7 @@ export default function NewPlant(props) {
                 }
             </CardContent>
             <CardActions>
-                <Button color="primary" variant="contained" disabled={values.text === ''} onClick={clickPlant} className={classes.submit}>POST</Button>
+                <Button color="primary" variant="contained" disabled={values.plantname === ''} onClick={clickPlant} className={classes.submit}>POST</Button>
             </CardActions>
         </Card>
     </div>)

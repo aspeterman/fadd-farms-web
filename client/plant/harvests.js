@@ -268,17 +268,17 @@ export default function Harvests(props) {
         // if (event.keyCode == 13 && event.target.value) {
         //     event.preventDefault()
         createHarvest({
-            userId: jwt.user._id
+            userId: jwt.user._id,
         }, {
             t: jwt.token
-        }, props.plantId, postData).then((data) => {
+        }, props.plantId, props.plotId, postData).then((data) => {
             if (data.error) {
                 console.log(data.error)
             } else {
                 setValues({ ...values, season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '' })
                 props.updateHarvests(data.harvests)
             }
-        })
+        }).then(console.log(props.harvests))
         // }
     }
 
@@ -372,13 +372,14 @@ export default function Harvests(props) {
             className={classes.cardHeader}
         />
         { props.harvests.map((item, i) => {
-            return <CardHeader
-                avatar={
-                    <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
-                }
-                title={harvestBody(item)}
-                className={classes.cardHeader}
-                key={i} />
+            if (item.harvestPlot === props.plotId)
+                return <CardHeader
+                    avatar={
+                        <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
+                    }
+                    title={harvestBody(item)}
+                    className={classes.cardHeader}
+                    key={i} />
         })
         }
     </div>)

@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from './../auth/auth-helper'
 import { plot, unplot } from './api-plant.js'
+import Harvests from './harvests'
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,6 +44,7 @@ const useStyles = makeStyles(theme => ({
 export default function Plots(props) {
     const classes = useStyles()
     const [values, setValues] = useState({
+        plotname: '',
         season: '',
         prePlantSeeds: '',
         prePlantGerminated: '',
@@ -52,6 +54,7 @@ export default function Plots(props) {
         seedsTransferredDate: '',
         error: '',
         user: {},
+        harvests: props.harvests
     })
     const jwt = auth.isAuthenticated()
     const handleChange = name => event => {
@@ -71,6 +74,7 @@ export default function Plots(props) {
         // postData.append('prePlantGerminatedDate', values.prePlantGerminatedDate)
         // postData.append('seedsTransferredDate', values.seedsTransferredDate)
         let postData = {
+            plotname: values.plotname,
             season: values.season,
             prePlantSeeds: values.prePlantSeeds,
             prePlantGerminated: values.prePlantGerminated,
@@ -80,7 +84,7 @@ export default function Plots(props) {
             seedsTransferredDate: values.seedsTransferredDate
         }
         // if (event.keyCode == 13 && event.target.value) {
-        //     event.preventDefault()
+        event.preventDefault()
         plot({
             userId: jwt.user._id
         }, {
@@ -89,14 +93,14 @@ export default function Plots(props) {
             if (data.error) {
                 console.log(data.error)
             } else {
-                setValues({ ...values, season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '' })
+                setValues({ ...values, plotname: '', season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '' })
                 props.updatePlots(data.plots)
             }
         })
         // }
     }
 
-    const deletePlot = comment => event => {
+    const deletePlot = plot => event => {
         unplot({
             userId: jwt.user._id
         }, {
@@ -113,7 +117,7 @@ export default function Plots(props) {
     const plotBody = item => {
         return (
             <>
-                <Link to={"/user/" + item.postedBy._id}>{item.postedBy.name}</Link><br />
+                <Link to={"/user/" + item.postedBy._id}>{item.postedBy.name} {item._id}</Link><br />
                 <Card
                 >
                     <CardHeader>Record</CardHeader>
@@ -126,7 +130,7 @@ export default function Plots(props) {
                         {/* <Card.Text> <span>Total Yield: {props.exercise.harvestYieldTally} lbs</span><br />
                             <span><TallyModal id={props.exercise._id} /></span></Card.Text> */}
                     </CardContent>
-                    {/* <Card.Footer><ButtonGroup><Button variant="danger" onClick={() => { props.deleteExercise(props.exercise._id) }}>Delete</Button><EditModal id={props.exercise._id} /></ButtonGroup></Card.Footer> */}
+                    <Harvests plantId={props.plantId} plotId={item._id} harvests={values.harvests} updateHarvests={props.updateHarvests} />
                     <CardActionArea>
                         <span className={classes.commentDate}>
                             {(new Date(item.created)).toDateString()} |
@@ -149,6 +153,16 @@ export default function Plots(props) {
                     className={classes.cardHeader}
                 />
                 <CardContent className={classes.cardContent}>
+                    <TextField
+                        placeholder="Name your plot"
+                        multiline
+                        rows="1"
+                        name='plotname'
+                        value={values.plotname}
+                        onChange={handleChange('plotname')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
                     <TextField
                         placeholder="prePlantSeeds"
                         multiline
@@ -248,5 +262,7 @@ export default function Plots(props) {
 Plots.propTypes = {
     plantId: PropTypes.string.isRequired,
     plots: PropTypes.array.isRequired,
-    updatePlots: PropTypes.func.isRequired
+    updatePlots: PropTypes.func.isRequired,
+    harvests: PropTypes.array.isRequired,
+    updateHarvests: PropTypes.func.isRequired
 }

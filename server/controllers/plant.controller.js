@@ -50,6 +50,7 @@ const listByUser = async (req, res) => {
         let plants = await Plant.find({ postedBy: req.profile._id })
             .populate('comments.postedBy', '_id name')
             .populate('plots.postedBy', '_id name')
+            .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
             .sort('-created')
             .exec()
@@ -67,6 +68,8 @@ const listNewsFeed = async (req, res) => {
     try {
         let plants = await Plant.find({ postedBy: { $in: req.profile.following } })
             .populate('comments.postedBy', '_id name')
+            .populate('plots.postedBy', '_id name')
+            .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
             .sort('-created')
             .exec()
@@ -200,6 +203,7 @@ const unplot = async (req, res) => {
 const harvest = async (req, res) => {
     let harvest = req.body.harvest
     harvest.postedBy = req.body.userId
+    harvest.harvestPlot = req.body.plotId
     try {
         let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { harvests: harvest } }, { new: true })
             .populate({
@@ -208,7 +212,8 @@ const harvest = async (req, res) => {
                     path: 'harvests'
                 }
             })
-            .populate('harvests.postedBy', '_id name')
+            .populate('harvestPlot', '_id plotname')
+            // .populate('harvests.harvestPlot', '_id plotname')
             .populate('postedBy', '_id name')
             .exec()
         res.json(result)

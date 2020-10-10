@@ -18,7 +18,6 @@ import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import { like, remove, unlike } from './api-plant.js'
 import Comments from './Comments'
-import Harvests from './harvests'
 import Plots from './Plots'
 
 const useStyles = makeStyles(theme => ({
@@ -189,12 +188,12 @@ export default function Plant(props) {
       <Divider />
       {/* <Divider> */}
       {values.plotsView ?
-        <Plots plantId={props.plant._id} plots={values.plots} updatePlots={updatePlots} />
+        <Plots plantId={props.plant._id} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />
         : null}
       {/* </Divider> */}
-      {values.harvestsView ?
+      {/* {values.harvestsView ?
         <Harvests plantId={props.plant._id} harvests={values.harvests} updateHarvests={updateHarvests} />
-        : null}
+        : null} */}
     </Card>
   )
 

@@ -203,7 +203,7 @@ const unplot = async (params, credentials, plantId, plot) => {
     }
 }
 
-const createHarvest = async (params, credentials, plantId, harvest) => {
+const createHarvest = async (params, credentials, plantId, plotId, harvest) => {
     try {
         let response = await fetch('/api/plants/harvest/', {
             method: 'PUT',
@@ -212,7 +212,7 @@ const createHarvest = async (params, credentials, plantId, harvest) => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + credentials.t
             },
-            body: JSON.stringify({ userId: params.userId, plantId: plantId, harvest: harvest })
+            body: JSON.stringify({ userId: params.userId, plantId: plantId, plotId: plotId, harvest: harvest })
         })
         return await response.json()
     } catch (err) {

@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
+import Plants from '../plant/Plants'
 import unicornbikeImg from './../assets/images/unicornbike.jpg'
 import auth from './../auth/auth-helper'
 import Newsfeed from './../post/Newsfeed'
@@ -79,6 +80,7 @@ export default function Home({ history }) {
             <Newsfeed />
           </Grid>
           <Grid item xs={6} sm={5}>
+            <Plants />
             <FindPeople />
           </Grid>
         </Grid>

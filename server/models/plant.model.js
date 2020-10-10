@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const plantSchema = new Schema({
   plots: [{
+    plotname: { type: String, required: 'Plot Name is Rwquired' },
     season: { type: String },
     description: { type: String },
     prePlantSeeds: { type: String },
@@ -18,7 +19,8 @@ const plantSchema = new Schema({
       observations: { type: String },
       yield: { type: Number },
       created: { type: Date, default: Date.now },
-      postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+      postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
+      harvestPlot: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
     }],
     created: { type: Date, default: Date.now },
     postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
@@ -27,7 +29,8 @@ const plantSchema = new Schema({
     observations: { type: String },
     yield: { type: Number },
     created: { type: Date, default: Date.now },
-    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
+    harvestPlot: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
   }],
   comments: [{
     text: String,
