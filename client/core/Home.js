@@ -5,8 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
-import Plants from '../plant/Plants'
-import unicornbikeImg from './../assets/images/unicornbike.jpg'
+import farm from './../assets/images/farm.jpg'
 import auth from './../auth/auth-helper'
 import Newsfeed from './../post/Newsfeed'
 import FindPeople from './../user/FindPeople'
@@ -63,11 +62,10 @@ export default function Home({ history }) {
               <Typography variant="h6" className={classes.title}>
                 Home Page
                 </Typography>
-              <CardMedia className={classes.media} image={unicornbikeImg} title="Unicorn Bicycle" />
-              <Typography variant="body2" component="p" className={classes.credit} color="textSecondary">Photo by <a href="https://unsplash.com/@boudewijn_huysmans" target="_blank" rel="noopener noreferrer">Boudewijn Huysmans</a> on Unsplash</Typography>
+              <CardMedia className={classes.media} image={farm} title="farm" />
               <CardContent>
                 <Typography type="body1" component="p">
-                  Welcome to the MERN Social home page.
+                  Welcome to the FADD Farms Website.
                   </Typography>
               </CardContent>
             </Card>
@@ -80,7 +78,7 @@ export default function Home({ history }) {
             <Newsfeed />
           </Grid>
           <Grid item xs={6} sm={5}>
-            <Plants />
+            {/* <Plants /> */}
             <FindPeople />
           </Grid>
         </Grid>

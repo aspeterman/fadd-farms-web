@@ -82,8 +82,8 @@ const listNewsFeed = async (req, res) => {
 }
 
 const getOne = async (req, res, data) => {
-    let plant = await Plant.findById(req.params.plantId)
     try {
+        let plant = await Plant.findById(req.params.plantId)
         res.json(plant)
     } catch (err) {
         return res.status(400).json({
@@ -188,7 +188,7 @@ const plot = async (req, res) => {
 const unplot = async (req, res) => {
     let plot = req.body.plot
     try {
-        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $pull: { plots: { _id: plot._id } } }, { new: true })
+        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $pull: { plots: { _id: plot._id }, harvests: { harvestPlot: plot._id } } }, { new: true })
             .populate('plots.postedBy', '_id name')
             .populate('postedBy', '_id name')
             .exec()
@@ -206,12 +206,6 @@ const harvest = async (req, res) => {
     harvest.harvestPlot = req.body.plotId
     try {
         let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { harvests: harvest } }, { new: true })
-            .populate({
-                path: 'plots',
-                populate: {
-                    path: 'harvests'
-                }
-            })
             .populate('harvestPlot', '_id plotname')
             // .populate('harvests.harvestPlot', '_id plotname')
             .populate('postedBy', '_id name')

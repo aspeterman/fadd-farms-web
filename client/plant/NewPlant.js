@@ -60,7 +60,6 @@ export default function NewPlant(props) {
     const classes = useStyles()
     const [values, setValues] = useState({
         plantname: '',
-        text: '',
         photo: '',
         description: '',
         soil: '',
@@ -70,7 +69,8 @@ export default function NewPlant(props) {
         whenToPlant: '',
         careDuringGrowth: '',
         error: '',
-        user: {}
+        user: {},
+        showNew: false
     })
     const jwt = auth.isAuthenticated()
     useEffect(() => {
@@ -86,7 +86,6 @@ export default function NewPlant(props) {
         postData.append('pests', values.pests)
         postData.append('plantHeight', values.plantHeight)
         postData.append('soil', values.soil)
-        postData.append('text', values.text)
         postData.append('photo', values.photo)
         create({
             userId: jwt.user._id
@@ -96,7 +95,7 @@ export default function NewPlant(props) {
             if (data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                setValues({ ...values, plantname: '', text: '', photo: '' })
+                setValues({ ...values, plantname: '', description: '', careDuringGrowth: '', whenToPlant: '', pests: '', plantHeight: '', soil: '', photo: '', showNew: false })
                 props.addUpdate(data)
             }
         })
@@ -107,114 +106,111 @@ export default function NewPlant(props) {
             : event.target.value
         setValues({ ...values, [name]: value })
     }
+
+    const handleShow = event => {
+        setValues({ ...values, showNew: !values.showNew })
+    }
     const photoURL = values.user._id ? '/api/users/photo/' + values.user._id : '/api/users/defaultphoto'
     return (<div className={classes.root}>
-        <Card className={classes.card}>
-            <CardHeader
-                avatar={
-                    <Avatar src={photoURL} />
-                }
-                title={values.user.name}
-                className={classes.cardHeader}
-            />
-            <CardContent className={classes.cardContent}>
-                <TextField
-                    placeholder="Plant Name"
-                    multiline
-                    rows="1"
-                    value={values.plantname}
-                    onChange={handleChange('plantname')}
-                    className={classes.textField}
-                    margin="normal"
+        <Button color="secondary" onClick={handleShow}>New Plant</Button>
+        {values.showNew ?
+            <Card className={classes.card}>
+                <CardHeader
+                    avatar={
+                        <Avatar src={photoURL} />
+                    }
+                    title={values.user.name}
+                    className={classes.cardHeader}
                 />
-                <TextField
-                    placeholder="Description"
-                    multiline
-                    rows="3"
-                    value={values.description}
-                    onChange={handleChange('description')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="When To Plant"
-                    multiline
-                    rows="1"
-                    value={values.whenToPlant}
-                    onChange={handleChange('whenToPlant')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="Care During Growth"
-                    multiline
-                    rows="1"
-                    value={values.careDuringGrowth}
-                    onChange={handleChange('careDuringGrowth')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="Plant Height"
-                    multiline
-                    rows="1"
-                    value={values.plantHeight}
-                    onChange={handleChange('plantHeight')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="Soil Requirements"
-                    multiline
-                    rows="1"
-                    value={values.soil}
-                    onChange={handleChange('soil')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="Plant Spacing"
-                    multiline
-                    rows="1"
-                    value={values.spacing}
-                    onChange={handleChange('spacing')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="pests"
-                    multiline
-                    rows="1"
-                    value={values.pests}
-                    onChange={handleChange('pests')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    placeholder="Share your thoughts ..."
-                    multiline
-                    rows="3"
-                    value={values.text}
-                    onChange={handleChange('text')}
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <input accept="image/*" onChange={handleChange('photo')} className={classes.input} id="icon-button-file" type="file" />
-                <label htmlFor="icon-button-file">
-                    <IconButton color="secondary" className={classes.photoButton} component="span">
-                        <PhotoCamera />
-                    </IconButton>
-                </label> <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
-                {values.error && (<Typography component="p" color="error">
-                    <Icon color="error" className={classes.error}>error</Icon>
-                    {values.error}
-                </Typography>)
-                }
-            </CardContent>
-            <CardActions>
-                <Button color="primary" variant="contained" disabled={values.plantname === ''} onClick={clickPlant} className={classes.submit}>POST</Button>
-            </CardActions>
-        </Card>
+                <CardContent className={classes.cardContent}>
+                    <TextField
+                        placeholder="Plant Name"
+                        multiline
+                        rows="1"
+                        value={values.plantname}
+                        onChange={handleChange('plantname')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="Description"
+                        multiline
+                        rows="3"
+                        value={values.description}
+                        onChange={handleChange('description')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="When To Plant"
+                        multiline
+                        rows="1"
+                        value={values.whenToPlant}
+                        onChange={handleChange('whenToPlant')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="Care During Growth"
+                        multiline
+                        rows="1"
+                        value={values.careDuringGrowth}
+                        onChange={handleChange('careDuringGrowth')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="Plant Height"
+                        multiline
+                        rows="1"
+                        value={values.plantHeight}
+                        onChange={handleChange('plantHeight')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="Soil Requirements"
+                        multiline
+                        rows="1"
+                        value={values.soil}
+                        onChange={handleChange('soil')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="Plant Spacing"
+                        multiline
+                        rows="1"
+                        value={values.spacing}
+                        onChange={handleChange('spacing')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <TextField
+                        placeholder="pests"
+                        multiline
+                        rows="1"
+                        value={values.pests}
+                        onChange={handleChange('pests')}
+                        className={classes.textField}
+                        margin="normal"
+                    />
+                    <input accept="image/*" onChange={handleChange('photo')} className={classes.input} id="icon-button-file" type="file" />
+                    <label htmlFor="icon-button-file">
+                        <IconButton color="secondary" className={classes.photoButton} component="span">
+                            <PhotoCamera />
+                        </IconButton>
+                    </label> <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
+                    {values.error && (<Typography component="p" color="error">
+                        <Icon color="error" className={classes.error}>error</Icon>
+                        {values.error}
+                    </Typography>)
+                    }
+                </CardContent>
+                <CardActions>
+                    <Button color="primary" variant="contained" disabled={values.plantname === ''} onClick={clickPlant} className={classes.submit}>POST</Button>
+                </CardActions>
+            </Card> : null}
     </div>)
 
 }

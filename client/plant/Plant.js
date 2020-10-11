@@ -66,7 +66,6 @@ export default function Plant(props) {
     harvests: props.plant.harvests,
     commentsView: false,
     plotsView: false,
-    harvestsView: false
   })
 
   // const [commentsView, showCommentList] = useState(false)
@@ -128,10 +127,6 @@ export default function Plant(props) {
     setValues({ ...values, plotsView: !values.plotsView })
   }
 
-  const showHarvests = () => {
-    setValues({ ...values, harvestsView: !values.harvestsView })
-  }
-
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -144,7 +139,7 @@ export default function Plant(props) {
           </IconButton>
         }
         title={<Link to={"/user/" + props.plant.postedBy._id}>{props.plant.postedBy.name}</Link>}
-        subheader={(new Date(props.plant.created)).toDateString()}
+        subheader={(new Date(props.plant.createdAt)).toDateString()}
         className={classes.cardHeader}
       />
       <CardContent className={classes.cardContent}>
@@ -174,12 +169,14 @@ export default function Plant(props) {
           <CommentIcon />
         </IconButton> <span>{values.comments.length}</span>
         <IconButton className={classes.button} aria-label="Info" color="secondary">
-          <Link to={"/plants/" + props.plant._id}>
+          <Link to={{
+            pathname: "/plants/" + props.plant._id,
+            plantProps: { plantId: props.plant._id, plant: props.plant, plots: values.plots, harvests: values.harvests, updateHarvests, updatePlots }
+          }}>
             <Info />
           </Link>
         </IconButton>
         <button onClick={showPlots}>Plots</button>
-        <button onClick={showHarvests}>Harvests</button>
       </CardActions>
       <Divider />
       {values.commentsView ?

@@ -1,10 +1,9 @@
-import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 // import Highcharts from 'highcharts';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import auth from '../auth/auth-helper';
-// import EditModal from '../components/exercises/EditModal';
-// import TallyModal from '../components/exercises/TableEntry';
-import { getOne } from './api-plant';
+import HarvestChart from './HarvestChart';
+import Plots from './Plots';
 // require('highcharts/highcharts-more')(Highcharts);
 // const HarvestList = props => (
 //     <div style={{ paddingBottom: '1em' }}>
@@ -40,35 +39,26 @@ import { getOne } from './api-plant';
 // )
 
 export default function PlantLog(props) {
-    const [seedsTally, setSeedsTally] = useState('')
-    const [germinatedTally, setGerminatedTally] = useState('')
-    const [seedsTransferredTally, setSeedsTranserredTally] = useState('')
-    const [plant, setPlant] = useState([])
-    const jwt = auth.isAuthenticated()
+    const [values, setValues] = useState({
+        plantId: props.location.plantProps.plantId,
+        plant: props.location.plantProps.plant,
+        harvests: props.location.plantProps.harvests,
+        plots: props.location.plantProps.plots,
+        user: auth.isAuthenticated()
+    })
 
-    useEffect(() => {
-        const abortController = new AbortController()
-        const signal = abortController.signal
-        getOne({
-            plantId: props.match.params.plantId,
-            userId: jwt.user._id
-        }, {
-            t: jwt.token
-        }, signal).then((data) => {
-            if (data.error) {
-                console.log(data.error)
-            } else {
-                setPlant(data)
-            }
-        })
-        return function cleanup() {
-            abortController.abort()
-        }
-    }, [])
+    const updatePlots = (plots) => {
+        setValues({ ...values, plots: plots })
+    }
+
+    const updateHarvests = (harvests) => {
+        setValues({ ...values, harvests: harvests })
+        console.log(props)
+    }
 
     return (
         <>
-            <h1>{plant.plantname}</h1>
+            <h1>{values.plant.plantname}</h1>
             <Card
                 style={{ paddingTop: '20px' }}
                 text="dark"
@@ -76,24 +66,29 @@ export default function PlantLog(props) {
                 <CardHeader><h3 align="center">Plant Info</h3>
                 </CardHeader>
                 <CardContent>
-                    <Typography><strong>Description: </strong>{plant.description}
+                    <Typography><strong>Description: </strong>{values.plant.description}
                     </Typography>
-                    <Typography><strong>Common Pests Or Diseases: </strong>{plant.pests}
+                    <Typography><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
                     </Typography>
-                    <Typography><strong>Average Plant Height: </strong>{plant.plantHeight}
+                    <Typography><strong>Average Plant Height: </strong>{values.plant.plantHeight}
                     </Typography>
-                    <Typography><strong>Care During Growth: </strong>{plant.careDuringGrowth}
+                    <Typography><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
                     </Typography>
-                    <Typography><strong>When Should you Plant: </strong>{plant.whenToPlant}
+                    <Typography><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
                     </Typography>
                     <Typography>
-                        <strong>Soil Requirements: </strong>{plant.soil}
+                        <strong>Soil Requirements: </strong>{values.plant.soil}
                     </Typography>
-                    {/* <EditPlantModal id={this.state._id} /> */}
                 </CardContent>
             </Card>
-            {/* <NewPlot plantId={props.match.params.plantId} />
-            <Plots /> */}
+            <Grid container spacing={8}>
+                <Grid item xs={8} sm={7}>
+                    <Plots plantId={values.plantId} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />
+                </Grid>
+                <Grid item xs={6} sm={5}>
+                    <HarvestChart harvests={values.harvests} />
+                </Grid>
+            </Grid>
         </>
     )
 }

@@ -46,7 +46,7 @@
 //     const [values, setValues] = useState({
 //         observations: '',
 //         yield: '',
-//         created: '',
+//         date: '',
 //         photo: '',
 //         error: '',
 //         user: {}
@@ -63,7 +63,7 @@
 //         let harvestData = {
 //             observations: values.observations,
 //             yield: values.yield,
-//             created: values.created
+//             date: values.date
 //         }
 //         if (event.keyCode == 13 && event.target.value) {
 //             event.preventDefault()
@@ -75,7 +75,7 @@
 //                 if (data.error) {
 //                     console.log(data.error)
 //                 } else {
-//                     setValues({ ...values, observations: '', yield: '', created: '' })
+//                     setValues({ ...values, observations: '', yield: '', date: '' })
 //                     props.updateHarvests(data.harvests)
 //                 }
 //             })
@@ -112,7 +112,7 @@
 //                     </CardContent>
 //                     <CardActionArea>
 //                         <span className={classes.commentDate}>
-//                             {(new Date(item.created)).toDateString()} |
+//                             {(new Date(item.date)).toDateString()} |
 //             {auth.isAuthenticated().user._id === item.postedBy._id &&
 //                                 <Icon onClick={deleteHarvest(item)} className={classes.commentDelete}>delete</Icon>}
 //                         </span>
@@ -156,9 +156,9 @@
 //                         placeholder="MM/DD/YYYY"
 //                         multiline
 //                         rows="1"
-//                         name='created'
+//                         name='date'
 //                         value={values.prePlantGerminated}
-//                         onChange={handleChange('created')}
+//                         onChange={handleChange('date')}
 //                         className={classes.textField}
 //                         margin="normal"
 //                     />
@@ -200,16 +200,12 @@
 //     updateHarvests: PropTypes.func.isRequired
 // }
 
-import { Button, Card, CardActionArea, CardActions, CardContent, Typography } from '@material-ui/core'
-import Avatar from '@material-ui/core/Avatar'
+import { Button, Card, CardActionArea, CardActions, CardContent, TextField, Typography } from '@material-ui/core'
 import CardHeader from '@material-ui/core/CardHeader'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import auth from './../auth/auth-helper'
 import { createHarvest, unHarvest } from './api-plant.js'
 
 
@@ -247,11 +243,12 @@ export default function Harvests(props) {
     const [values, setValues] = useState({
         observations: '',
         yield: '',
-        created: '',
+        date: '',
         error: '',
-        user: {}
+        user: {},
+        showNew: false
     })
-    const jwt = auth.isAuthenticated()
+    // const jwt = auth.isAuthenticated()
     const handleChange = name => event => {
         const value = name === 'photo'
             ? event.target.files[0]
@@ -263,126 +260,165 @@ export default function Harvests(props) {
         let postData = {
             observations: values.observations,
             yield: values.yield,
-            created: values.created
+            date: values.date
         }
         // if (event.keyCode == 13 && event.target.value) {
-        //     event.preventDefault()
+        event.preventDefault()
         createHarvest({
-            userId: jwt.user._id,
+            userId: props.jwt.user._id,
         }, {
-            t: jwt.token
+            t: props.jwt.token
         }, props.plantId, props.plotId, postData).then((data) => {
             if (data.error) {
                 console.log(data.error)
             } else {
-                setValues({ ...values, season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '' })
+                setValues({ ...values, season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '', showNew: false })
                 props.updateHarvests(data.harvests)
             }
-        }).then(console.log(props.harvests))
+        })
         // }
     }
 
     const deleteHarvest = harvest => event => {
         unHarvest({
-            userId: jwt.user._id
+            userId: props.jwt.user._id
         }, {
-            t: jwt.token
+            t: props.jwt.token
         }, props.plantId, harvest).then((data) => {
             if (data.error) {
                 console.log(data.error)
+                setValues({ ...values, error: data.error })
             } else {
                 props.updateHarvests(data.harvests)
             }
         })
     }
 
+    const handleShow = event => {
+        setValues({ ...values, showNew: !values.showNew })
+    }
+
     const harvestBody = item => {
         return (
             <>
-                <Link to={"/user/" + item.postedBy._id}>{item.postedBy.name}</Link><br />
+                {/* <Link to={"/user/" + item.postedBy._id}>{item.postedBy.name}</Link><br /> */}
                 <Card
                 >
-                    <CardHeader>{item.created}</CardHeader>
+                    <CardHeader>{item.date}</CardHeader>
                     <CardContent>
                         <Typography>Harvester Noted: {item.observations}</Typography>
                         <Typography>Yield(lbs) {item.yield}</Typography>
                     </CardContent>
                     <CardActionArea>
                         <span className={classes.commentDate}>
-                            {(new Date(item.created)).toDateString()} |
-                    {auth.isAuthenticated().user._id === item.postedBy._id &&
-                                <Icon onClick={deleteHarvest(item)} className={classes.commentDelete}>delete</Icon>}
+                            {(new Date(item.date)).toDateString()} |
+                                <Icon onClick={deleteHarvest(item)} className={classes.commentDelete}>delete</Icon>
                         </span>
                     </CardActionArea>
                 </Card>
             </>
         )
     }
-    return (<div>
-        <CardHeader
-            avatar={
-                <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + auth.isAuthenticated().user._id} />
-            }
-            title={<Card className={classes.card}>
+    return (
+        <div>
+            <button onClick={handleShow}>New</button>
+            {values.showNew ?
                 <CardHeader
-                    title={values.user.name}
-                    className={classes.cardHeader}
-                />
-                <CardContent className={classes.cardContent}>
-                    <TextField
-                        placeholder="Observations"
-                        multiline
-                        rows="1"
-                        name='observations'
-                        value={values.prePlantSeeds}
-                        onChange={handleChange('observations')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="Yield (lbs)"
-                        multiline
-                        rows="1"
-                        name='yield'
-                        value={values.prePlantSeedsDate}
-                        onChange={handleChange('yield')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="MM/DD/YYYY"
-                        multiline
-                        rows="1"
-                        name='created'
-                        value={values.prePlantGerminated}
-                        onChange={handleChange('created')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    {values.error && (<Typography component="p" color="error">
-                        <Icon color="error" className={classes.error}>error</Icon>
-                        {values.error}
-                    </Typography>)
-                    }
-                </CardContent>
-                <CardActions>
-                    <Button color="primary" variant="contained" onClick={addHarvest} className={classes.submit}>POST</Button>
-                </CardActions>
-            </Card>}
-            className={classes.cardHeader}
-        />
-        { props.harvests.map((item, i) => {
-            if (item.harvestPlot === props.plotId)
+                    title={<Card className={classes.card}>
+                        <CardHeader
+                            title={values.user.name}
+                            className={classes.cardHeader}
+                        />
+                        <CardContent className={classes.cardContent}>
+                            <TextField
+                                placeholder="Yield (lbs)"
+                                name='yield'
+                                onChange={handleChange('yield')}
+                                className={classes.textField}
+                                margin="normal"
+                            />
+                            <TextField
+                                placeholder="Observations"
+                                multiline
+                                rows="2"
+                                name='observations'
+                                onChange={handleChange('observations')}
+                                className={classes.textField}
+                                margin="normal"
+                            />
+                            <TextField
+                                label="date"
+                                type="date"
+                                defaultValue={values.date}
+                                name='date'
+                                onChange={handleChange('date')}
+                                className={classes.textField}
+                                margin="normal"
+                            />
+                            {values.error && (<Typography component="p" color="error">
+                                <Icon color="error" className={classes.error}>error</Icon>
+                                {values.error}
+                            </Typography>)
+                            }
+                        </CardContent>
+                        <CardActions>
+                            <Button color="primary" variant="contained" onClick={addHarvest} className={classes.submit}>POST</Button>
+                        </CardActions>
+                    </Card>}
+                // title={<form onSubmit={addHarvest}>
+                //     <div className="form-group">
+                //         <label>Yield: </label>
+                //         <input type="text"
+                //             style={{
+                //                 backgroundColor: 'white',
+                //                 padding: '1px',
+                //                 margin: `2px 2px 2px 2px`
+                //             }}
+                //             required
+                //             // className="form-control"
+                //             value={values.yield}
+                //             name="yield"
+                //             placeholder="Yield"
+                //             onChange={handleChange('yield')}
+                //         />
+                //     </div>
+                //     <div className="form-group">
+                //         <label>Observations: </label>
+                //         <input type="text"
+                //             // className="form-control"
+                //             value={values.observations}
+                //             name="observations"
+                //             placeholder="Observations"
+                //             onChange={handleChange('observations')}
+                //         />
+                //     </div>
+                //     <div className="form-group">
+                //         <label>Date: </label>
+                //         <input type="text"
+                //             // className="form-control"
+                //             value={values.date}
+                //             name="date"
+                //             placeholder="Date"
+                //             onChange={handleChange('date')}
+                //         />
+                //     </div>
+                //     <div className="form-group">
+                //         <input type="submit" value="Submit" className="btn btn-success" />
+                //     </div>
+                // </form>}
+                /> : null}
+            { props.harvests.map((item, i) => {
+                // if (item.harvestPlot === props.plotId)
                 return <CardHeader
-                    avatar={
-                        <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
-                    }
+                    // avatar={
+                    //     <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
+                    // }
                     title={harvestBody(item)}
                     className={classes.cardHeader}
                     key={i} />
-        })
-        }
-    </div>)
+            })
+            }
+        </div>)
 }
 
 

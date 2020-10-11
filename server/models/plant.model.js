@@ -15,19 +15,13 @@ const plantSchema = new Schema({
     seedsTransferredDate: String,
     harvestYieldTally: Number,
     images: { type: [String] },
-    harvests: [{
-      observations: { type: String },
-      yield: { type: Number },
-      created: { type: Date, default: Date.now },
-      postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
-      harvestPlot: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
-    }],
     created: { type: Date, default: Date.now },
     postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
   }],
   harvests: [{
     observations: { type: String },
     yield: { type: Number },
+    date: { type: Date },
     created: { type: Date, default: Date.now },
     postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
     harvestPlot: { type: mongoose.Schema.ObjectId, ref: 'Plant' }

@@ -151,23 +151,6 @@ const uncomment = async (params, credentials, plantId, comment) => {
     }
 }
 
-const listPlots = async (params, credentials, signal) => {
-    try {
-        let response = await fetch('/api/plots/feed/' + params.plantId, {
-            method: 'GET',
-            signal: signal,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            }
-        })
-        return await response.json()
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 const plot = async (params, credentials, plantId, plot) => {
     try {
         let response = await fetch('/api/plants/plot/', {
