@@ -4,6 +4,7 @@ import PrivateRoute from './auth/PrivateRoute'
 import Signin from './auth/Signin'
 import Home from './core/Home'
 import Menu from './core/Menu'
+import NotFound from './core/NotFound'
 import PlantHome from './core/PlantHome'
 import PlantLog from './plant/PlantInfo'
 import EditProfile from './user/EditProfile'
@@ -23,6 +24,7 @@ const MainRouter = () => {
       <Route path="/signin" component={Signin} />
       <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
       <Route path="/user/:userId" component={Profile} />
+      <Route path="*" component={NotFound} />
     </Switch>
   </div>)
 }

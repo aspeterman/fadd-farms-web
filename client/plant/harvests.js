@@ -200,7 +200,7 @@
 //     updateHarvests: PropTypes.func.isRequired
 // }
 
-import { Button, Card, CardActionArea, CardActions, CardContent, TextField, Typography } from '@material-ui/core'
+import { Button, Card, CardActionArea, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@material-ui/core'
 import CardHeader from '@material-ui/core/CardHeader'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
@@ -222,9 +222,10 @@ const useStyles = makeStyles(theme => ({
         width: '96%'
     },
     commentText: {
+        display: 'block',
         backgroundColor: 'white',
         padding: theme.spacing(1),
-        margin: `2px ${theme.spacing(2)}px 2px 2px`
+        margin: `2px ${theme.spacing(1)}px 2px 2px`,
     },
     commentDate: {
         display: 'block',
@@ -248,6 +249,8 @@ export default function Harvests(props) {
         user: {},
         showNew: false
     })
+    const [open, setOpen] = React.useState(false);
+
     // const jwt = auth.isAuthenticated()
     const handleChange = name => event => {
         const value = name === 'photo'
@@ -273,6 +276,7 @@ export default function Harvests(props) {
                 console.log(data.error)
             } else {
                 setValues({ ...values, season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '', showNew: false })
+                setOpen(false)
                 props.updateHarvests(data.harvests)
             }
         })
@@ -294,9 +298,13 @@ export default function Harvests(props) {
         })
     }
 
-    const handleShow = event => {
-        setValues({ ...values, showNew: !values.showNew })
-    }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const harvestBody = item => {
         return (
@@ -321,101 +329,70 @@ export default function Harvests(props) {
     }
     return (
         <div>
-            <button onClick={handleShow}>New</button>
-            {values.showNew ?
-                <CardHeader
-                    title={<Card className={classes.card}>
+            <div>
+                <Button variant="outlined" size="small" color="primary" onClick={handleClickOpen}>
+                    Record a Harvest
+      </Button>
+                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">New Harvest</DialogTitle>
+                    <DialogContent>
                         <CardHeader
-                            title={values.user.name}
-                            className={classes.cardHeader}
+                            title={<div className={classes.card}>
+                                <TextField
+                                    required
+                                    label="date"
+                                    type="date"
+                                    defaultValue={values.date}
+                                    name='date'
+                                    onChange={handleChange('date')}
+                                    className={classes.commentDate}
+                                    margin="normal"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                                <TextField
+                                    type="number"
+                                    label="Yield (lbs)"
+                                    name='yield'
+                                    onChange={handleChange('yield')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                />
+                                <br />
+                                <TextField
+                                    label="Observations"
+                                    type="text"
+                                    multiline
+                                    rows="2"
+                                    name='observations'
+                                    onChange={handleChange('observations')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                />
+                                {values.error && (<Typography component="p" color="error">
+                                    <Icon color="error" className={classes.error}>error</Icon>
+                                    {values.error}
+                                </Typography>)
+                                }
+                            </div>}
                         />
-                        <CardContent className={classes.cardContent}>
-                            <TextField
-                                placeholder="Yield (lbs)"
-                                name='yield'
-                                onChange={handleChange('yield')}
-                                className={classes.textField}
-                                margin="normal"
-                            />
-                            <TextField
-                                placeholder="Observations"
-                                multiline
-                                rows="2"
-                                name='observations'
-                                onChange={handleChange('observations')}
-                                className={classes.textField}
-                                margin="normal"
-                            />
-                            <TextField
-                                label="date"
-                                type="date"
-                                defaultValue={values.date}
-                                name='date'
-                                onChange={handleChange('date')}
-                                className={classes.textField}
-                                margin="normal"
-                            />
-                            {values.error && (<Typography component="p" color="error">
-                                <Icon color="error" className={classes.error}>error</Icon>
-                                {values.error}
-                            </Typography>)
-                            }
-                        </CardContent>
-                        <CardActions>
-                            <Button color="primary" variant="contained" onClick={addHarvest} className={classes.submit}>POST</Button>
-                        </CardActions>
-                    </Card>}
-                // title={<form onSubmit={addHarvest}>
-                //     <div className="form-group">
-                //         <label>Yield: </label>
-                //         <input type="text"
-                //             style={{
-                //                 backgroundColor: 'white',
-                //                 padding: '1px',
-                //                 margin: `2px 2px 2px 2px`
-                //             }}
-                //             required
-                //             // className="form-control"
-                //             value={values.yield}
-                //             name="yield"
-                //             placeholder="Yield"
-                //             onChange={handleChange('yield')}
-                //         />
-                //     </div>
-                //     <div className="form-group">
-                //         <label>Observations: </label>
-                //         <input type="text"
-                //             // className="form-control"
-                //             value={values.observations}
-                //             name="observations"
-                //             placeholder="Observations"
-                //             onChange={handleChange('observations')}
-                //         />
-                //     </div>
-                //     <div className="form-group">
-                //         <label>Date: </label>
-                //         <input type="text"
-                //             // className="form-control"
-                //             value={values.date}
-                //             name="date"
-                //             placeholder="Date"
-                //             onChange={handleChange('date')}
-                //         />
-                //     </div>
-                //     <div className="form-group">
-                //         <input type="submit" value="Submit" className="btn btn-success" />
-                //     </div>
-                // </form>}
-                /> : null}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="primary" variant="contained" onClick={addHarvest} className={classes.submit}>POST</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+
             { props.harvests.map((item, i) => {
-                // if (item.harvestPlot === props.plotId)
-                return <CardHeader
-                    // avatar={
-                    //     <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
-                    // }
-                    title={harvestBody(item)}
-                    className={classes.cardHeader}
-                    key={i} />
+                if (item.harvestPlot === props.plotId)
+                    return <CardHeader
+                        // avatar={
+                        //     <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
+                        // }
+                        title={harvestBody(item)}
+                        className={classes.cardHeader}
+                        key={i} />
             })
             }
         </div>)

@@ -11,7 +11,7 @@ const config = {
         path.join(CURRENT_WORKING_DIR, 'client/main.js')
     ],
     output: {
-        path: path.join(CURRENT_WORKING_DIR , '/dist'),
+        path: path.join(CURRENT_WORKING_DIR, '/dist'),
         filename: 'bundle.js',
         publicPath: '/dist/'
     },
@@ -29,14 +29,14 @@ const config = {
                 use: 'file-loader'
             }
         ]
-    },  
+    },
     plugins: [
-          new webpack.HotModuleReplacementPlugin(),
-          new webpack.NoEmitOnErrorsPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
     ],
     resolve: {
         alias: {
-          'react-dom': '@hot-loader/react-dom'
+            'react-dom': '@hot-loader/react-dom'
         }
     }
 }

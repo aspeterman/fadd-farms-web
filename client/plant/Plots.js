@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, Typography } from '@material-ui/core'
+import { Button, Card, CardActionArea, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import CardHeader from '@material-ui/core/CardHeader'
 import Icon from '@material-ui/core/Icon'
@@ -57,6 +57,7 @@ export default function Plots(props) {
         harvestsView: false,
         showNew: false
     })
+    const [open, setOpen] = useState(false)
     const jwt = auth.isAuthenticated()
     const handleChange = name => event => {
         const value = name === 'photo'
@@ -95,6 +96,7 @@ export default function Plots(props) {
                 console.log(data.error)
             } else {
                 setValues({ ...values, plotname: '', season: '', prePlantSeeds: '', prePlantGerminated: '', seedsTransferred: '', prePlantGerminatedDate: '', prePlantSeedsDate: '', seedsTransferredDate: '', showNew: false })
+                setOpen(false)
                 props.updatePlots(data.plots)
             }
         })
@@ -124,6 +126,14 @@ export default function Plots(props) {
         setValues({ ...values, harvestsView: !values.harvestsView })
     }
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const plotBody = item => {
         return (
             <>
@@ -138,6 +148,7 @@ export default function Plots(props) {
                         <Typography>Seeds Transferred: {item.seedsTransferred} on {item.seedsTransferredDate}</Typography>
                         {/* <Card.Text> <span>Total Yield: {props.exercise.harvestYieldTally} lbs</span><br />
                             <span><TallyModal id={props.exercise._id} /></span></Card.Text> */}
+                        <Button color="primary" variant="outlined" size="small" onClick={showHarvests}>Show Harvests</Button>
                     </CardContent>
                     <CardActionArea>
                         <span className={classes.commentDate}>
@@ -146,7 +157,6 @@ export default function Plots(props) {
                                 <Icon onClick={deletePlot(item)} className={classes.commentDelete}>delete</Icon>}
                         </span>
                     </CardActionArea>
-                    <button onClick={showHarvests}>Show Harvests</button>
                     {values.harvestsView ?
                         <Harvests jwt={jwt} plantId={props.plantId} plotId={item._id} harvests={props.harvests.filter(harvest => harvest.harvestPlot === item._id)} updateHarvests={props.updateHarvests} /> : null}
                 </Card>
@@ -154,124 +164,127 @@ export default function Plots(props) {
         )
     }
     return (<div>
-        <Button onClick={handleShow}>New Plot</Button>
-        {values.showNew ?
-            <CardHeader
-                avatar={
-                    <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + auth.isAuthenticated().user._id} />
-                }
-                title={<Card className={classes.card}>
-                    <CardHeader
-                        title={values.user.name}
-                        className={classes.cardHeader}
-                    />
-                    <CardContent className={classes.cardContent}>
-                        <TextField
-                            placeholder="Name your plot"
-                            multiline
-                            rows="1"
-                            name='plotname'
-                            value={values.plotname}
-                            onChange={handleChange('plotname')}
-                            className={classes.textField}
-                            margin="normal"
+        <Button variant="outlined" color="primary" size="small" onClick={handleClickOpen}>
+            New Plot
+      </Button>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">New Plot</DialogTitle>
+            <DialogContent>
+                <CardHeader
+                    avatar={
+                        <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + auth.isAuthenticated().user._id} />
+                    }
+                    title={<Card className={classes.card}>
+                        <CardHeader
+                            title={values.user.name}
+                            className={classes.cardHeader}
                         />
-                        <TextField
-                            placeholder="Season"
-                            multiline
-                            rows="1"
-                            name='season'
-                            value={values.season}
-                            onChange={handleChange('season')}
-                            className={classes.textField}
-                            margin="normal"
-                        />
-                        <div>
+                        <CardContent className={classes.cardContent}>
                             <TextField
-                                placeholder="prePlantSeeds"
-                                type="number"
-                                name='prePlantSeeds'
-                                value={values.prePlantSeeds}
-                                onChange={handleChange('prePlantSeeds')}
+                                placeholder="Name your plot"
+                                autoFocus
+                                name='plotname'
+                                value={values.plotname}
+                                onChange={handleChange('plotname')}
                                 className={classes.textField}
                                 margin="normal"
                             />
                             <TextField
-                                label="Pre-planted on"
-                                type="date"
-                                defaultValue={values.prePlantSeedsDate}
-                                name='prePlantSeedsDate'
-                                onChange={handleChange('prePlantSeedsDate')}
-                                className={classes.textField}
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <TextField
-                                placeholder="Pre plant germinated"
-                                type="number"
-                                name='prePlantGerminated'
-                                value={values.prePlantGerminated}
-                                onChange={handleChange('prePlantGerminated')}
+                                placeholder="Season"
+                                name='season'
+                                value={values.season}
+                                onChange={handleChange('season')}
                                 className={classes.textField}
                                 margin="normal"
                             />
-                            <TextField
-                                label="Germinated On"
-                                type="date"
-                                defaultValue={values.prePlantGerminatedDate}
-                                name='prePlantGerminatedDate'
-                                onChange={handleChange('prePlantGerminatedDate')}
-                                className={classes.textField}
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <TextField
-                                type="number"
-                                placeholder="Seeds Transferred"
-                                name='seedsTransferred'
-                                value={values.seedsTransferred}
-                                onChange={handleChange('seedsTransferred')}
-                                className={classes.textField}
-                                margin="normal"
-                            />
-                            <TextField
-                                label="Transferred On"
-                                type="date"
-                                defaultValue={new Date()}
-                                name='seedsTransferredDate'
-                                onChange={handleChange('seedsTransferredDate')}
-                                className={classes.textField}
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </div>
-                        {values.error && (<Typography component="p" color="error">
-                            <Icon color="error" className={classes.error}>error</Icon>
-                            {values.error}
-                        </Typography>)
-                        }
-                    </CardContent>
-                    <CardActions>
-                        <Button color="primary" variant="contained" onClick={addPlot} className={classes.submit}>POST</Button>
-                    </CardActions>
-                </Card>}
-                className={classes.cardHeader}
-            /> : null}
+                            <div>
+                                <TextField
+                                    placeholder="prePlantSeeds"
+                                    type="number"
+                                    name='prePlantSeeds'
+                                    value={values.prePlantSeeds}
+                                    onChange={handleChange('prePlantSeeds')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label="Pre-planted on"
+                                    type="date"
+                                    defaultValue={values.prePlantSeedsDate}
+                                    name='prePlantSeedsDate'
+                                    onChange={handleChange('prePlantSeedsDate')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <TextField
+                                    placeholder="Pre plant germinated"
+                                    type="number"
+                                    name='prePlantGerminated'
+                                    value={values.prePlantGerminated}
+                                    onChange={handleChange('prePlantGerminated')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label="Germinated On"
+                                    type="date"
+                                    defaultValue={values.prePlantGerminatedDate}
+                                    name='prePlantGerminatedDate'
+                                    onChange={handleChange('prePlantGerminatedDate')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <TextField
+                                    type="number"
+                                    placeholder="Seeds Transferred"
+                                    name='seedsTransferred'
+                                    value={values.seedsTransferred}
+                                    onChange={handleChange('seedsTransferred')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label="Transferred On"
+                                    type="date"
+                                    defaultValue={new Date()}
+                                    name='seedsTransferredDate'
+                                    onChange={handleChange('seedsTransferredDate')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </div>
+                            {values.error && (<Typography component="p" color="error">
+                                <Icon color="error" className={classes.error}>error</Icon>
+                                {values.error}
+                            </Typography>)
+                            }
+                        </CardContent>
+                    </Card>}
+                    className={classes.cardHeader}
+                />
+                <DialogActions>
+                    <Button color="primary" variant="contained" onClick={addPlot} className={classes.submit}>POST</Button>
+                </DialogActions>
+            </DialogContent>
+        </Dialog>
         { props.plots.map((item, i) => {
             return <CardHeader
-                avatar={
-                    <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
-                }
+                // avatar={
+                //     <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
+                // }
                 title={plotBody(item)}
                 className={classes.cardHeader}
                 key={i} />

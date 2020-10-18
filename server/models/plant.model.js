@@ -3,6 +3,36 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const plantSchema = new Schema({
+  plantname: {
+    type: String,
+    required: '{PATH} is required!',
+    unique: true
+  },
+  description: {
+    type: String,
+  },
+  spacing: {
+    type: String
+  },
+  soil: {
+    type: String
+  },
+  plantHeight: {
+    type: String
+  },
+  careDuringGrowth: {
+    type: String
+  },
+  pests: {
+    type: String
+  },
+  whenToPlant: {
+    type: String
+  },
+  photo: {
+    data: Buffer,
+    contentType: String
+  },
   plots: [{
     plotname: { type: String, required: 'Plot Name is Rwquired' },
     season: { type: String },
@@ -33,48 +63,8 @@ const plantSchema = new Schema({
   }],
   likes: [{ type: Schema.ObjectId, ref: 'User' }],
   postedBy: { type: Schema.ObjectId, ref: 'User' },
-  plantname: {
-    type: String,
-    required: '{PATH} is required!',
-    unique: true
-  },
-  exercises: {
-    type: Array
-  },
-  description: {
-    type: String,
-  },
-  spacing: {
-    type: String
-  },
-  soil: {
-    type: String
-  },
-  plantHeight: {
-    type: String
-  },
-  careDuringGrowth: {
-    type: String
-  },
-  pests: {
-    type: String
-  },
-  whenToPlant: {
-    type: String
-  },
-  photo: {
-    data: Buffer,
-    contentType: String
-  },
 }, {
   timestamps: true,
 });
-
-// const imageSchema = Schema({
-//   plant: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'Plant' },
-//   url: String,
-// });
 
 export default mongoose.model('Plant', plantSchema);

@@ -41,6 +41,7 @@ router.route('/api/plants/getone/:plantId')
     .get(plantCtrl.getOne)
 
 router.route('/api/plants/:plantId')
+    .put(plantCtrl.update)
     .delete(authCtrl.requireSignin, plantCtrl.isPoster, plantCtrl.remove)
 
 router.param('userId', userCtrl.userByID)

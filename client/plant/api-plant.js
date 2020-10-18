@@ -14,6 +14,22 @@ const create = async (params, credentials, post) => {
     }
 }
 
+const update = async (params, credentials, plant) => {
+    try {
+        let response = await fetch('/api/plants/' + params.plantId, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: plant
+        })
+        return await response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 const listPlantByUser = async (params, credentials) => {
     try {
         let response = await fetch('/api/plants/by/' + params.userId, {
@@ -225,6 +241,7 @@ export {
     listPlants,
     listPlantByUser,
     create,
+    update,
     getOne,
     remove,
     like,

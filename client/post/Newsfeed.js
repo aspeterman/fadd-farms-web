@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react'
-import {makeStyles} from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
-import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import React, { useEffect, useState } from 'react'
 import auth from './../auth/auth-helper'
-import PostList from './PostList'
-import {listNewsFeed} from './api-post.js'
+import { listNewsFeed } from './api-post.js'
 import NewPost from './NewPost'
+import PostList from './PostList'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(3)
   },
   title: {
-    padding:`${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
     color: theme.palette.openTitle,
     fontSize: '1em'
   },
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: 330
   }
 }))
-export default function Newsfeed () {
+export default function Newsfeed() {
   const classes = useStyles()
   const [posts, setPosts] = useState([])
   const jwt = auth.isAuthenticated()
@@ -43,7 +43,7 @@ export default function Newsfeed () {
         setPosts(data)
       }
     })
-    return function cleanup(){
+    return function cleanup() {
       abortController.abort()
     }
 
@@ -61,16 +61,16 @@ export default function Newsfeed () {
     setPosts(updatedPosts)
   }
 
-    return (
-      <Card className={classes.card}>
-        <Typography type="title" className={classes.title}>
-          Newsfeed
+  return (
+    <Card className={classes.card}>
+      <Typography type="title" className={classes.title}>
+        Newsfeed
         </Typography>
-        <Divider/>
-        <NewPost addUpdate={addPost}/>
-        <Divider/>
-        <PostList removeUpdate={removePost} posts={posts}/>
-      </Card>
-    )
+      <Divider />
+      <NewPost addUpdate={addPost} />
+      <Divider />
+      <PostList removeUpdate={removePost} posts={posts} />
+    </Card>
+  )
 }
 

@@ -7,7 +7,6 @@ const auth = {
 
     if (sessionStorage.getItem('jwt')) {
 
-      // console.log(sessionStorage.getItem('jwt'))
       return JSON.parse(sessionStorage.getItem('jwt'))
     }
     else

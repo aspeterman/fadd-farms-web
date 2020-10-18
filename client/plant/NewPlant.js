@@ -1,9 +1,4 @@
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import CardHeader from '@material-ui/core/CardHeader'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
@@ -53,11 +48,15 @@ const useStyles = makeStyles(theme => ({
     },
     filename: {
         verticalAlign: 'super'
+    },
+    button: {
+        marginBottom: theme.spacing(2)
     }
 }))
 
 export default function NewPlant(props) {
     const classes = useStyles()
+    const [open, setOpen] = useState(false)
     const [values, setValues] = useState({
         plantname: '',
         photo: '',
@@ -97,6 +96,7 @@ export default function NewPlant(props) {
             } else {
                 setValues({ ...values, plantname: '', description: '', careDuringGrowth: '', whenToPlant: '', pests: '', plantHeight: '', soil: '', photo: '', showNew: false })
                 props.addUpdate(data)
+                setOpen(false)
             }
         })
     }
@@ -107,110 +107,108 @@ export default function NewPlant(props) {
         setValues({ ...values, [name]: value })
     }
 
-    const handleShow = event => {
-        setValues({ ...values, showNew: !values.showNew })
-    }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const photoURL = values.user._id ? '/api/users/photo/' + values.user._id : '/api/users/defaultphoto'
     return (<div className={classes.root}>
-        <Button color="secondary" onClick={handleShow}>New Plant</Button>
-        {values.showNew ?
-            <Card className={classes.card}>
-                <CardHeader
-                    avatar={
-                        <Avatar src={photoURL} />
-                    }
-                    title={values.user.name}
-                    className={classes.cardHeader}
+        <Button variant="outlined" color="primary" className={classes.button} onClick={handleClickOpen}>
+            New Plant
+      </Button>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">New Plant</DialogTitle>
+            <DialogContent>
+                <TextField
+                    placeholder="Plant Name"
+                    autoFocus
+                    value={values.plantname}
+                    onChange={handleChange('plantname')}
+                    className={classes.textField}
+                    margin="normal"
                 />
-                <CardContent className={classes.cardContent}>
-                    <TextField
-                        placeholder="Plant Name"
-                        multiline
-                        rows="1"
-                        value={values.plantname}
-                        onChange={handleChange('plantname')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="Description"
-                        multiline
-                        rows="3"
-                        value={values.description}
-                        onChange={handleChange('description')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="When To Plant"
-                        multiline
-                        rows="1"
-                        value={values.whenToPlant}
-                        onChange={handleChange('whenToPlant')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="Care During Growth"
-                        multiline
-                        rows="1"
-                        value={values.careDuringGrowth}
-                        onChange={handleChange('careDuringGrowth')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="Plant Height"
-                        multiline
-                        rows="1"
-                        value={values.plantHeight}
-                        onChange={handleChange('plantHeight')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="Soil Requirements"
-                        multiline
-                        rows="1"
-                        value={values.soil}
-                        onChange={handleChange('soil')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="Plant Spacing"
-                        multiline
-                        rows="1"
-                        value={values.spacing}
-                        onChange={handleChange('spacing')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <TextField
-                        placeholder="pests"
-                        multiline
-                        rows="1"
-                        value={values.pests}
-                        onChange={handleChange('pests')}
-                        className={classes.textField}
-                        margin="normal"
-                    />
-                    <input accept="image/*" onChange={handleChange('photo')} className={classes.input} id="icon-button-file" type="file" />
-                    <label htmlFor="icon-button-file">
-                        <IconButton color="secondary" className={classes.photoButton} component="span">
-                            <PhotoCamera />
-                        </IconButton>
-                    </label> <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
-                    {values.error && (<Typography component="p" color="error">
-                        <Icon color="error" className={classes.error}>error</Icon>
-                        {values.error}
-                    </Typography>)
-                    }
-                </CardContent>
-                <CardActions>
-                    <Button color="primary" variant="contained" disabled={values.plantname === ''} onClick={clickPlant} className={classes.submit}>POST</Button>
-                </CardActions>
-            </Card> : null}
+                <TextField
+                    placeholder="Description"
+                    multiline
+                    rows="3"
+                    value={values.description}
+                    onChange={handleChange('description')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="When To Plant"
+                    multiline
+                    rows="1"
+                    value={values.whenToPlant}
+                    onChange={handleChange('whenToPlant')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="Care During Growth"
+                    multiline
+                    rows="1"
+                    value={values.careDuringGrowth}
+                    onChange={handleChange('careDuringGrowth')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="Plant Height"
+                    multiline
+                    rows="1"
+                    value={values.plantHeight}
+                    onChange={handleChange('plantHeight')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="Soil Requirements"
+                    multiline
+                    rows="1"
+                    value={values.soil}
+                    onChange={handleChange('soil')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="Plant Spacing"
+                    multiline
+                    rows="1"
+                    value={values.spacing}
+                    onChange={handleChange('spacing')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="pests"
+                    multiline
+                    rows="1"
+                    value={values.pests}
+                    onChange={handleChange('pests')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <input accept="image/*" onChange={handleChange('photo')} className={classes.input} id="icon-button-file" type="file" />
+                <label htmlFor="icon-button-file">
+                    <IconButton color="secondary" className={classes.photoButton} component="span">
+                        <PhotoCamera />
+                    </IconButton>
+                </label> <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
+                {values.error && (<Typography component="p" color="error">
+                    <Icon color="error" className={classes.error}>error</Icon>
+                    {values.error}
+                </Typography>)
+                }
+            </DialogContent>
+            <DialogActions>
+                <Button color="primary" variant="contained" disabled={values.plantname === ''} onClick={clickPlant} className={classes.submit}>POST</Button>
+            </DialogActions>
+        </Dialog>
     </div>)
 
 }

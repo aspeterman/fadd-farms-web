@@ -1,5 +1,6 @@
 import formidable from 'formidable'
 import fs from 'fs'
+import extend from 'lodash/extend'
 import Plant from '../models/plant.model'
 import errorHandler from './../helpers/dbErrorHandler'
 
@@ -21,6 +22,32 @@ const create = (req, res, next) => {
         try {
             let result = await plant.save()
             res.json(result)
+        } catch (err) {
+            return res.status(400).json({
+                error: errorHandler.getErrorMessage(err)
+            })
+        }
+    })
+}
+
+const update = (req, res) => {
+    let form = new formidable.IncomingForm()
+    form.keepExtensions = true
+    form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return res.status(400).json({
+                error: "Photo could not be uploaded"
+            })
+        }
+        let plant = req.plant
+        plant = extend(plant, fields)
+        if (files.photo) {
+            plant.photo.data = fs.readFileSync(files.photo.path)
+            plant.photo.contentType = files.photo.type
+        }
+        try {
+            await plant.save()
+            res.json(plant)
         } catch (err) {
             return res.status(400).json({
                 error: errorHandler.getErrorMessage(err)
@@ -71,7 +98,7 @@ const listNewsFeed = async (req, res) => {
             .populate('plots.postedBy', '_id name')
             .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
-            .sort('-created')
+            .sort('plantname')
             .exec()
         res.json(plants)
     } catch (err) {
@@ -237,6 +264,7 @@ export default {
     listByUser,
     listNewsFeed,
     create,
+    update,
     postByID,
     getOne,
     remove,

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/co
 // import Highcharts from 'highcharts';
 import React, { useState } from 'react';
 import auth from '../auth/auth-helper';
+import EditPlant from './EditPlant';
 import HarvestChart from './HarvestChart';
 import Plots from './Plots';
 // require('highcharts/highcharts-more')(Highcharts);
@@ -39,26 +40,30 @@ import Plots from './Plots';
 // )
 
 export default function PlantLog(props) {
+    console.log(props)
     const [values, setValues] = useState({
-        plantId: props.location.plantProps.plantId,
+        plantId: props.location.plantProps.plant.plantId,
         plant: props.location.plantProps.plant,
         harvests: props.location.plantProps.harvests,
         plots: props.location.plantProps.plots,
         user: auth.isAuthenticated()
     })
 
+    const updatePlant = (plant) => {
+        setValues({ ...values, plant: plant })
+    }
     const updatePlots = (plots) => {
         setValues({ ...values, plots: plots })
     }
 
     const updateHarvests = (harvests) => {
         setValues({ ...values, harvests: harvests })
-        console.log(props)
     }
 
     return (
         <>
             <h1>{values.plant.plantname}</h1>
+            <EditPlant plantId={values.plant._id} plant={values.plant} updatePlant={updatePlant} />
             <Card
                 style={{ paddingTop: '20px' }}
                 text="dark"
@@ -83,7 +88,7 @@ export default function PlantLog(props) {
             </Card>
             <Grid container spacing={8}>
                 <Grid item xs={8} sm={7}>
-                    <Plots plantId={values.plantId} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />
+                    <Plots plantId={props.location.plantProps.plantId} plant={values.plant} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />
                 </Grid>
                 <Grid item xs={6} sm={5}>
                     <HarvestChart harvests={values.harvests} />

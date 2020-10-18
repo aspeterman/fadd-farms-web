@@ -73,14 +73,11 @@ export default function PlantHome({ history }) {
                 </Grid>
             }
             {defaultPage &&
-                <Grid container spacing={8}>
-                    {/* <Grid item xs={8} sm={7}>
-            <Newsfeed />
-          </Grid> */}
-                    <Grid item xs={8} sm={7}>
-                        <Plants />
-                    </Grid>
-                </Grid>
+                // <Grid container>
+                //     <Grid >
+                //     </Grid>
+                // </Grid>
+                <Plants />
             }
         </div>
     )

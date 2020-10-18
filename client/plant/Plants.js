@@ -17,7 +17,8 @@ const useStyles = makeStyles(theme => ({
   title: {
     padding: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
     color: theme.palette.openTitle,
-    fontSize: '1em'
+    fontSize: '2em',
+    textAlign: "center"
   },
   media: {
     minHeight: 330
@@ -64,12 +65,14 @@ export default function Plants() {
   return (
     <Card className={classes.card}>
       <Typography type="title" className={classes.title}>
-        Plants
+        Garden Plants
         </Typography>
       <Divider />
       <NewPlant addUpdate={addPlant} />
       <Divider />
-      <PlantList removeUpdate={removePlant} plants={plants} />
+      <PlantList removeUpdate={removePlant}
+        // addUpdate={addPlant} 
+        plants={plants} />
     </Card>
   )
 }
