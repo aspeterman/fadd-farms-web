@@ -21,7 +21,7 @@ export default function PlantList(props) {
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      {props.plants.map((item, i) => {
+      {props.showing === 'all' ? props.plants.map((item, i) => {
         return (
           <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={4}>
             <Plant plant={item} key={i} onRemove={props.removeUpdate}
@@ -30,6 +30,16 @@ export default function PlantList(props) {
           </GridList>
         )
       })
+        :
+        props.plants.filter(item => item.active === true).map((item, i) => {
+          return (
+            <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={4}>
+              <Plant plant={item} key={i} onRemove={props.removeUpdate}
+              // addUpdate={props.addUpdate} 
+              />
+            </GridList>
+          )
+        })
       }
     </div>
   )

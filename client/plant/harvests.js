@@ -200,12 +200,13 @@
 //     updateHarvests: PropTypes.func.isRequired
 // }
 
-import { Button, Card, CardActionArea, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@material-ui/core'
+import { Avatar, Button, Card, CardActionArea, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@material-ui/core'
 import CardHeader from '@material-ui/core/CardHeader'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { createHarvest, unHarvest } from './api-plant.js'
 
 
@@ -309,7 +310,7 @@ export default function Harvests(props) {
     const harvestBody = item => {
         return (
             <>
-                {/* <Link to={"/user/" + item.postedBy._id}>{item.postedBy.name}</Link><br /> */}
+                <Link to={"/user/" + item.postedBy._id}>{item.postedBy.name}</Link><br />
                 <Card
                 >
                     <CardHeader>{item.date}</CardHeader>
@@ -385,14 +386,13 @@ export default function Harvests(props) {
             </div>
 
             { props.harvests.map((item, i) => {
-                if (item.harvestPlot === props.plotId)
-                    return <CardHeader
-                        // avatar={
-                        //     <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
-                        // }
-                        title={harvestBody(item)}
-                        className={classes.cardHeader}
-                        key={i} />
+                return <CardHeader
+                    avatar={
+                        <Avatar className={classes.smallAvatar} src={'/api/users/photo/' + item.postedBy._id} />
+                    }
+                    title={harvestBody(item)}
+                    className={classes.cardHeader}
+                    key={i} />
             })
             }
         </div>)

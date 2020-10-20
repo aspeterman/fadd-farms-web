@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
@@ -22,11 +23,15 @@ const useStyles = makeStyles(theme => ({
   },
   media: {
     minHeight: 330
+  },
+  button: {
+    marginBottom: theme.spacing(2),
   }
 }))
 export default function Plants() {
   const classes = useStyles()
   const [plants, setPlants] = useState([])
+  const [showing, setShowing] = useState('all')
   const jwt = auth.isAuthenticated()
 
   useEffect(() => {
@@ -62,6 +67,14 @@ export default function Plants() {
     setPlants(updatedPlants)
   }
 
+  const handleShowActive = () => {
+    setShowing('active')
+  }
+
+  const handleShowAll = () => {
+    setShowing('all')
+  }
+
   return (
     <Card className={classes.card}>
       <Typography type="title" className={classes.title}>
@@ -69,10 +82,13 @@ export default function Plants() {
         </Typography>
       <Divider />
       <NewPlant addUpdate={addPlant} />
+      <Button variant="outlined" className={classes.button} onClick={handleShowAll}>Show All</Button>
+      <Button variant="outlined" className={classes.button} onClick={handleShowActive}>Show Active</Button>
       <Divider />
       <PlantList removeUpdate={removePlant}
-        // addUpdate={addPlant} 
-        plants={plants} />
+        plants={plants}
+        showing={showing}
+      />
     </Card>
   )
 }

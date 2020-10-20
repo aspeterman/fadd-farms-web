@@ -1,4 +1,4 @@
-import { Button, GridListTile } from '@material-ui/core'
+import { Button, GridListTile, Tooltip } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -61,6 +61,7 @@ export default function Plant(props) {
     return match
   }
   const [values, setValues] = useState({
+    active: props.plant.active,
     like: checkLike(props.plant.likes),
     likes: props.plant.likes.length,
     comments: props.plant.comments,
@@ -163,23 +164,24 @@ export default function Plant(props) {
         </CardContent>
         <CardActions>
           {values.like
-            ? <IconButton onClick={clickLike} className={classes.button} aria-label="Like" color="secondary">
+            ? <Tooltip title="Unlike"><IconButton onClick={clickLike} className={classes.button} aria-label="Like" color="secondary">
               <FavoriteIcon />
-            </IconButton>
-            : <IconButton onClick={clickLike} className={classes.button} aria-label="Unlike" color="secondary">
+            </IconButton></Tooltip>
+            : <Tooltip title="Like"><IconButton onClick={clickLike} className={classes.button} aria-label="Unlike" color="secondary">
               <FavoriteBorderIcon />
-            </IconButton>} <span>{values.likes}</span>
+            </IconButton></Tooltip>} <span>{values.likes}</span>
           <IconButton className={classes.button} aria-label="Comment" color="secondary" onClick={showComments}>
             <CommentIcon />
           </IconButton> <span>{values.comments.length}</span>
-          <IconButton className={classes.button} aria-label="Info" color="secondary">
-            <Link to={{
-              pathname: "/plants/" + props.plant._id,
-              plantProps: { plantId: props.plant._id, plant: props.plant, plots: values.plots, harvests: values.harvests, updateHarvests, updatePlots }
-            }}>
-              <Info />
-            </Link>
-          </IconButton>
+          <Tooltip title="Plant Information">
+            <IconButton className={classes.button} aria-label="Info" color="secondary">
+              <Link to={{
+                pathname: "/plants/" + props.plant._id
+              }}>
+                <Info />
+              </Link>
+            </IconButton>
+          </Tooltip>
         </CardActions>
         <Divider />
         <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={showPlots}>Plots</Button>

@@ -47,6 +47,9 @@ const useStyles = makeStyles(theme => ({
   },
   filename: {
     marginLeft: '10px'
+  },
+  button: {
+    margin: theme.spacing(1),
   }
 }))
 
@@ -62,6 +65,7 @@ export default function EditPlant(props) {
     whenToPlant: props.plant.whenToPlant,
     careDuringGrowth: props.plant.careDuringGrowth,
     spacing: props.plant.spacing,
+    active: props.plant.active,
     plantId: props.plantId,
     redirectToPlant: false,
   })
@@ -87,6 +91,7 @@ export default function EditPlant(props) {
     values.careDuringGrowth && plantData.append('careDuringGrowth', values.careDuringGrowth)
     values.spacing && plantData.append('spacing', values.spacing)
     values.photo && plantData.append('photo', values.photo)
+    values.active && plantData.append('active', values.active)
     update({
       plantId: props.plantId
     }, {
@@ -115,14 +120,14 @@ export default function EditPlant(props) {
   }
   return (
     <>
-      <Button onClick={handleShow}>Edit</Button>
+      <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={handleShow}>Edit</Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogContent>
           <Card className={classes.card}>
             <CardContent>
               <Typography variant="h6" className={classes.title}>
-                Edit Profile
-          </Typography>
+                Edit {values.plantname}
+              </Typography>
               {/* <Avatar src={photoUrl} className={classes.bigAvatar} /><br />
         <input accept="image/*" onChange={handleChange('photo')} className={classes.input} id="icon-button-file" type="file" />
         <label htmlFor="icon-button-file">
@@ -137,6 +142,10 @@ export default function EditPlant(props) {
                   <PhotoCamera />
                 </IconButton>
               </label> <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
+              {values.active === true ?
+                <button onClick={handleChange('active')} value="false">Deactivate</button>
+                :
+                <button onClick={handleChange('active')} value="true">Activate</button>}
               <TextField id="plantname" label="Plant Name" className={classes.textField} value={values.plantname} onChange={handleChange('plantname')} margin="normal" /><br />
               <TextField
                 id="multiline-flexible"

@@ -1,11 +1,13 @@
-import { Button, Card, CardActionArea, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core'
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import CardHeader from '@material-ui/core/CardHeader'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
+import DeleteIcon from '@material-ui/icons/Delete'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import auth from './../auth/auth-helper'
 import { plot, unplot } from './api-plant.js'
 import Harvests from './harvests'
@@ -139,7 +141,19 @@ export default function Plots(props) {
             <>
                 <Card
                 >
-                    <CardHeader>Record</CardHeader>
+                    <CardHeader
+                        avatar={
+                            <Avatar src={'/api/users/photo/' + props.plant.postedBy._id} />
+                        }
+                        action={props.plant.postedBy._id === auth.isAuthenticated().user._id &&
+                            <IconButton onClick={deletePlot(item)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        }
+                        title={<Link to={"/user/" + props.plant.postedBy._id}>{props.plant.postedBy.name}</Link>}
+                        subheader={(new Date(props.plant.createdAt)).toDateString()}
+                        className={classes.cardHeader}
+                    />
                     <CardContent>
                         <Typography>Season: {item.season}</Typography>
                         {/* <Card.Text>Description: {props.exercise.description}</Card.Text> */}
@@ -150,16 +164,17 @@ export default function Plots(props) {
                             <span><TallyModal id={props.exercise._id} /></span></Card.Text> */}
                         <Button color="primary" variant="outlined" size="small" onClick={showHarvests}>Show Harvests</Button>
                     </CardContent>
-                    <CardActionArea>
+                    {/* <CardActionArea>
                         <span className={classes.commentDate}>
                             {(new Date(item.created)).toDateString()} |
             {auth.isAuthenticated().user._id === item.postedBy._id &&
                                 <Icon onClick={deletePlot(item)} className={classes.commentDelete}>delete</Icon>}
                         </span>
-                    </CardActionArea>
+                    </CardActionArea> */}
                     {values.harvestsView ?
                         <Harvests jwt={jwt} plantId={props.plantId} plotId={item._id} harvests={props.harvests.filter(harvest => harvest.harvestPlot === item._id)} updateHarvests={props.updateHarvests} /> : null}
                 </Card>
+                <Divider />
             </>
         )
     }

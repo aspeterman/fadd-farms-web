@@ -1,11 +1,5 @@
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
-import unicornbikeImg from './../assets/images/unicornbike.jpg'
 import auth from './../auth/auth-helper'
 import Plants from './../plant/Plants'
 
@@ -54,7 +48,7 @@ export default function PlantHome({ history }) {
 
     return (
         <div className={classes.root}>
-            { !defaultPage &&
+            {/* { !defaultPage &&
                 <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <Card className={classes.card}>
@@ -78,7 +72,8 @@ export default function PlantHome({ history }) {
                 //     </Grid>
                 // </Grid>
                 <Plants />
-            }
+            } */}
+            <Plants />
         </div>
     )
 }

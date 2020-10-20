@@ -1,10 +1,15 @@
-import { Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Card, CardContent, CircularProgress, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, makeStyles, Typography } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { toUpper } from 'lodash';
 // import Highcharts from 'highcharts';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import auth from '../auth/auth-helper';
+import { getOne } from './api-plant';
+import Comments from './Comments';
 import EditPlant from './EditPlant';
 import HarvestChart from './HarvestChart';
 import Plots from './Plots';
+
 // require('highcharts/highcharts-more')(Highcharts);
 // const HarvestList = props => (
 //     <div style={{ paddingBottom: '1em' }}>
@@ -39,15 +44,87 @@ import Plots from './Plots';
 //     </div>
 // )
 
-export default function PlantLog(props) {
-    console.log(props)
+const useStyles = makeStyles(theme => ({
+    root: {
+        flexGrow: 1,
+        marginTop: 60,
+        margin: 30,
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: '3em'
+    },
+    expansion: {
+        paddingLeft: `${theme.spacing(2)}px 0px`,
+        paddingRight: `${theme.spacing(2)}px 0px`,
+        scrollPaddingTop: theme.spacing(3),
+        backgroundColor: theme.palette.primary.primary
+        ,
+    },
+    card: {
+        minWidth: '96%',
+        // margin: 'auto',
+        minHeight: 300,
+        maxHeight: 600,
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        backgroundColor: 'rgba(0, 0, 0, 0.06)'
+    },
+    cardContent: {
+        backgroundColor: 'white',
+        padding: `${theme.spacing(2)}px 0px`
+    },
+    cardHeader: {
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1)
+    },
+    text: {
+        margin: theme.spacing(2)
+    },
+    photo: {
+        textAlign: 'center',
+        backgroundColor: '#f2f5f4',
+        padding: theme.spacing(1)
+    },
+    media: {
+        height: 100
+    },
+    button: {
+        margin: theme.spacing(1),
+    }
+}))
+
+export default function PlantLog({ match }) {
+    const classes = useStyles()
     const [values, setValues] = useState({
-        plantId: props.location.plantProps.plant.plantId,
-        plant: props.location.plantProps.plant,
-        harvests: props.location.plantProps.harvests,
-        plots: props.location.plantProps.plots,
-        user: auth.isAuthenticated()
+        plantId: '',
+        plant: [],
+        harvests: [],
+        plots: [],
+        comments: [],
+        user: auth.isAuthenticated(),
+        loading: true
     })
+
+    const jwt = auth.isAuthenticated()
+
+    useEffect(() => {
+        const abortController = new AbortController()
+        const signal = abortController.signal
+
+        getOne({
+            plantId: match.params.plantId
+        }, { t: jwt.token }, signal).then((data) => {
+            if (data & data.error) {
+                setValues({ ...values, error: data.error })
+            } else {
+                setValues({ ...values, plantId: data._id, plant: data, harvests: data.harvests, plots: data.plots, comments: data.comments, loading: false })
+            }
+        })
+        return function cleanup() {
+            abortController.abort()
+        }
+    }, [match.params.plantId])
 
     const updatePlant = (plant) => {
         setValues({ ...values, plant: plant })
@@ -60,41 +137,61 @@ export default function PlantLog(props) {
         setValues({ ...values, harvests: harvests })
     }
 
+    const updateComments = (comments) => {
+        setValues({ ...values, comments: comments })
+    }
+
     return (
-        <>
-            <h1>{values.plant.plantname}</h1>
-            <EditPlant plantId={values.plant._id} plant={values.plant} updatePlant={updatePlant} />
-            <Card
-                style={{ paddingTop: '20px' }}
-                text="dark"
-            >
-                <CardHeader><h3 align="center">Plant Info</h3>
-                </CardHeader>
-                <CardContent>
-                    <Typography><strong>Description: </strong>{values.plant.description}
-                    </Typography>
-                    <Typography><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
-                    </Typography>
-                    <Typography><strong>Average Plant Height: </strong>{values.plant.plantHeight}
-                    </Typography>
-                    <Typography><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
-                    </Typography>
-                    <Typography><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
-                    </Typography>
-                    <Typography>
-                        <strong>Soil Requirements: </strong>{values.plant.soil}
-                    </Typography>
-                </CardContent>
-            </Card>
+        <div className={classes.root}>
+            {values.loading ? <CircularProgress /> :
+                <>
+                    <Typography className={classes.title}>{toUpper(values.plant.plantname)}                                   <EditPlant plantId={values.plant._id} plant={values.plant} updatePlant={updatePlant} /></Typography>
+                    <ExpansionPanel >
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                            className={classes.expansion}
+                        >
+                            <Typography className={classes.heading}>Show Details</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <Card className={classes.card}
+                            >
+                                <CardContent>
+                                    <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
+                                    </Typography>
+                                    <Typography className={classes.text}>
+                                        <strong>Soil Requirements: </strong>{values.plant.soil}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel></>}
             <Grid container spacing={8}>
                 <Grid item xs={8} sm={7}>
-                    <Plots plantId={props.location.plantProps.plantId} plant={values.plant} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />
+                    <Typography className={classes.text}>Plant Records</Typography>
+                    {values.loading ? <CircularProgress /> :
+                        <Plots plantId={values.plantId} plant={values.plant} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />}
                 </Grid>
                 <Grid item xs={6} sm={5}>
-                    <HarvestChart harvests={values.harvests} />
+                    <Typography className={classes.text}>General Comments</Typography>
+                    {values.loading ? <CircularProgress /> :
+                        <Comments plantId={values.plantId} comments={values.comments} updateComments={updateComments} />}
                 </Grid>
+                {values.loading ? <CircularProgress /> :
+                    <HarvestChart harvests={values.harvests} />}
             </Grid>
-        </>
+        </div>
+
     )
 }
 

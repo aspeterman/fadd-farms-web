@@ -1,7 +1,5 @@
-import React from 'react'
-
-export default function NotFound() {
-    return (
-        <h1>Page Not Found</h1>
-    )
-}
+import React from 'react';
+export default ({ staticContext = {} }) => {
+    staticContext.status = 404;
+    return <h1>Oops, nothing here!</h1>;
+};

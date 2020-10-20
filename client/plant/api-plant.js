@@ -79,6 +79,22 @@ const getOne = async (params, credentials) => {
     }
 }
 
+const activate = async (params, credentials, plantId) => {
+    try {
+        let response = await fetch('/api/plants/activate/', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({ userId: params.userId, plantId: plantId })
+        })
+        return await response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
 const remove = async (params, credentials) => {
     try {
         let response = await fetch('/api/plants/' + params.plantId, {
@@ -244,6 +260,7 @@ export {
     update,
     getOne,
     remove,
+    activate,
     like,
     unlike,
     comment,

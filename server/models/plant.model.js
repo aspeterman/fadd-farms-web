@@ -33,6 +33,10 @@ const plantSchema = new Schema({
     data: Buffer,
     contentType: String
   },
+  active: {
+    type: Boolean,
+    default: true
+  },
   plots: [{
     plotname: { type: String, required: 'Plot Name is Rwquired' },
     season: { type: String },

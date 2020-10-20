@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import HomeIcon from '@material-ui/icons/Home'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, NavLink as RouterNavLink, withRouter } from 'react-router-dom'
 import auth from './../auth/auth-helper'
 
 function HideOnScroll(props) {
@@ -42,37 +42,37 @@ const Menu = withRouter(({ history }, props) => (
       <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h6" color="inherit">
-            FADD Farms
+            FADD
       </Typography>
-          <Link to="/">
+          <Link as={RouterNavLink} to="/">
             <IconButton aria-label="Home" style={isActive(history, "/")}>
               <HomeIcon />
             </IconButton>
           </Link>
           {
             !auth.isAuthenticated() && (<span>
-              <Link to="/signup">
+              <Link as={RouterNavLink} to="/signup">
                 <Button style={isActive(history, "/signup")}>Sign up
             </Button>
               </Link>
-              <Link to="/signin">
+              <Link as={RouterNavLink} to="/signin">
                 <Button style={isActive(history, "/signin")}>Sign In
             </Button>
               </Link>
             </span>)
           }
           {
-            auth.isAuthenticated() && (<span>
-              <Link to="/plants">
+            auth.isAuthenticated() && (<div align="right">
+              <Link as={RouterNavLink} to="/plants">
                 <Button style={isActive(history, "/plants")}>Garden</Button>
               </Link>
-              <Link to={"/user/" + auth.isAuthenticated().user._id}>
-                <Button style={isActive(history, "/user/" + auth.isAuthenticated().user._id)}>My Profile</Button>
+              <Link as={RouterNavLink} to={"/user/" + auth.isAuthenticated().user._id}>
+                <Button style={isActive(history, "/user/" + auth.isAuthenticated().user._id)}>Profile</Button>
               </Link>
               <Button color="inherit" onClick={() => {
                 auth.clearJWT(() => history.push('/'))
               }}>Sign out</Button>
-            </span>)
+            </div>)
           }
         </Toolbar>
       </AppBar>

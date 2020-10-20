@@ -39,7 +39,11 @@ const update = (req, res) => {
                 error: "Photo could not be uploaded"
             })
         }
-        let plant = req.plant
+        let plant = await Plant.findByIdAndUpdate(req.plant)
+            .populate('comments.postedBy', '_id name')
+            .populate('plots.postedBy', '_id name')
+            .populate('harvests.postedBy', '_id name')
+            .populate('postedBy', '_id name')
         plant = extend(plant, fields)
         if (files.photo) {
             plant.photo.data = fs.readFileSync(files.photo.path)
@@ -111,6 +115,10 @@ const listNewsFeed = async (req, res) => {
 const getOne = async (req, res, data) => {
     try {
         let plant = await Plant.findById(req.params.plantId)
+            .populate('comments.postedBy', '_id name')
+            .populate('plots.postedBy', '_id name')
+            .populate('harvests.postedBy', '_id name')
+            .populate('postedBy', '_id name')
         res.json(plant)
     } catch (err) {
         return res.status(400).json({
