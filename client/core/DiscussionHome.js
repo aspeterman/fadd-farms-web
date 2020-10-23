@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
-import auth from './../auth/auth-helper'
-import Plants from './../plant/Plants'
+import auth from '../auth/auth-helper'
+import NewsFeed from '../post/Newsfeed'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -73,7 +73,7 @@ export default function PlantHome({ history }) {
                 // </Grid>
                 <Plants />
             } */}
-            <Plants />
+            <NewsFeed />
         </div>
     )
 }

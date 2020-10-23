@@ -19,12 +19,10 @@ import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import { like, remove, unlike } from './api-plant.js'
 import Comments from './Comments'
-import Plots from './Plots'
 
 const useStyles = makeStyles(theme => ({
   card: {
-    // maxWidth: 600,
-    // margin: 'auto',
+
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
     backgroundColor: 'rgba(0, 0, 0, 0.06)'
@@ -131,6 +129,10 @@ export default function Plant(props) {
     setValues({ ...values, plotsView: !values.plotsView })
   }
 
+  const imageUrl = props.plant._id
+    ? `/api/plants/image/${props.plant._id}?${new Date().getTime()}`
+    : '/api/plants/defaultphoto'
+
   return (
     <GridListTile cols={4}>
       <Card className={classes.card}>
@@ -154,12 +156,18 @@ export default function Plant(props) {
           <Typography component="p" className={classes.text}>
             Overview: {props.plant.description}
           </Typography>
-          {props.plant.photo &&
+          {props.plant.image &&
             (<div className={classes.photo}>
               <img
                 className={classes.media}
-                src={'/api/plants/photo/' + props.plant._id}
+                // src={'/api/plants/photo/' + props.plant._id}
+                src={imageUrl}
               />
+              {/* <CardMedia
+                className={classes.media}
+                image={imageUrl}
+                title={props.plant.plantname}
+              /> */}
             </div>)}
         </CardContent>
         <CardActions>
@@ -191,9 +199,6 @@ export default function Plant(props) {
           : null}
         <Divider />
         {/* <Divider> */}
-        {values.plotsView ?
-          <Plots plantId={props.plant._id} plant={props.plant} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />
-          : null}
       </Card>
     </GridListTile>
   )

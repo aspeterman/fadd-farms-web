@@ -2,23 +2,32 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import PrivateRoute from './auth/PrivateRoute'
 import Signin from './auth/Signin'
+import DiscussionHome from './core/DiscussionHome'
 import Home from './core/Home'
-import Menu from './core/Menu'
+import MenuBar from './core/Menu'
 import NotFound from './core/NotFound'
-import PlantHome from './core/PlantHome'
+import NewHarvest from './harvest/NewHarvest'
 import PlantLog from './plant/PlantInfo'
+import EditPlot from './plots/EditPlot'
+import NewPlot from './plots/NewPlot'
+import PlotInfo from './plots/PlotInfo'
 import EditProfile from './user/EditProfile'
 import Profile from './user/Profile'
 import Signup from './user/Signup'
 import Users from './user/Users'
 
+
 const MainRouter = () => {
   return (<div>
-    <Menu />
+    <MenuBar />
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route exact path="/plants" component={PlantHome} />
-      <Route path="/plants/:plantId" component={PlantLog} />
+      <Route exact path="/news" component={DiscussionHome} />
+      <Route exact path="/plants/:plantId" component={PlantLog} />
+      <Route path="/plants/:plantId/plots/new" component={NewPlot} />
+      <Route path="/plants/:plantId/:plotId/edit" component={EditPlot} />
+      <Route path="/plants/:plantId/:plotId" component={PlotInfo} />
+      <Route path="/plants/:plantId/:plotId/new" component={NewHarvest} />
       <Route path="/users" component={Users} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={Signin} />

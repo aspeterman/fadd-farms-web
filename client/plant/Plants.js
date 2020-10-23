@@ -1,4 +1,3 @@
-import { Button } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
@@ -16,10 +15,13 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(3)
   },
   title: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+    // padding: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+    // color: theme.palette.openTitle,
+    // fontSize: '2em',
+    // textAlign: "center"
+    margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
     color: theme.palette.openTitle,
-    fontSize: '2em',
-    textAlign: "center"
+    fontSize: '1em'
   },
   media: {
     minHeight: 330
@@ -81,9 +83,13 @@ export default function Plants() {
         Garden Plants
         </Typography>
       <Divider />
-      <NewPlant addUpdate={addPlant} />
-      <Button variant="outlined" className={classes.button} onClick={handleShowAll}>Show All</Button>
-      <Button variant="outlined" className={classes.button} onClick={handleShowActive}>Show Active</Button>
+      <NewPlant
+        addUpdate={addPlant}
+        handleShowActive={handleShowActive}
+        handleShowAll={handleShowAll}
+        showing={showing} />
+      {/* <Button variant="outlined" className={classes.button} onClick={handleShowAll}>Show All</Button>
+      <Button variant="outlined" className={classes.button} onClick={handleShowActive}>Show Active</Button> */}
       <Divider />
       <PlantList removeUpdate={removePlant}
         plants={plants}

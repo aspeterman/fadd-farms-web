@@ -1,8 +1,10 @@
 import formidable from 'formidable'
 import fs from 'fs'
 import extend from 'lodash/extend'
+import defaultImage from '../../client/assets/images/veg.jpg'
 import Plant from '../models/plant.model'
 import errorHandler from './../helpers/dbErrorHandler'
+
 
 const create = (req, res, next) => {
     let form = new formidable.IncomingForm()
@@ -15,9 +17,9 @@ const create = (req, res, next) => {
         }
         let plant = new Plant(fields)
         plant.postedBy = req.profile
-        if (files.photo) {
-            plant.photo.data = fs.readFileSync(files.photo.path)
-            plant.photo.contentType = files.photo.type
+        if (files.image) {
+            plant.image.data = fs.readFileSync(files.image.path)
+            plant.image.contentType = files.image.type
         }
         try {
             let result = await plant.save()
@@ -45,9 +47,9 @@ const update = (req, res) => {
             .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
         plant = extend(plant, fields)
-        if (files.photo) {
-            plant.photo.data = fs.readFileSync(files.photo.path)
-            plant.photo.contentType = files.photo.type
+        if (files.image) {
+            plant.image.data = fs.readFileSync(files.image.path)
+            plant.image.contentType = files.image.type
         }
         try {
             await plant.save()
@@ -116,8 +118,8 @@ const getOne = async (req, res, data) => {
     try {
         let plant = await Plant.findById(req.params.plantId)
             .populate('comments.postedBy', '_id name')
-            .populate('plots.postedBy', '_id name')
-            .populate('harvests.postedBy', '_id name')
+            // .populate('plots.postedBy', '_id name')
+            // .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
         res.json(plant)
     } catch (err) {
@@ -140,8 +142,12 @@ const remove = async (req, res) => {
 }
 
 const photo = (req, res, next) => {
-    res.set("Content-Type", req.plant.photo.contentType)
-    return res.send(req.plant.photo.data)
+    res.set("Content-Type", req.plant.image.contentType)
+    return res.send(req.plant.image.data)
+}
+
+const defaultPhoto = (req, res) => {
+    return res.sendFile(process.cwd() + defaultImage)
 }
 
 const like = async (req, res) => {
@@ -277,6 +283,7 @@ export default {
     getOne,
     remove,
     photo,
+    defaultPhoto,
     like,
     unlike,
     comment,

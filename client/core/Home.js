@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
 import farm from './../assets/images/farm.jpg'
 import auth from './../auth/auth-helper'
-import Newsfeed from './../post/Newsfeed'
+import Plants from './../plant/Plants'
 import FindPeople from './../user/FindPeople'
 
 const useStyles = makeStyles(theme => ({
@@ -75,10 +75,9 @@ export default function Home({ history }) {
       {defaultPage &&
         <Grid container spacing={8}>
           <Grid item xs={8} sm={7}>
-            <Newsfeed />
+            <Plants />
           </Grid>
           <Grid item xs={6} sm={5}>
-            {/* <Plants /> */}
             <FindPeople />
           </Grid>
         </Grid>

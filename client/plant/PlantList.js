@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
   gridList: {
     // width: 500,
-    height: 550,
+    // height: 550,
   },
 }));
 
@@ -23,7 +23,7 @@ export default function PlantList(props) {
     <div className={classes.root}>
       {props.showing === 'all' ? props.plants.map((item, i) => {
         return (
-          <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={4}>
+          <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={3}>
             <Plant plant={item} key={i} onRemove={props.removeUpdate}
             // addUpdate={props.addUpdate} 
             />
@@ -33,7 +33,7 @@ export default function PlantList(props) {
         :
         props.plants.filter(item => item.active === true).map((item, i) => {
           return (
-            <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={4}>
+            <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={3}>
               <Plant plant={item} key={i} onRemove={props.removeUpdate}
               // addUpdate={props.addUpdate} 
               />

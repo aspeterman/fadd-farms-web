@@ -1,14 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import PhotoCamera from '@material-ui/icons/PhotoCamera'
+import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import auth from './../auth/auth-helper'
 import { create } from './api-plant.js'
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -59,7 +59,7 @@ export default function NewPlant(props) {
     const [open, setOpen] = useState(false)
     const [values, setValues] = useState({
         plantname: '',
-        photo: '',
+        image: '',
         description: '',
         soil: '',
         spacing: '',
@@ -72,20 +72,27 @@ export default function NewPlant(props) {
         showNew: false
     })
     const jwt = auth.isAuthenticated()
+    const handleChange = name => event => {
+        const value = name === 'image'
+            ? event.target.files[0]
+            : event.target.value
+        setValues({ ...values, [name]: value })
+    }
+
     useEffect(() => {
         setValues({ ...values, user: auth.isAuthenticated().user })
     }, [])
     const clickPlant = () => {
         let postData = new FormData()
-        postData.append('plantname', values.plantname)
-        postData.append('description', values.description)
-        postData.append('careDuringGrowth', values.careDuringGrowth)
-        postData.append('whenToPlant', values.whenToPlant)
-        postData.append('spacing', values.spacing)
-        postData.append('pests', values.pests)
-        postData.append('plantHeight', values.plantHeight)
-        postData.append('soil', values.soil)
-        postData.append('photo', values.photo)
+        values.plantname && postData.append('plantname', values.plantname)
+        values.description && postData.append('description', values.description)
+        values.careDuringGrowth && postData.append('careDuringGrowth', values.careDuringGrowth)
+        values.whenToPlant && postData.append('whenToPlant', values.whenToPlant)
+        values.spacing && postData.append('spacing', values.spacing)
+        values.pests && postData.append('pests', values.pests)
+        values.plantHeight && postData.append('plantHeight', values.plantHeight)
+        values.soil && postData.append('soil', values.soil)
+        values.image && postData.append('image', values.image)
         create({
             userId: jwt.user._id
         }, {
@@ -94,17 +101,11 @@ export default function NewPlant(props) {
             if (data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                setValues({ ...values, plantname: '', description: '', careDuringGrowth: '', whenToPlant: '', pests: '', plantHeight: '', soil: '', photo: '', showNew: false })
+                setValues({ ...values, plantname: '', description: '', careDuringGrowth: '', whenToPlant: '', pests: '', plantHeight: '', soil: '', image: '', showNew: false })
                 props.addUpdate(data)
                 setOpen(false)
             }
         })
-    }
-    const handleChange = name => event => {
-        const value = name === 'photo'
-            ? event.target.files[0]
-            : event.target.value
-        setValues({ ...values, [name]: value })
     }
 
     const handleClickOpen = () => {
@@ -119,6 +120,11 @@ export default function NewPlant(props) {
         <Button variant="outlined" color="primary" className={classes.button} onClick={handleClickOpen}>
             New Plant
       </Button>
+        {props.showing === 'active' ?
+            <Button variant="outlined" color="primary" value="all" className={classes.button} onClick={props.handleShowAll}>Show All</Button>
+            :
+            <Button variant="outlined" color="primary" value="active" className={classes.button} onClick={props.handleShowActive}>Show Active</Button>
+        }
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">New Plant</DialogTitle>
             <DialogContent>
@@ -193,12 +199,19 @@ export default function NewPlant(props) {
                     className={classes.textField}
                     margin="normal"
                 />
-                <input accept="image/*" onChange={handleChange('photo')} className={classes.input} id="icon-button-file" type="file" />
+                {/* <input accept="image/*" onChange={handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
                 <label htmlFor="icon-button-file">
                     <IconButton color="secondary" className={classes.photoButton} component="span">
                         <PhotoCamera />
                     </IconButton>
-                </label> <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
+                </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span> */}
+                <input accept="image/*" onChange={handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
+                <label htmlFor="icon-button-file">
+                    <Button variant="contained" color="secondary" component="span">
+                        Upload Photo
+              <FileUpload />
+                    </Button>
+                </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span><br />
                 {values.error && (<Typography component="p" color="error">
                     <Icon color="error" className={classes.error}>error</Icon>
                     {values.error}

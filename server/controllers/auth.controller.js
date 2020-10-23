@@ -1,6 +1,6 @@
-import User from '../models/user.model'
-import jwt from 'jsonwebtoken'
 import expressJwt from 'express-jwt'
+import jwt from 'jsonwebtoken'
+import User from '../models/user.model'
 import config from './../../config/config'
 
 const signin = async (req, res) => {
@@ -30,7 +30,7 @@ const signin = async (req, res) => {
 
     return res.json({
       token,
-      user: {_id: user._id, name: user.name, email: user.email}
+      user: { _id: user._id, name: user.name, email: user.email }
     })
   } catch (err) {
     console.log(err)

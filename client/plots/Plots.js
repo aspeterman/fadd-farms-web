@@ -8,9 +8,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import auth from './../auth/auth-helper'
-import { plot, unplot } from './api-plant.js'
-import Harvests from './harvests'
+import auth from '../auth/auth-helper'
+import Harvests from '../harvest/harvests'
+import { plot, unplot } from '../plant/api-plant.js'
 
 
 const useStyles = makeStyles(theme => ({

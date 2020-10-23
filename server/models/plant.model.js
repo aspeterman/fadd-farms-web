@@ -8,6 +8,9 @@ const plantSchema = new Schema({
     required: '{PATH} is required!',
     unique: true
   },
+  category: {
+    type: String
+  },
   description: {
     type: String,
   },
@@ -29,7 +32,7 @@ const plantSchema = new Schema({
   whenToPlant: {
     type: String
   },
-  photo: {
+  image: {
     data: Buffer,
     contentType: String
   },
@@ -37,29 +40,29 @@ const plantSchema = new Schema({
     type: Boolean,
     default: true
   },
-  plots: [{
-    plotname: { type: String, required: 'Plot Name is Rwquired' },
-    season: { type: String },
-    description: { type: String },
-    prePlantSeeds: { type: String },
-    prePlantSeedsDate: String,
-    prePlantGerminated: { type: String },
-    prePlantGerminatedDate: String,
-    seedsTransferred: { type: String },
-    seedsTransferredDate: String,
-    harvestYieldTally: Number,
-    images: { type: [String] },
-    created: { type: Date, default: Date.now },
-    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
-  }],
-  harvests: [{
-    observations: { type: String },
-    yield: { type: Number },
-    date: { type: Date },
-    created: { type: Date, default: Date.now },
-    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
-    harvestPlot: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
-  }],
+  // plots: [{
+  //   plotname: { type: String, required: 'Plot Name is Rwquired' },
+  //   season: { type: String },
+  //   description: { type: String },
+  //   prePlantSeeds: { type: String },
+  //   prePlantSeedsDate: String,
+  //   prePlantGerminated: { type: String },
+  //   prePlantGerminatedDate: String,
+  //   seedsTransferred: { type: String },
+  //   seedsTransferredDate: String,
+  //   harvestYieldTally: Number,
+  //   images: { type: [String] },
+  //   created: { type: Date, default: Date.now },
+  //   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+  // }],
+  // harvests: [{
+  //   observations: { type: String },
+  //   yield: { type: Number },
+  //   date: { type: Date },
+  //   created: { type: Date, default: Date.now },
+  //   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
+  //   harvestPlot: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
+  // }],
   comments: [{
     text: String,
     created: { type: Date, default: Date.now },

@@ -1,5 +1,4 @@
-import { Card, CardContent, CircularProgress, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, makeStyles, Typography } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Button, Card, CardContent, CircularProgress, Divider, Grid, makeStyles, Typography } from '@material-ui/core';
 import { toUpper } from 'lodash';
 // import Highcharts from 'highcharts';
 import React, { useEffect, useState } from 'react';
@@ -7,8 +6,6 @@ import auth from '../auth/auth-helper';
 import { getOne } from './api-plant';
 import Comments from './Comments';
 import EditPlant from './EditPlant';
-import HarvestChart from './HarvestChart';
-import Plots from './Plots';
 
 // require('highcharts/highcharts-more')(Highcharts);
 // const HarvestList = props => (
@@ -62,10 +59,10 @@ const useStyles = makeStyles(theme => ({
         ,
     },
     card: {
-        minWidth: '96%',
+        maxWidth: '96%',
         // margin: 'auto',
         minHeight: 300,
-        maxHeight: 600,
+        // maxHeight: 600,
         marginTop: theme.spacing(3),
         marginBottom: theme.spacing(3),
         backgroundColor: 'rgba(0, 0, 0, 0.06)'
@@ -97,7 +94,7 @@ const useStyles = makeStyles(theme => ({
 export default function PlantLog({ match }) {
     const classes = useStyles()
     const [values, setValues] = useState({
-        plantId: '',
+        plantId: match.params.plantId,
         plant: [],
         harvests: [],
         plots: [],
@@ -118,7 +115,7 @@ export default function PlantLog({ match }) {
             if (data & data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                setValues({ ...values, plantId: data._id, plant: data, harvests: data.harvests, plots: data.plots, comments: data.comments, loading: false })
+                setValues({ ...values, plant: data, harvests: data.harvests, plots: data.plots, comments: data.comments, loading: false })
             }
         })
         return function cleanup() {
@@ -129,12 +126,14 @@ export default function PlantLog({ match }) {
     const updatePlant = (plant) => {
         setValues({ ...values, plant: plant })
     }
-    const updatePlots = (plots) => {
-        setValues({ ...values, plots: plots })
-    }
 
-    const updateHarvests = (harvests) => {
-        setValues({ ...values, harvests: harvests })
+    const [open, setShow] = useState(false)
+
+    const handleShow = () => {
+        setShow(true)
+    }
+    const handleClose = () => {
+        setShow(false)
     }
 
     const updateComments = (comments) => {
@@ -143,10 +142,11 @@ export default function PlantLog({ match }) {
 
     return (
         <div className={classes.root}>
-            {values.loading ? <CircularProgress /> :
-                <>
-                    <Typography className={classes.title}>{toUpper(values.plant.plantname)}                                   <EditPlant plantId={values.plant._id} plant={values.plant} updatePlant={updatePlant} /></Typography>
-                    <ExpansionPanel >
+            <>
+                <Typography className={classes.title}>{toUpper(values.plant.plantname)}
+                    <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={handleShow}>Edit</Button>
+                </Typography>
+                {/* <ExpansionPanel >
                         <ExpansionPanelSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
@@ -155,41 +155,69 @@ export default function PlantLog({ match }) {
                         >
                             <Typography className={classes.heading}>Show Details</Typography>
                         </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <Card className={classes.card}
-                            >
-                                <CardContent>
-                                    <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
-                                    </Typography>
-                                    <Typography className={classes.text}>
-                                        <strong>Soil Requirements: </strong>{values.plant.soil}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel></>}
-            <Grid container spacing={8}>
-                <Grid item xs={8} sm={7}>
-                    <Typography className={classes.text}>Plant Records</Typography>
-                    {values.loading ? <CircularProgress /> :
-                        <Plots plantId={values.plantId} plant={values.plant} plots={values.plots} updatePlots={updatePlots} harvests={values.harvests} updateHarvests={updateHarvests} />}
+                    <ExpansionPanelDetails> */}
+                {/* <div className={classes.expansion}> */}
+                <Grid container spacing={8}>
+                    <Grid item xs={6} sm={6}>
+                        <Card className={classes.card}
+                        >
+                            <CardContent>
+                                <Typography className={classes.text}><strong>Status: </strong>{values.plant.active ? "Currently Active" : "Not Currently Active"}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
+                                </Typography>
+                                <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Common Pests: </strong>{values.plant.pests}
+                                </Typography>
+                                <Typography className={classes.text}>
+                                    <strong>Soil Requirements: </strong>{values.plant.soil}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Divider />
+
+                        <Typography className={classes.text}>General Comments</Typography>
+                        {values.loading ? <CircularProgress /> :
+                            <Comments plantId={match.params.plantId} comments={values.comments} updateComments={updateComments} />}
+                    </Grid>
+                    <Grid item xs={6} sm={6}>
+                        {values.loading ? <CircularProgress /> :
+                            <EditPlant plantId={match.params.plantId} plant={values.plant} updatePlant={updatePlant} handleShow={handleShow} handleClose={handleClose} open={open} />}
+                    </Grid>
+
+                    {/* <Grid item xs={6} sm={6}>
+
+                        <Card className={classes.card}>
+                            <Typography className={classes.text}>General Comments</Typography>
+                            {values.loading ? <CircularProgress /> :
+                                <Comments plantId={values.plantId} comments={values.comments} updateComments={updateComments} />}
+                        </Card>
+                    </Grid> */}
                 </Grid>
+                {/* </div> */}
+            </>
+            {/* } */}
+            {/* </ExpansionPanelDetails>
+                    </ExpansionPanel></>} */}
+            {/* <Grid container spacing={8}>
                 <Grid item xs={6} sm={5}>
                     <Typography className={classes.text}>General Comments</Typography>
                     {values.loading ? <CircularProgress /> :
                         <Comments plantId={values.plantId} comments={values.comments} updateComments={updateComments} />}
-                </Grid>
-                {values.loading ? <CircularProgress /> :
-                    <HarvestChart harvests={values.harvests} />}
-            </Grid>
+                </Grid> */}
+            {/* {values.loading ? <CircularProgress /> :
+                    <HarvestChart harvests={values.harvests} />} */}
+
+
+            {/* </Grid> */}
+
         </div>
 
     )
