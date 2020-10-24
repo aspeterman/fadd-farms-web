@@ -46,7 +46,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function NewHarvest({ match }) {
-    console.log(match.params.plotId)
     const classes = useStyles()
     const [values, setValues] = useState({
         observations: '',
@@ -71,8 +70,9 @@ export default function NewHarvest({ match }) {
         values.image && harvestData.append('image', values.image)
 
         create({
-            // plantId: match.params.plantId,
-            plotId: match.params.plotId
+            plantId: match.params.plantId,
+            plotId: match.params.plotId,
+            userId: jwt.user._id
         }, {
             t: jwt.token
         }, harvestData).then((data) => {
@@ -100,7 +100,7 @@ export default function NewHarvest({ match }) {
               <FileUpload />
                     </Button>
                 </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span><br />
-                <TextField id="yield" label="Yield" className={classes.textField} value={values.yield} onChange={handleChange('yield')} margin="normal" /><br />
+                <TextField autoFocus id="yield" label="Yield" className={classes.textField} value={values.yield} onChange={handleChange('yield')} margin="normal" /><br />
                 <TextField
                     id="multiline-flexible"
                     label="Observations"

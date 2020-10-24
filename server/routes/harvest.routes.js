@@ -9,8 +9,15 @@ router.route('/api/harvests/by/:plotId')
     .post(authCtrl.requireSignin, harvestCtrl.create)
     .get(harvestCtrl.listByPlot)
 
+router.route('/api/harvests/:plotId')
+    .post(authCtrl.requireSignin, harvestCtrl.create)
+// .get(harvestCtrl.listByPlot)
+
 router.route('/api/harvests/latest')
     .get(harvestCtrl.listLatest)
+
+router.route('/api/harvests/feed')
+    .get(authCtrl.requireSignin, harvestCtrl.listHarvestFeed)
 
 router.route('/api/harvests')
     .get(harvestCtrl.list)

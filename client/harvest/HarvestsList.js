@@ -198,7 +198,7 @@ export default function MyHarvests(props) {
         const updatedharvestts = [...harvests]
         const index = updatedharvestts.indexOf(harvest)
         updatedharvestts.splice(index, 1)
-        setharvests(updatedharvestts)
+        setHarvests(updatedharvestts)
     }
 
     return (
@@ -206,7 +206,7 @@ export default function MyHarvests(props) {
             <Typography type="title" className={classes.title}>
                 harvests
           <span className={classes.addButton}>
-                    <Link to={`/plots/${props.plotId}}/new`}>
+                    <Link to={`/plants/${props.plantId}/${props.plotId}/new`}>
                         <Button color="primary" variant="contained">
                             <Icon className={classes.leftIcon}>add_box</Icon>  New harvest
               </Button>
@@ -235,6 +235,7 @@ export default function MyHarvests(props) {
                                 </Link>
                                 <DeleteHarvest
                                     harvest={harvest}
+                                    plotId={harvest.plot._id}
                                     harvestId={harvest._id}
                                     onRemove={removeHarvest} />
                             </ListItemSecondaryAction>
@@ -245,6 +246,7 @@ export default function MyHarvests(props) {
         </Card>)
 }
 MyHarvests.propTypes = {
-    harvestId: PropTypes.string.isRequired
+    plantId: PropTypes.string.isRequired,
+    plotId: PropTypes.string.isRequired
 }
 

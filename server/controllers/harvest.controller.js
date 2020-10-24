@@ -16,6 +16,8 @@ const create = (req, res, next) => {
         }
         let harvest = new Harvest(fields)
         harvest.plot = req.plot
+        harvest.plant = req.plant
+        harvest.postedBy = req.profile
         if (files.image) {
             harvest.image.data = fs.readFileSync(files.image.path)
             harvest.image.contentType = files.image.type
@@ -31,10 +33,28 @@ const create = (req, res, next) => {
     })
 }
 
+const listHarvestFeed = async (req, res) => {
+    // let following = req.profile.following
+    // following.push(req.profile._id)
+    try {
+        let posts = await Harvest.find({})
+            // let posts = await Harvest.find({ postedBy: { $in: req.profile.following } })
+            // .populate('plant', '_id plantname')
+            .populate('plot', '_id name')
+            // .populate('postedBy', '_id name')
+            .sort('-createdAt')
+            .exec()
+        res.json(posts)
+    } catch (err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        })
+    }
+}
+
 const harvestById = async (req, res, next, id) => {
     try {
         let harvest = await Harvest.findById(id)
-            // .populate('plant', '_id name')
             .populate('plot', '_id name')
             .exec()
         if (!harvest)
@@ -145,6 +165,7 @@ const list = async (req, res) => {
 
 export default {
     create,
+    listHarvestFeed,
     harvestById,
     photo,
     defaultPhoto,

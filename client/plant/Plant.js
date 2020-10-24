@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import { Info } from '@material-ui/icons'
 import CommentIcon from '@material-ui/icons/Comment'
-import DeleteIcon from '@material-ui/icons/Delete'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import PropTypes from 'prop-types'
@@ -19,6 +18,7 @@ import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import { like, remove, unlike } from './api-plant.js'
 import Comments from './Comments'
+import DeletePlant from './DeletePlant'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -140,10 +140,15 @@ export default function Plant(props) {
           avatar={
             <Avatar src={'/api/users/photo/' + props.plant.postedBy._id} />
           }
-          action={props.plant.postedBy._id === auth.isAuthenticated().user._id &&
-            <IconButton onClick={deletePlant}>
-              <DeleteIcon />
-            </IconButton>
+          action={
+            // props.plant.postedBy._id === auth.isAuthenticated().user._id &&
+            // <IconButton onClick={deletePlant}>
+            //   <DeleteIcon />
+            // </IconButton>
+            <DeletePlant
+              plant={props.plant}
+              plantId={props.plant._id}
+              onRemove={deletePlant} />
           }
           title={<Link to={"/user/" + props.plant.postedBy._id}>{props.plant.postedBy.name}</Link>}
           subheader={(new Date(props.plant.createdAt)).toDateString()}

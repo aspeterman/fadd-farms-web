@@ -11,7 +11,8 @@ const harvestSchema = new Schema({
         contentType: String
     },
     plot: { type: mongoose.Schema.ObjectId, ref: 'Plot' },
-    // plant: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
+    plant: { type: mongoose.Schema.ObjectId, ref: 'Plant' },
+    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
 }, {
     timeStamps: true
 })

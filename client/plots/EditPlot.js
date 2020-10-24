@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router'
+import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import { read, update } from './api-plot.js'
 

@@ -33,7 +33,7 @@ const create = (req, res, next) => {
 
 const plotById = async (req, res, next, id) => {
     try {
-        let plot = await Plot.findById(id).populate('plant', '_id name').exec()
+        let plot = await Plot.findById(id).populate('plant', '_id plantname').exec()
         if (!plot)
             return res.status('400').json({
                 error: "plot not found"

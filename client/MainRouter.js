@@ -22,17 +22,17 @@ const MainRouter = () => {
     <MenuBar />
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route exact path="/news" component={DiscussionHome} />
-      <Route exact path="/plants/:plantId" component={PlantLog} />
-      <Route path="/plants/:plantId/plots/new" component={NewPlot} />
-      <Route path="/plants/:plantId/:plotId/edit" component={EditPlot} />
-      <Route path="/plants/:plantId/:plotId" component={PlotInfo} />
+      <PrivateRoute exact path="/news" component={DiscussionHome} />
+      <PrivateRoute exact path="/plants/:plantId" component={PlantLog} />
+      <PrivateRoute exact path="/plants/:plantId/plots/new" component={NewPlot} />
+      <PrivateRoute exact path="/plants/:plantId/:plotId/edit" component={EditPlot} />
+      <PrivateRoute exact path="/plants/:plantId/:plotId" component={PlotInfo} />
       <Route path="/plants/:plantId/:plotId/new" component={NewHarvest} />
       <Route path="/users" component={Users} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={Signin} />
       <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
-      <Route path="/user/:userId" component={Profile} />
+      <PrivateRoute path="/user/:userId" component={Profile} />
       <Route path="*" component={NotFound} />
     </Switch>
   </div>)

@@ -94,6 +94,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state'
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import useIsSsr from '../utils/useIsSsr'
 import auth from './../auth/auth-helper'
 
 const isActive = (history, path) => {
@@ -102,69 +103,80 @@ const isActive = (history, path) => {
   else
     return { color: '#ffffff' }
 }
-// const photoUrl = auth.isAuthenticated().user._id
-//   ? `/api/users/photo/${auth.isAuthenticated().user._id}?${new Date().getTime()}`
-//   : '/api/users/defaultphoto'
-const MenuBar = withRouter(({ history }) => (
-  <AppBar position="static">
-    <Toolbar>
-      <Typography variant="h6" color="inherit">
-        FADD
+
+
+const MenuBar = withRouter(({ history }) => {
+  const isSsr = useIsSsr()
+
+  const screenWidth = isSsr ? null : window.innerWidth;
+  return (
+    screenWidth ?
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" color="inherit">
+            FADD
       </Typography>
-      <div>
-        <Link to="/">
-          <IconButton aria-label="Home" style={isActive(history, "/")}>
-            <HomeIcon />
-          </IconButton>
-        </Link>
-        <Link to="/news">
-          <Button style={isActive(history, "/news")}>News</Button>
-        </Link>
-      </div>
-      <div style={{ 'position': 'absolute', 'right': '10px' }}>
-        <span style={{ 'float': 'right' }}>
-          {
-            !auth.isAuthenticated() && (<>
-              <Link to="/signup">
-                <Button style={isActive(history, "/signup")}>Sign up
+          <div>
+            <Link to="/">
+              <IconButton aria-label="Home" style={isActive(history, "/")}>
+                <HomeIcon />
+              </IconButton>
+            </Link>
+            <Link to="/news">
+              <Button style={isActive(history, "/news")}>News</Button>
+            </Link>
+          </div>
+          <div style={{ 'position': 'absolute', 'right': '10px' }}>
+            <div style={{ 'float': 'right' }}>
+              {
+                !auth.isAuthenticated() && (<>
+                  <Link to="/signup">
+                    <Button style={isActive(history, "/signup")}>Sign up
             </Button>
-              </Link>
-              <Link to="/signin">
-                <Button style={isActive(history, "/signin")}>Sign In
+                  </Link>
+                  <Link to="/signin">
+                    <Button style={isActive(history, "/signin")}>Sign In
             </Button>
-              </Link>
-            </>)
-          }
-          {
-            auth.isAuthenticated() && (<>
-              <PopupState variant="popover" popupId="demo-popup-menu">
-                {(popupState) => (
-                  <React.Fragment>
-                    <Avatar src={'../assets/images/profile-pic-png'} {...bindTrigger(popupState)} />
-                    <Menu {...bindMenu(popupState)}>
-                      <MenuItem onClick={popupState.close}>
-                        <Link to={"/user/" + auth.isAuthenticated().user._id}>
-                          <Button>My Profile</Button>
-                        </Link>
-                      </MenuItem>
-                      <MenuItem onClick={popupState.close}>
-                        <Button color="inherit" onClick={() => {
-                          auth.clearJWT(() => history.push('/'))
-                        }}>Sign out</Button>
-                      </MenuItem>
-                    </Menu>
-                  </React.Fragment>
-                )}
-              </PopupState>
+                  </Link>
+                </>)
+              }
+            </div>
+            <div style={{ 'float': 'right' }}>
+              {
+                auth.isAuthenticated() && (<>
+                  <PopupState variant="popover" popupId="demo-popup-menu">
+                    {(popupState) => (
+                      <>
+                        <Button {...bindTrigger(popupState)}>
+                          <Avatar src={'../images/profile-pic.png'} />
+                        </Button>
+                        <Menu {...bindMenu(popupState)}>
+                          <MenuItem onClick={popupState.close}>
+                            {/* <Button> */}
+                            <Link to={"/user/" + auth.isAuthenticated().user._id}>
+                              My Profile
+                              </Link>
+                            {/* </Button> */}
+                          </MenuItem>
+                          <MenuItem onClick={popupState.close}>
+                            <Button color="inherit" onClick={() => {
+                              auth.clearJWT(() => history.push('/'))
+                            }}>Sign out</Button>
+                          </MenuItem>
+                        </Menu>
+                      </>
+                    )}
+                  </PopupState>
 
 
 
-            </>)
-          }
-        </span>
-      </div>
-    </Toolbar>
-  </AppBar>
-))
+                </>)
+              }
+            </div>
+          </div>
+        </Toolbar>
+      </AppBar>
+      : <AppBar></AppBar>)
+})
 
 export default MenuBar

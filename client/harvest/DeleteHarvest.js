@@ -20,8 +20,8 @@ export default function DeleteHarvest(props) {
   }
   const deleteHarvest = () => {
     remove({
-      plantId: props.plantId,
-      plotId: props.plot._id
+      plotId: props.plotId,
+      harvestId: props.harvestId,
     }, { t: jwt.token }).then((data) => {
       if (data.error) {
         console.log(data.error)
@@ -39,7 +39,7 @@ export default function DeleteHarvest(props) {
       <DeleteIcon />
     </IconButton>
     <Dialog open={open} onClose={handleRequestClose}>
-      <DialogTitle>{"Delete " + props.plot.name}</DialogTitle>
+      <DialogTitle>{"Delete this record"}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Confirm to delete your plot.
@@ -58,8 +58,8 @@ export default function DeleteHarvest(props) {
 
 }
 DeleteHarvest.propTypes = {
-  plantId: PropTypes.string.isRequired,
-  plot: PropTypes.object.isRequired,
+  harvestId: PropTypes.string.isRequired,
+  harvest: PropTypes.object.isRequired,
   onRemove: PropTypes.func.isRequired
 }
 

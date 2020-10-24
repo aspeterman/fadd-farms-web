@@ -123,7 +123,7 @@ export default function Plot({ match }) {
                     </Card>
                 </Grid>
                 <Grid item xs={5} sm={5}>
-                    <HarvestList plotId={match.params.plotId} />
+                    <HarvestList plantId={match.params.plantId} plotId={match.params.plotId} />
                 </Grid>
             </Grid>
         </div>)

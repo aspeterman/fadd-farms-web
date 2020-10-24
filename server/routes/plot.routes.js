@@ -6,7 +6,7 @@ import plotCtrl from '../controllers/plot.controller'
 const router = express.Router()
 
 router.route('/api/plots/by/:plantId')
-    .post(authCtrl.requireSignin, plantCtrl.isPoster, plotCtrl.create)
+    .post(authCtrl.requireSignin, plotCtrl.create)
     .get(plotCtrl.listByPlant)
 
 router.route('/api/plots/latest')

@@ -1,7 +1,7 @@
 import queryString from 'query-string'
 const create = async (params, credentials, harvest) => {
     try {
-        let response = await fetch('/api/harvests/by/' + params.plotId, {
+        let response = await fetch(`/api/harvests/` + params.plotId, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -9,7 +9,7 @@ const create = async (params, credentials, harvest) => {
             },
             body: harvest
         })
-        return response.json()
+        return await response.json()
     } catch (err) {
         console.log(err)
     }
@@ -22,6 +22,23 @@ const read = async (params, signal) => {
             signal: signal
         })
         return response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const listHarvestFeed = async (params, credentials, signal) => {
+    try {
+        let response = await fetch('/api/harvests/feed', {
+            method: 'GET',
+            signal: signal,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            }
+        })
+        return await response.json()
     } catch (err) {
         console.log(err)
     }
@@ -99,6 +116,7 @@ const list = async (params, signal) => {
 export {
     create,
     read,
+    listHarvestFeed,
     update,
     remove,
     listByPlot,

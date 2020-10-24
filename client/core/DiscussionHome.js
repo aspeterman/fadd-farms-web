@@ -1,6 +1,9 @@
+import { Card, CardContent, CardMedia, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
+import unicornbikeImg from '../assets/images/unicornbike.jpg'
 import auth from '../auth/auth-helper'
+import RecentActivity from '../harvest/RecentActivity'
 import NewsFeed from '../post/Newsfeed'
 
 const useStyles = makeStyles(theme => ({
@@ -48,7 +51,7 @@ export default function PlantHome({ history }) {
 
     return (
         <div className={classes.root}>
-            {/* { !defaultPage &&
+            { !defaultPage &&
                 <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <Card className={classes.card}>
@@ -56,7 +59,6 @@ export default function PlantHome({ history }) {
                                 Garden Page
                 </Typography>
                             <CardMedia className={classes.media} image={unicornbikeImg} title="Unicorn Bicycle" />
-                            <Typography variant="body2" component="p" className={classes.credit} color="textSecondary">Photo by <a href="https://unsplash.com/@boudewijn_huysmans" target="_blank" rel="noopener noreferrer">Boudewijn Huysmans</a> on Unsplash</Typography>
                             <CardContent>
                                 <Typography type="body1" component="p">
                                     Welcome to Your Garden.
@@ -67,13 +69,16 @@ export default function PlantHome({ history }) {
                 </Grid>
             }
             {defaultPage &&
-                // <Grid container>
-                //     <Grid >
-                //     </Grid>
-                // </Grid>
-                <Plants />
-            } */}
-            <NewsFeed />
+                <Grid container spacing={8}>
+                    <Grid item xs={8} sm={8}>
+                        <NewsFeed />
+                    </Grid>
+                    <Grid item xs={4} sm={4}>
+                        <RecentActivity />
+                    </Grid>
+                </Grid>
+            }
+
         </div>
     )
 }
