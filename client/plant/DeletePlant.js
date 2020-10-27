@@ -9,7 +9,6 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import auth from '../auth/auth-helper'
-import { remove } from './api-plant.js'
 
 export default function DeletePlant(props) {
   const [open, setOpen] = useState(false)

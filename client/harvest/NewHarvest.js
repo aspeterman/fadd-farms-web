@@ -68,9 +68,10 @@ export default function NewHarvest({ match }) {
         values.yield && harvestData.append('yield', values.yield)
         values.date && harvestData.append('date', values.date)
         values.image && harvestData.append('image', values.image)
+        harvestData.append('postedBy', jwt.user._id)
+        harvestData.append('plot', match.params.plotId)
 
         create({
-            plantId: match.params.plantId,
             plotId: match.params.plotId,
             userId: jwt.user._id
         }, {
@@ -114,7 +115,8 @@ export default function NewHarvest({ match }) {
                 <TextField
                     label="Date"
                     type="date"
-                    defaultValue={values.date}
+                    defaultValue={new Date().toJSON().slice(0, 10)}
+                    format='yyyy/MM/dd'
                     name='prePlantGerminatedDate'
                     onChange={handleChange('date')}
                     className={classes.textField}

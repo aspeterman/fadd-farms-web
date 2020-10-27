@@ -1,16 +1,16 @@
 import { List } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Harvest from './Harvest';
 
 
 export default function RecentList(props) {
     return (
         <List dense>
-            {props.harvest && props.harvests.map((harvest, i) => {
-                if (i < 10)
-                    return (<span key={i}>
-                        {harvest.yield}
-                    </span>)
+            { props.harvests.map((harvest, i) => {
+                return (
+                    <Harvest removeUpdate={props.removeUpdate} harvest={harvest} key={i} />
+                )
             })}
         </List>
 

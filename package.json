@@ -40,6 +40,7 @@
     "helmet": "3.22.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
+    "material-ui-popup-state": "^1.7.0",
     "moment": "^2.29.0",
     "mongoose": "5.9.7",
     "nodemon": "2.0.2",

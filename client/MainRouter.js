@@ -6,6 +6,7 @@ import DiscussionHome from './core/DiscussionHome'
 import Home from './core/Home'
 import MenuBar from './core/Menu'
 import NotFound from './core/NotFound'
+import EditHarvest from './harvest/EditHarvest'
 import NewHarvest from './harvest/NewHarvest'
 import PlantLog from './plant/PlantInfo'
 import EditPlot from './plots/EditPlot'
@@ -16,18 +17,18 @@ import Profile from './user/Profile'
 import Signup from './user/Signup'
 import Users from './user/Users'
 
-
 const MainRouter = () => {
   return (<div>
     <MenuBar />
     <Switch>
       <Route exact path="/" component={Home} />
-      <PrivateRoute exact path="/news" component={DiscussionHome} />
+      <Route exact path="/news" component={DiscussionHome} />
       <PrivateRoute exact path="/plants/:plantId" component={PlantLog} />
       <PrivateRoute exact path="/plants/:plantId/plots/new" component={NewPlot} />
       <PrivateRoute exact path="/plants/:plantId/:plotId/edit" component={EditPlot} />
       <PrivateRoute exact path="/plants/:plantId/:plotId" component={PlotInfo} />
       <Route path="/plants/:plantId/:plotId/new" component={NewHarvest} />
+      <Route path="/plants/:plantId/:plotId/:harvestId/edit" component={EditHarvest} />
       <Route path="/users" component={Users} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={Signin} />

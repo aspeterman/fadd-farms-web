@@ -9,8 +9,9 @@ import Typography from '@material-ui/core/Typography'
 import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router'
+import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
-import { read, update } from './api-plot.js'
+import { read, update } from './api-harvest.js'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function EditPlot({ match }) {
+export default function EditHarvest({ match }) {
   const classes = useStyles()
   const [values, setValues] = useState({
     yield: '',
@@ -70,7 +71,7 @@ export default function EditPlot({ match }) {
     const abortController = new AbortController()
     const signal = abortController.signal
     read({
-      plotId: match.params.plotId
+      harvestId: match.params.harvestId
     }, signal).then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error })

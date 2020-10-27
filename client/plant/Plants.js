@@ -7,6 +7,7 @@ import auth from '../auth/auth-helper'
 import { listPlants } from './api-plant.js'
 import NewPlant from './NewPlant'
 import PlantList from './PlantList'
+import PlantSearch from './PlantSearch'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -19,6 +20,9 @@ const useStyles = makeStyles(theme => ({
     // color: theme.palette.openTitle,
     // fontSize: '2em',
     // textAlign: "center"
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
     color: theme.palette.openTitle,
     fontSize: '1em'
@@ -28,7 +32,11 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginBottom: theme.spacing(2),
-  }
+  },
+  margin: {
+    // margin: theme.spacing(1),
+    background: theme.palette.primary.primary
+  },
 }))
 export default function Plants() {
   const classes = useStyles()
@@ -79,9 +87,12 @@ export default function Plants() {
 
   return (
     <Card className={classes.card}>
-      <Typography type="title" className={classes.title}>
-        Garden Plants
+      <div className={classes.title}>
+        <Typography type="title">
+          Garden Plants
         </Typography>
+        <PlantSearch plants={plants} />
+      </div>
       <Divider />
       <NewPlant
         addUpdate={addPlant}

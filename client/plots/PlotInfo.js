@@ -115,7 +115,7 @@ export default function Plot({ match }) {
                             />
                             <Typography component="p" variant="subtitle1" className={classes.subheading}>
                                 {values.season}<br />
-                                <Link to={'/plants/' + values.plantId} className={classes.link}>
+                                <Link to={'/plants/' + values.plantId} className={classes.link}>Go
                                 </Link>
                             </Typography>
 

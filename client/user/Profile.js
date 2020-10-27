@@ -13,6 +13,7 @@ import Edit from '@material-ui/icons/Edit'
 import React, { useEffect, useState } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import auth from './../auth/auth-helper'
+import { listHarvestByUser } from './../harvest/api-harvest'
 import { listPlantByUser } from './../plant/api-plant.js'
 import { listByUser } from './../post/api-post.js'
 import FollowProfileButton from './../user/FollowProfileButton'
@@ -64,6 +65,7 @@ export default function Profile({ match }) {
         setValues({ ...values, user: data, following: following })
         loadPosts(data._id)
         loadPlants(data._id)
+        loadHarvests(data._id)
       }
     })
     return function cleanup() {
@@ -106,6 +108,19 @@ export default function Profile({ match }) {
   }
   const loadPlants = (user) => {
     listPlantByUser({
+      userId: user
+    }, {
+      t: jwt.token
+    }).then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        setPlants(data)
+      }
+    })
+  }
+  const loadHarvests = (user) => {
+    listHarvestByUser({
       userId: user
     }, {
       t: jwt.token

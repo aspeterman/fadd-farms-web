@@ -70,10 +70,10 @@ export default function PlantHome({ history }) {
             }
             {defaultPage &&
                 <Grid container spacing={8}>
-                    <Grid item xs={8} sm={8}>
+                    <Grid item xs={7} sm={7}>
                         <NewsFeed />
                     </Grid>
-                    <Grid item xs={4} sm={4}>
+                    <Grid item xs={5} sm={5}>
                         <RecentActivity />
                     </Grid>
                 </Grid>

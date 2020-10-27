@@ -1,11 +1,16 @@
+import { Avatar, CardContent, Divider, IconButton } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import DeleteIcon from '@material-ui/icons/Delete'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import auth from '../auth/auth-helper'
+import { remove } from './api-harvest'
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,11 +21,22 @@ const useStyles = makeStyles(theme => ({
         display: 'flex'
     },
     card: {
-        padding: '24px 40px 40px'
+        maxWidth: 600,
+        margin: 'auto',
+        marginBottom: theme.spacing(3),
+        backgroundColor: 'rgba(0, 0, 0, 0.06)'
     },
     subheading: {
         margin: '24px',
         color: theme.palette.openTitle
+    },
+    cardContent: {
+        backgroundColor: 'white',
+        padding: `${theme.spacing(2)}px 0px`
+    },
+    cardHeader: {
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1)
     },
     price: {
         padding: '16px',
@@ -32,9 +48,9 @@ const useStyles = makeStyles(theme => ({
     },
     media: {
         height: 200,
-        display: 'inline-block',
-        width: '50%',
-        marginLeft: '24px'
+        // display: 'inline-block',
+        // width: 200,
+        // marginLeft: '24px'
     },
     icon: {
         verticalAlign: 'sub'
@@ -53,37 +69,74 @@ const useStyles = makeStyles(theme => ({
     action: {
         margin: '8px 24px',
         display: 'inline-block'
+    },
+    text: {
+        margin: theme.spacing(1)
     }
 }))
 
 export default function Harvest(props) {
     const classes = useStyles()
 
+    const jwt = auth.isAuthenticated()
 
-    const imageUrl = harvest._id
-        ? `/api/harvest/image/${harvest._id}?${new Date().getTime()}`
+
+    const deleteHarvest = () => {
+        remove({
+            plotId: props.harvest.plot,
+            harvestId: props.harvest._id
+        }, {
+            t: jwt.token
+        }).then((data) => {
+            if (data.error) {
+                console.log(data.error)
+            } else {
+                props.removeUpdate(props.harvest)
+            }
+        })
+    }
+
+
+    const imageUrl = props.harvest._id
+        ? `/api/harvest/image/${props.harvest._id}?${new Date().getTime()}`
         : '/api/harvest/defaultphoto'
     return (
         <div className={classes.root}>
-            <Grid container spacing={10}>
-                <Grid item xs={4} sm={4}>
+            <Grid >
+                <Grid >
                     <Card className={classes.card}>
                         <CardHeader
-                            title={harvest.date}
+                            avatar={
+                                <Avatar src={imageUrl} />
+                            }
+                            action={
+                                // props.harvest.postedBy._id === auth.isAuthenticated().user._id &&
+                                <IconButton onClick={deleteHarvest}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            }
+                            title={<Link to={"/user/" + props.harvest.postedBy._id}>{props.harvest.postedBy.name}</Link>}
+                            title={props.harvest.date ? props.harvest.date : new Date().toDateString()}
+                            subheader={(props.harvest.date)}
+                            className={classes.cardHeader}
                         />
-                        <div className={classes.flex}>
+                        <Divider />
+                        {/* <div className={classes.flex}> */}
+                        <CardContent className={classes.cardContent}>
+
                             <CardMedia
                                 className={classes.media}
                                 image={imageUrl}
-                                title={harvest.name}
+                                title={props.harvest.yield}
                             />
-                            <Typography component="p" variant="subtitle1" className={classes.subheading}>
-                                {harvest.yield}<br />
-                                <Link to={'/plants/' + harvest.plot._id} className={classes.link}>
-                                </Link>
+                            <Typography component="p" variant="subtitle1" className={classes.text}>
+                                Yield: {props.harvest.yield}<br />
                             </Typography>
-
-                        </div>
+                            <Typography component="p" variant="subtitle1" className={classes.text}>
+                                Notes: {props.harvest.observations}<br />
+                            </Typography>
+                        </CardContent>
+                        {/* </div> */}
                     </Card>
                 </Grid>
             </Grid>

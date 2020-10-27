@@ -140,6 +140,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { listByPlot } from './api-harvest.js'
 import DeleteHarvest from './DeleteHarvest.js'
+import HarvestChart from './HarvestChart.js'
 
 const useStyles = makeStyles(theme => ({
     harvests: {
@@ -202,48 +203,52 @@ export default function MyHarvests(props) {
     }
 
     return (
-        <Card className={classes.harvests}>
-            <Typography type="title" className={classes.title}>
-                harvests
+        <>
+            <HarvestChart harvests={harvests} />
+            <Divider />
+            <Card className={classes.harvests}>
+                <Typography type="title" className={classes.title}>
+                    harvests
           <span className={classes.addButton}>
-                    <Link to={`/plants/${props.plantId}/${props.plotId}/new`}>
-                        <Button color="primary" variant="contained">
-                            <Icon className={classes.leftIcon}>add_box</Icon>  New harvest
+                        <Link to={`/plants/${props.plantId}/${props.plotId}/new`}>
+                            <Button color="primary" variant="contained">
+                                <Icon className={classes.leftIcon}>add_box</Icon>  New harvest
               </Button>
-                    </Link>
-                </span>
-            </Typography>
-            <List dense>
-                {harvests.map((harvest, i) => {
-                    return <span key={i}>
-                        <ListItem>
-                            <CardMedia
-                                className={classes.cover}
-                                image={'/api/harvest/image/' + harvest._id + "?" + new Date().getTime()}
-                                title={harvest.name}
-                            />
-                            <div className={classes.details}>
-                                <Typography type="headline" component="h2" color="primary" className={classes.harvestTitle}>
-                                    Yield(lbs): {harvest.yield}
-                                </Typography>
-                            </div>
-                            <ListItemSecondaryAction>
-                                <Link to={"/plants/" + props.plotId + "/" + harvest._id + "/edit"}>
-                                    <IconButton aria-label="Edit" color="primary">
-                                        <Edit />
-                                    </IconButton>
-                                </Link>
-                                <DeleteHarvest
-                                    harvest={harvest}
-                                    plotId={harvest.plot._id}
-                                    harvestId={harvest._id}
-                                    onRemove={removeHarvest} />
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider /></span>
-                })}
-            </List>
-        </Card>)
+                        </Link>
+                    </span>
+                </Typography>
+                <List dense>
+                    {harvests.map((harvest, i) => {
+                        return <span key={i}>
+                            <ListItem>
+                                <CardMedia
+                                    className={classes.cover}
+                                    image={'/api/harvest/image/' + harvest._id + "?" + new Date().getTime()}
+                                    title={harvest.name}
+                                />
+                                <div className={classes.details}>
+                                    <Typography type="headline" component="h2" color="primary" className={classes.harvestTitle}>
+                                        Yield(lbs): {harvest.yield}
+                                    </Typography>
+                                </div>
+                                <ListItemSecondaryAction>
+                                    <Link to={"/plants/" + props.plantId + '/' + props.plotId + "/" + harvest._id + "/edit"}>
+                                        <IconButton aria-label="Edit" color="primary">
+                                            <Edit />
+                                        </IconButton>
+                                    </Link>
+                                    <DeleteHarvest
+                                        harvest={harvest}
+                                        plotId={harvest.plot._id}
+                                        harvestId={harvest._id}
+                                        onRemove={removeHarvest} />
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                            <Divider /></span>
+                    })}
+                </List>
+            </Card>
+        </>)
 }
 MyHarvests.propTypes = {
     plantId: PropTypes.string.isRequired,

@@ -1,7 +1,7 @@
 import { Card, Divider, makeStyles, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import auth from '../auth/auth-helper'
-import { listHarvestFeed } from './api-harvest'
+import { listLatest } from './api-harvest'
 import RecentList from './RecentList'
 
 const useStyles = makeStyles(theme => ({
@@ -30,9 +30,7 @@ const RecentActivity = (props) => {
         const abortController = new AbortController()
         const signal = abortController.signal
 
-        listHarvestFeed({
-            // userId: jwt.user._id
-        }, {
+        listLatest({
             t: jwt.token
         }, signal).then((data) => {
             if (data.error) {

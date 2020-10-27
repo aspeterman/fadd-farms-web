@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react'
 import farm from './../assets/images/farm.jpg'
 import auth from './../auth/auth-helper'
 import Plants from './../plant/Plants'
-import FindPeople from './../user/FindPeople'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -73,14 +72,16 @@ export default function Home({ history }) {
         </Grid>
       }
       {defaultPage &&
-        <Grid container spacing={8}>
-          <Grid item xs={8} sm={7}>
-            <Plants />
+        <>
+          <Grid container spacing={10}>
+            <Grid item xs={12} sm={12}>
+              <Plants />
+            </Grid>
+            {/* <Grid item xs={6} sm={5}>
+              <FindPeople />
+            </Grid> */}
           </Grid>
-          <Grid item xs={6} sm={5}>
-            <FindPeople />
-          </Grid>
-        </Grid>
+        </>
       }
     </div>
   )

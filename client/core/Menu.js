@@ -96,6 +96,7 @@ import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import useIsSsr from '../utils/useIsSsr'
 import auth from './../auth/auth-helper'
+import SideBar from './SideBar'
 
 const isActive = (history, path) => {
   if (history.location.pathname == path)
@@ -152,16 +153,19 @@ const MenuBar = withRouter(({ history }) => {
                         </Button>
                         <Menu {...bindMenu(popupState)}>
                           <MenuItem onClick={popupState.close}>
-                            {/* <Button> */}
-                            <Link to={"/user/" + auth.isAuthenticated().user._id}>
-                              My Profile
+                            <Button>
+                              <Link to={"/user/" + auth.isAuthenticated().user._id}>
+                                My Profile
                               </Link>
-                            {/* </Button> */}
+                            </Button>
                           </MenuItem>
                           <MenuItem onClick={popupState.close}>
                             <Button color="inherit" onClick={() => {
                               auth.clearJWT(() => history.push('/'))
                             }}>Sign out</Button>
+                          </MenuItem>
+                          <MenuItem>
+                            <SideBar />
                           </MenuItem>
                         </Menu>
                       </>
