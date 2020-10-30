@@ -4,7 +4,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import PlantList from './../plant/PlantList'
+import PlantList from '../plant/PlantList'
 import PostList from './../post/PostList'
 import FollowGrid from './../user/FollowGrid'
 

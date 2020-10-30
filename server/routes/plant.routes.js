@@ -19,6 +19,12 @@ router.route('/api/plants/by/:userId')
 router.route('/api/plants/feed/:userId')
     .get(authCtrl.requireSignin, plantCtrl.listNewsFeed)
 
+router.route('/api/plants')
+    .get(plantCtrl.list)
+
+router.route('/api/products/categories')
+    .get(plantCtrl.listCategories)
+
 router.route('/api/plants/like')
     .put(authCtrl.requireSignin, plantCtrl.like)
 router.route('/api/plants/unlike')

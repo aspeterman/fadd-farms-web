@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1)
     },
-    price: {
+    plant: {
         padding: '16px',
         margin: '16px 0px',
         display: 'flex',
@@ -110,14 +110,13 @@ export default function Harvest(props) {
                                 <Avatar src={imageUrl} />
                             }
                             action={
-                                // props.harvest.postedBy._id === auth.isAuthenticated().user._id &&
+                                props.harvest.postedBy._id === auth.isAuthenticated().user._id &&
                                 <IconButton onClick={deleteHarvest}>
                                     <DeleteIcon />
                                 </IconButton>
                             }
                             title={<Link to={"/user/" + props.harvest.postedBy._id}>{props.harvest.postedBy.name}</Link>}
-                            title={props.harvest.date ? props.harvest.date : new Date().toDateString()}
-                            subheader={(props.harvest.date)}
+                            subheader={props.harvest.date ? props.harvest.date.slice(0, 10) : props.harvest.createdAt}
                             className={classes.cardHeader}
                         />
                         <Divider />
@@ -129,6 +128,9 @@ export default function Harvest(props) {
                                 image={imageUrl}
                                 title={props.harvest.yield}
                             />
+                            <Typography component="h4" variant="subtitle1" className={classes.price}>
+                                Harvested From:<Link className={classes.price} to={`/plants/${props.harvest.plot.plant}/${props.harvest.plot._id}`}> {props.harvest.plant.plantname}</Link><br />
+                            </Typography>
                             <Typography component="p" variant="subtitle1" className={classes.text}>
                                 Yield: {props.harvest.yield}<br />
                             </Typography>

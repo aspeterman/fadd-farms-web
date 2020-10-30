@@ -1,4 +1,4 @@
-import { Button, GridListTile, Tooltip } from '@material-ui/core'
+import { GridListTile, Tooltip } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -66,7 +66,6 @@ export default function Plant(props) {
     plots: props.plant.plots,
     harvests: props.plant.harvests,
     commentsView: false,
-    plotsView: false,
     error: {}
   })
 
@@ -125,10 +124,6 @@ export default function Plant(props) {
 
   }
 
-  const showPlots = () => {
-    setValues({ ...values, plotsView: !values.plotsView })
-  }
-
   const imageUrl = props.plant._id
     ? `/api/plants/image/${props.plant._id}?${new Date().getTime()}`
     : '/api/plants/defaultphoto'
@@ -141,7 +136,7 @@ export default function Plant(props) {
             <Avatar src={'/api/users/photo/' + props.plant.postedBy._id} />
           }
           action={
-            // props.plant.postedBy._id === auth.isAuthenticated().user._id &&
+            props.plant.postedBy._id === auth.isAuthenticated().user._id &&
             // <IconButton onClick={deletePlant}>
             //   <DeleteIcon />
             // </IconButton>
@@ -165,14 +160,8 @@ export default function Plant(props) {
             (<div className={classes.photo}>
               <img
                 className={classes.media}
-                // src={'/api/plants/photo/' + props.plant._id}
                 src={imageUrl}
               />
-              {/* <CardMedia
-                className={classes.media}
-                image={imageUrl}
-                title={props.plant.plantname}
-              /> */}
             </div>)}
         </CardContent>
         <CardActions>
@@ -197,8 +186,6 @@ export default function Plant(props) {
           </Tooltip>
         </CardActions>
         <Divider />
-        <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={showPlots}>Plots</Button>
-        {/* <EditPlant plantId={props.plant._id} plant={props.plant} /> */}
         {values.commentsView ?
           <Comments plantId={props.plant._id} comments={values.comments} updateComments={updateComments} showComments={showComments} />
           : null}

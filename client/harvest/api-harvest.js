@@ -106,15 +106,19 @@ const listByPlot = async (params, signal) => {
 
 const listLatest = async (credentials, signal) => {
     try {
-        let response = await fetch('/api/harvests/latest', {
-            method: 'GET',
-            signal: signal,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            }
-        })
+        let response = await fetch('/api/harvests/latest',
+            {
+                params: {
+                    _limit: 10
+                },
+                method: 'GET',
+                signal: signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + credentials.t
+                }
+            })
         return await response.json()
     } catch (err) {
         console.log(err)

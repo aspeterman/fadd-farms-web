@@ -6,7 +6,7 @@ const plantSchema = new Schema({
   plantname: {
     type: String,
     required: '{PATH} is required!',
-    unique: true
+    // unique: true
   },
   category: {
     type: String

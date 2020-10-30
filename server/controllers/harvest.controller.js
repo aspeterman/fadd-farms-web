@@ -37,7 +37,8 @@ const listHarvestFeed = async (req, res) => {
     following.push(req.profile._id)
     try {
         let posts = await Harvest.find({ postedBy: { $in: req.profile.following } })
-            // .populate('plot', '_id name')
+            .populate('plot', '_id name')
+            .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
             // .sort('-createdAt')
             .exec()
@@ -53,6 +54,7 @@ const harvestById = async (req, res, next, id) => {
     try {
         let harvest = await Harvest.findById(id)
             .populate('plot', '_id name')
+            .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
             .exec()
         if (!harvest)
@@ -128,6 +130,7 @@ const listByPlot = async (req, res) => {
     try {
         let harvests = await Harvest.find({ plot: req.plot._id })
             .populate('plot', '_id name').select('-image')
+            .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
         res.json(harvests)
     } catch (err) {
@@ -141,6 +144,8 @@ const listByUser = async (req, res) => {
     try {
         let harvests = await Harvest.find({ postedBy: req.profile._id })
             .populate('postedBy', '_id name')
+            .populate('plot', '_id name plant')
+            .populate('plant', '_id plantname')
             .sort('-date')
             .exec()
         res.json(harvests)
@@ -154,6 +159,11 @@ const listByUser = async (req, res) => {
 const listLatest = async (req, res) => {
     try {
         let harvests = await Harvest.find({})
+            .populate('postedBy', '_id name')
+            .populate('plot', '_id name plant')
+            .populate('plant', '_id plantname')
+            .sort('-date')
+            .exec()
         res.json(harvests)
     } catch (err) {
         return res.status(400).json({

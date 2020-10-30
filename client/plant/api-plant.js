@@ -1,3 +1,5 @@
+import queryString from 'query-string'
+
 const create = async (params, credentials, post) => {
     try {
         let response = await fetch('/api/plants/new/' + params.userId, {
@@ -183,75 +185,30 @@ const uncomment = async (params, credentials, plantId, comment) => {
     }
 }
 
-const plot = async (params, credentials, plantId, plot) => {
+const list = async (params, signal) => {
+    const query = queryString.stringify(params)
     try {
-        let response = await fetch('/api/plants/plot/', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            },
-            body: JSON.stringify({ userId: params.userId, plantId: plantId, plot: plot })
+        let response = await fetch('/api/plants?' + query, {
+            method: 'GET',
+            signal: signal
         })
-        return await response.json()
+        return response.json()
     } catch (err) {
         console.log(err)
     }
 }
 
-
-const unplot = async (params, credentials, plantId, plot) => {
+const listCategories = async (signal) => {
     try {
-        let response = await fetch('/api/plants/unplot/', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            },
-            body: JSON.stringify({ userId: params.userId, plantId: plantId, plot: plot })
+        let response = await fetch('/api/plants/categories', {
+            method: 'GET',
+            signal: signal
         })
-        return await response.json()
+        return response.json()
     } catch (err) {
         console.log(err)
     }
 }
-
-const createHarvest = async (params, credentials, plantId, plotId, harvest) => {
-    try {
-        let response = await fetch('/api/plants/harvest/', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            },
-            body: JSON.stringify({ userId: params.userId, plantId: plantId, plotId: plotId, harvest: harvest })
-        })
-        return await response.json()
-    } catch (err) {
-        console.log(err)
-    }
-}
-
-const unHarvest = async (params, credentials, plantId, harvest) => {
-    try {
-        let response = await fetch('/api/plants/unharvest/', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            },
-            body: JSON.stringify({ userId: params.userId, plantId: plantId, harvest: harvest })
-        })
-        return await response.json()
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 
 export {
     listPlants,
@@ -265,9 +222,7 @@ export {
     unlike,
     comment,
     uncomment,
-    plot,
-    unplot,
-    createHarvest,
-    unHarvest
+    list,
+    listCategories
 }
 

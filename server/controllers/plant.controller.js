@@ -82,10 +82,8 @@ const listByUser = async (req, res) => {
     try {
         let plants = await Plant.find({ postedBy: req.profile._id })
             .populate('comments.postedBy', '_id name')
-            .populate('plots.postedBy', '_id name')
-            .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
-            .sort('-created')
+            .sort('plantname')
             .exec()
         res.json(plants)
     } catch (err) {
@@ -118,8 +116,6 @@ const getOne = async (req, res, data) => {
     try {
         let plant = await Plant.findById(req.params.plantId)
             .populate('comments.postedBy', '_id name')
-            // .populate('plots.postedBy', '_id name')
-            // .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
         res.json(plant)
     } catch (err) {
@@ -211,29 +207,16 @@ const uncomment = async (req, res) => {
         })
     }
 }
-const plot = async (req, res) => {
-    let plot = req.body.plot
-    plot.postedBy = req.body.userId
+
+const list = async (req, res) => {
+    const query = {}
+    if (req.query.search)
+        query.plantname = { '$regex': req.query.search, '$options': "i" }
+    if (req.query.category && req.query.category != 'All')
+        query.category = req.query.category
     try {
-        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { plots: plot } }, { new: true })
-            .populate('plots.postedBy', '_id name')
-            .populate('postedBy', '_id name')
-            .exec()
-        res.json(result)
-    } catch (err) {
-        return res.status(400).json({
-            error: errorHandler.getErrorMessage(err)
-        })
-    }
-}
-const unplot = async (req, res) => {
-    let plot = req.body.plot
-    try {
-        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $pull: { plots: { _id: plot._id }, harvests: { harvestPlot: plot._id } } }, { new: true })
-            .populate('plots.postedBy', '_id name')
-            .populate('postedBy', '_id name')
-            .exec()
-        res.json(result)
+        let plants = await Plant.find(query)
+        res.json(plants)
     } catch (err) {
         return res.status(400).json({
             error: errorHandler.getErrorMessage(err)
@@ -241,32 +224,10 @@ const unplot = async (req, res) => {
     }
 }
 
-const harvest = async (req, res) => {
-    let harvest = req.body.harvest
-    harvest.postedBy = req.body.userId
-    harvest.harvestPlot = req.body.plotId
+const listCategories = async (req, res) => {
     try {
-        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { harvests: harvest } }, { new: true })
-            .populate('harvestPlot', '_id plotname')
-            // .populate('harvests.harvestPlot', '_id plotname')
-            .populate('postedBy', '_id name')
-            .exec()
-        res.json(result)
-    } catch (err) {
-        return res.status(400).json({
-            error: errorHandler.getErrorMessage(err)
-        })
-    }
-}
-
-const unharvest = async (req, res) => {
-    let harvest = req.body.harvest
-    try {
-        let result = await Plant.findByIdAndUpdate(req.body.plantId, { $pull: { harvests: { _id: harvest._id } } }, { new: true })
-            .populate('harvests.postedBy', '_id name')
-            .populate('postedBy', '_id name')
-            .exec()
-        res.json(result)
+        let plants = await Plant.distinct('category', {})
+        res.json(plants)
     } catch (err) {
         return res.status(400).json({
             error: errorHandler.getErrorMessage(err)
@@ -288,9 +249,7 @@ export default {
     unlike,
     comment,
     uncomment,
-    plot,
-    unplot,
     isPoster,
-    harvest,
-    unharvest
+    list,
+    listCategories
 }

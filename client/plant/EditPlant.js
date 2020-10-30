@@ -57,6 +57,7 @@ export default function EditPlant(props) {
   const classes = useStyles()
   const [values, setValues] = useState({
     plantname: '',
+    category: '',
     description: '',
     image: '',
     plantHeight: '',
@@ -106,6 +107,7 @@ export default function EditPlant(props) {
   const clickSubmit = () => {
     let plantData = new FormData()
     values.plantname && plantData.append('plantname', values.plantname)
+    values.category && plantData.append('category', values.category)
     values.description && plantData.append('description', values.description)
     values.plantHeight && plantData.append('plantHeight', values.plantHeight)
     values.pests && plantData.append('pests', values.pests)
@@ -167,6 +169,7 @@ export default function EditPlant(props) {
                 <Button className={classes.button} size="small" variant="outlined" color="primary" onClick={handleToggleActive}>{values.active ? "Deactivate" : "Activate"}</Button>
                 <br />
                 <TextField autoFocus id="plantname" label="Plant Name" className={classes.textField} value={values.plantname} onChange={handleChange('plantname')} margin="normal" /><br />
+                <TextField autoFocus id="category" label="Category" className={classes.textField} value={values.category} onChange={handleChange('category')} margin="normal" /><br />
                 <TextField
                   id="multiline-flexible"
                   label="Description"

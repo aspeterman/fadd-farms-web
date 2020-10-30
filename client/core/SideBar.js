@@ -38,8 +38,8 @@ export default function SideBar() {
                 [classes.fullList]: anchor === 'top' || anchor === 'bottom',
             })}
             role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
+        // onClick={toggleDrawer(anchor, false)}
+        // onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
                 {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (

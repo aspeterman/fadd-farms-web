@@ -59,6 +59,7 @@ export default function NewPlant(props) {
     const [open, setOpen] = useState(false)
     const [values, setValues] = useState({
         plantname: '',
+        category: '',
         image: '',
         description: '',
         soil: '',
@@ -85,6 +86,7 @@ export default function NewPlant(props) {
     const clickPlant = () => {
         let postData = new FormData()
         values.plantname && postData.append('plantname', values.plantname)
+        values.category && postData.append('category', values.category)
         values.description && postData.append('description', values.description)
         values.careDuringGrowth && postData.append('careDuringGrowth', values.careDuringGrowth)
         values.whenToPlant && postData.append('whenToPlant', values.whenToPlant)
@@ -120,11 +122,11 @@ export default function NewPlant(props) {
         <Button variant="outlined" color="primary" className={classes.button} onClick={handleClickOpen}>
             New Plant
       </Button>
-        {props.showing === 'active' ?
+        {/* {props.showing === 'active' ?
             <Button variant="outlined" color="primary" value="all" className={classes.button} onClick={props.handleShowAll}>Show All</Button>
             :
             <Button variant="outlined" color="primary" value="active" className={classes.button} onClick={props.handleShowActive}>Show Active</Button>
-        }
+        } */}
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">New Plant</DialogTitle>
             <DialogContent>
@@ -133,6 +135,13 @@ export default function NewPlant(props) {
                     autoFocus
                     value={values.plantname}
                     onChange={handleChange('plantname')}
+                    className={classes.textField}
+                    margin="normal"
+                />
+                <TextField
+                    placeholder="Category"
+                    value={values.category}
+                    onChange={handleChange('category')}
                     className={classes.textField}
                     margin="normal"
                 />

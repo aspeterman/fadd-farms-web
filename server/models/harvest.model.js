@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const harvestSchema = new Schema({
     observations: { type: String },
     yield: { type: Number },
-    date: { type: Date },
+    date: { type: Date, default: Date.now() },
     image: {
         data: Buffer,
         contentType: String

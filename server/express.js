@@ -19,6 +19,7 @@ import plantRoutes from './routes/plant.routes'
 import plotRoutes from './routes/plot.routes.js'
 import postRoutes from './routes/post.routes'
 import userRoutes from './routes/user.routes'
+
 const CURRENT_WORKING_DIR = process.cwd()
 const app = express()
 

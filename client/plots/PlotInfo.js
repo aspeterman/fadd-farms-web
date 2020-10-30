@@ -1,9 +1,11 @@
+import { IconButton } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import { Edit } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
@@ -56,14 +58,22 @@ const useStyles = makeStyles(theme => ({
     action: {
         margin: '8px 24px',
         display: 'inline-block'
-    }
+    },
+    text: {
+        display: 'block',
+        backgroundColor: 'white',
+        padding: theme.spacing(1),
+        margin: `2px ${theme.spacing(1)}px 2px 2px`,
+    },
 }))
 
 export default function Plot({ match }) {
     const classes = useStyles()
     const [values, setValues] = useState({
+        postedBy: '',
         plotId: '',
         plantId: '',
+        plantname: '',
         name: '',
         season: '',
         image: '',
@@ -87,7 +97,8 @@ export default function Plot({ match }) {
             if (data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                setValues({ ...values, plotId: data._id, plantId: data.plant._id, name: data.name, season: data.season, prePlantSeeds: data.prePlantSeeds, prePlantSeedsDate: data.prePlantSeedsDate, prePlantGerminated: data.prePlantGerminated, prePlantGerminatedDate: data.prePlantGerminatedDate, seedsTransferred: data.seedsTransferred, seedsTransferredDate: data.seedsTransferredDate })
+                setValues({ ...values, plotId: data._id, plantId: data.plant._id, plantname: data.plant.plantname, name: data.name, season: data.season, prePlantSeeds: data.prePlantSeeds, prePlantSeedsDate: data.prePlantSeedsDate, prePlantGerminated: data.prePlantGerminated, prePlantGerminatedDate: data.prePlantGerminatedDate, seedsTransferred: data.seedsTransferred, seedsTransferredDate: data.seedsTransferredDate })
+                console.log(data)
             }
         })
         return function cleanup() {
@@ -104,8 +115,16 @@ export default function Plot({ match }) {
                 <Grid item xs={7} sm={7}>
                     <Card className={classes.card}>
                         <CardHeader
-                            title={values.name}
-                        // subheader={plot.quantity > 0? 'In Stock': 'Out of Stock'}
+                            action={
+                                <Link to={"/plants/" + values.plantId + '/' + values.plotId + "/edit"}>
+                                    <IconButton aria-label="Edit" color="primary">
+                                        <Edit />
+                                    </IconButton>
+                                </Link>
+                            }
+                            title={<Link to={'/plants/' + values.plantId} className={classes.link}>{values.plantname}
+                            </Link>}
+                            subheader={values.name}
                         />
                         <div className={classes.flex}>
                             <CardMedia
@@ -113,12 +132,18 @@ export default function Plot({ match }) {
                                 image={imageUrl}
                                 title={values.name}
                             />
-                            <Typography component="p" variant="subtitle1" className={classes.subheading}>
-                                {values.season}<br />
-                                <Link to={'/plants/' + values.plantId} className={classes.link}>Go
-                                </Link>
+                            <Typography component="div" variant="subtitle1" className={classes.text}>
+                                Season: {values.season}
                             </Typography>
-
+                            <Typography component="p" variant="subtitle1" className={classes.text}>
+                                Preplant Seeds: {values.prePlantSeeds} on {values.prePlantSeedsDate}
+                            </Typography>
+                            <Typography component="p" variant="subtitle1" className={classes.text}>
+                                Germinated Seeds: {values.prePlantGerminated} on {values.prePlantGerminatedDate}
+                            </Typography>
+                            <Typography component="p" variant="subtitle1" className={classes.text}>
+                                Transferred: {values.seedsTransferred} on {values.seedsTransferredDate}
+                            </Typography>
                         </div>
                     </Card>
                 </Grid>

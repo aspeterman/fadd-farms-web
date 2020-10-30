@@ -70,6 +70,7 @@ export default function NewHarvest({ match }) {
         values.image && harvestData.append('image', values.image)
         harvestData.append('postedBy', jwt.user._id)
         harvestData.append('plot', match.params.plotId)
+        harvestData.append('plant', match.params.plantId)
 
         create({
             plotId: match.params.plotId,
