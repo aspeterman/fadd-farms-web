@@ -24,11 +24,11 @@ const MainRouter = () => {
       <Route exact path="/" component={Home} />
       <Route exact path="/news" component={DiscussionHome} />
       <PrivateRoute exact path="/plants/:plantId" component={PlantLog} />
-      <PrivateRoute exact path="/plants/:plantId/plots/new" component={NewPlot} />
-      <PrivateRoute exact path="/plants/:plantId/:plotId/edit" component={EditPlot} />
+      <PrivateRoute path="/plants/:plantId/plots/new" component={NewPlot} />
+      <PrivateRoute path="/plants/:plantId/:plotId/edit" component={EditPlot} />
       <PrivateRoute exact path="/plants/:plantId/:plotId" component={PlotInfo} />
-      <Route path="/plants/:plantId/:plotId/new" component={NewHarvest} />
-      <Route path="/plants/:plantId/:plotId/:harvestId/edit" component={EditHarvest} />
+      <PrivateRoute path="/plants/:plantId/:plotId/new" component={NewHarvest} />
+      <PrivateRoute path="/plants/:plantId/:plotId/:harvestId/edit" component={EditHarvest} />
       <Route path="/users" component={Users} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={Signin} />

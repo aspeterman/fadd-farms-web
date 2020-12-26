@@ -12,9 +12,6 @@ const config = {
         publicPath: '/dist/',
         libraryTarget: "commonjs2"
     },
-    // devServer: {
-    //     historyApiFallback: true
-    // },
     externals: [nodeExternals()],
     module: {
         rules: [

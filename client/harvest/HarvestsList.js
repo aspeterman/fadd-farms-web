@@ -135,12 +135,15 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Edit from '@material-ui/icons/Edit'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import auth from '../auth/auth-helper.js'
 import { listByPlot } from './api-harvest.js'
 import DeleteHarvest from './DeleteHarvest.js'
 import HarvestChart from './HarvestChart.js'
+import HarvestGallery from './HarvestGallery.js'
 
 const useStyles = makeStyles(theme => ({
     harvests: {
@@ -176,7 +179,9 @@ const useStyles = makeStyles(theme => ({
 export default function MyHarvests(props) {
     const classes = useStyles()
     const [harvests, setHarvests] = useState([])
+    const [chartHarvests, setChartHarvests] = useState([])
 
+    const jwt = auth.isAuthenticated()
     useEffect(() => {
         const abortController = new AbortController()
         const signal = abortController.signal
@@ -187,7 +192,11 @@ export default function MyHarvests(props) {
             if (data.error) {
                 console.log(data.error)
             } else {
+                let harvests = data.map(harvest => harvest.date = new moment(harvest.date).format('YYYY-MM-DD'))
+
+                props.setYieldData(getArraySum(data))
                 setHarvests(data)
+                setChartHarvests(data)
             }
         })
         return function cleanup() {
@@ -195,16 +204,38 @@ export default function MyHarvests(props) {
         }
     }, [])
 
+    function getArraySum(a) {
+        var total = 0;
+        for (var i in a) {
+            total += a[i].yield;
+        }
+        return total;
+    }
+
     const removeHarvest = (harvest) => {
-        const updatedharvestts = [...harvests]
-        const index = updatedharvestts.indexOf(harvest)
-        updatedharvestts.splice(index, 1)
-        setHarvests(updatedharvestts)
+        const updatedHarvests = [...harvests]
+        const index = updatedHarvests.indexOf(harvest)
+        updatedHarvests.splice(index, 1)
+        setHarvests(updatedHarvests)
+    }
+
+    const handleThisYear = () => {
+        let newHarvests = harvests.filter(harvest => parseInt(harvest.date.slice(0, 4)) === new Date().getFullYear())
+        setChartHarvests(newHarvests)
+    }
+    const handleLastYear = () => {
+        console.log(new Date().getFullYear())
+        let newHarvests = harvests.filter(harvest => parseInt(harvest.date.slice(0, 4)) === new Date().getFullYear() - 1)
+        setChartHarvests(newHarvests)
+    }
+    const handleShowAll = () => {
+        setChartHarvests(harvests)
     }
 
     return (
         <>
-            <HarvestChart harvests={harvests} />
+            <HarvestGallery harvests={harvests} />
+            <HarvestChart harvests={chartHarvests} handleThisYear={handleThisYear} handleLastYear={handleLastYear} handleShowAll={handleShowAll} />
             <Divider />
             <Card className={classes.harvests}>
                 <Typography type="title" className={classes.title}>
@@ -227,22 +258,33 @@ export default function MyHarvests(props) {
                                     title={harvest.name}
                                 />
                                 <div className={classes.details}>
-                                    <Typography type="headline" component="h2" color="primary" className={classes.harvestTitle}>
+                                    <Typography type="headline" component="p" color="primary" className={classes.subheading}>
+                                        {harvest.date.slice(0, 10)}
+                                    </Typography>
+                                    <Typography variant="subtitle2"
+                                        color="textSecondary"
+                                        component="p">
                                         Yield(lbs): {harvest.yield}
                                     </Typography>
+                                    <Typography variant="subtitle2"
+                                        color="textSecondary"
+                                        component="p">
+                                        Notes: {harvest.observations}
+                                    </Typography>
                                 </div>
-                                <ListItemSecondaryAction>
-                                    <Link to={"/plants/" + props.plantId + '/' + props.plotId + "/" + harvest._id + "/edit"}>
-                                        <IconButton aria-label="Edit" color="primary">
-                                            <Edit />
-                                        </IconButton>
-                                    </Link>
-                                    <DeleteHarvest
-                                        harvest={harvest}
-                                        plotId={harvest.plot._id}
-                                        harvestId={harvest._id}
-                                        onRemove={removeHarvest} />
-                                </ListItemSecondaryAction>
+                                {harvest.postedBy._id === auth.isAuthenticated().user._id &&
+                                    <ListItemSecondaryAction>
+                                        <Link to={"/plants/" + props.plantId + '/' + props.plotId + "/" + harvest._id + "/edit"}>
+                                            <IconButton aria-label="Edit" color="primary">
+                                                <Edit />
+                                            </IconButton>
+                                        </Link>
+                                        <DeleteHarvest
+                                            harvest={harvest}
+                                            plotId={harvest.plot._id}
+                                            harvestId={harvest._id}
+                                            onRemove={removeHarvest} />
+                                    </ListItemSecondaryAction>}
                             </ListItem>
                             <Divider /></span>
                     })}

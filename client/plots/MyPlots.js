@@ -138,6 +138,7 @@ import Edit from '@material-ui/icons/Edit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import auth from '../auth/auth-helper.js'
 import { listByPlant } from './api-plot.js'
 import DeletePlot from './DeletePlot'
 
@@ -176,12 +177,15 @@ export default function MyPlots(props) {
   const classes = useStyles()
   const [plots, setPlots] = useState([])
 
+  const jwt = auth.isAuthenticated()
+
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
 
     listByPlant({
-      plantId: props.plantId
+      plantId: props.plantId,
+      userId: jwt.user._id
     }, signal).then((data) => {
       if (data.error) {
         console.log(data.error)

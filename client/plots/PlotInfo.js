@@ -5,7 +5,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { Edit } from '@material-ui/icons'
+import { ArrowBackTwoTone, Edit } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         margin: 30,
     },
     flex: {
-        display: 'flex'
+        display: 'block'
     },
     card: {
         padding: '24px 40px 40px'
@@ -69,6 +69,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Plot({ match }) {
     const classes = useStyles()
+    const [totalYield, setYield] = useState(0)
     const [values, setValues] = useState({
         postedBy: '',
         plotId: '',
@@ -97,14 +98,17 @@ export default function Plot({ match }) {
             if (data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                setValues({ ...values, plotId: data._id, plantId: data.plant._id, plantname: data.plant.plantname, name: data.name, season: data.season, prePlantSeeds: data.prePlantSeeds, prePlantSeedsDate: data.prePlantSeedsDate, prePlantGerminated: data.prePlantGerminated, prePlantGerminatedDate: data.prePlantGerminatedDate, seedsTransferred: data.seedsTransferred, seedsTransferredDate: data.seedsTransferredDate })
-                console.log(data)
+                setValues({ ...values, plotId: data._id, plantId: data.plant._id, plantname: data.plant.plantname, name: data.name, season: data.season, prePlantSeeds: data.prePlantSeeds, prePlantSeedsDate: data.prePlantSeedsDate, prePlantGerminated: data.prePlantGerminated, prePlantGerminatedDate: data.prePlantGerminatedDate, seedsTransferred: data.seedsTransferred, seedsTransferredDate: data.seedsTransferredDate, postedBy: data.postedBy._id })
             }
         })
         return function cleanup() {
             abortController.abort()
         }
     }, [])
+
+    const setYieldData = (data) => {
+        setYield(data)
+    }
 
     const imageUrl = values.plotId
         ? `/api/plot/image/${values.plotId}?${new Date().getTime()}`
@@ -115,14 +119,14 @@ export default function Plot({ match }) {
                 <Grid item xs={7} sm={7}>
                     <Card className={classes.card}>
                         <CardHeader
-                            action={
+                            action={values.postedBy === jwt.user._id &&
                                 <Link to={"/plants/" + values.plantId + '/' + values.plotId + "/edit"}>
                                     <IconButton aria-label="Edit" color="primary">
                                         <Edit />
                                     </IconButton>
                                 </Link>
                             }
-                            title={<Link to={'/plants/' + values.plantId} className={classes.link}>{values.plantname}
+                            title={<Link to={'/plants/' + values.plantId} className={classes.link}><ArrowBackTwoTone />
                             </Link>}
                             subheader={values.name}
                         />
@@ -144,11 +148,14 @@ export default function Plot({ match }) {
                             <Typography component="p" variant="subtitle1" className={classes.text}>
                                 Transferred: {values.seedsTransferred} on {values.seedsTransferredDate}
                             </Typography>
+                            <Typography component="p" variant="subtitle1" className={classes.text}>
+                                Total Yield: {totalYield}
+                            </Typography>
                         </div>
                     </Card>
                 </Grid>
                 <Grid item xs={5} sm={5}>
-                    <HarvestList plantId={match.params.plantId} plotId={match.params.plotId} />
+                    <HarvestList plantId={match.params.plantId} plotId={match.params.plotId} setYieldData={setYieldData} />
                 </Grid>
             </Grid>
         </div>)

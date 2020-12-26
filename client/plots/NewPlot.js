@@ -1,3 +1,4 @@
+import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -49,7 +50,7 @@ export default function NewPlot({ match }) {
   const classes = useStyles()
   const [values, setValues] = useState({
     name: '',
-    season: '',
+    season: 'Fall',
     image: '',
     prePlantSeeds: '',
     prePlantSeedsDate: '',
@@ -80,7 +81,8 @@ export default function NewPlot({ match }) {
     values.seedsTransferredDate && plotData.append('seedsTransferredDate', values.seedsTransferredDate)
 
     create({
-      plantId: match.params.plantId
+      plantId: match.params.plantId,
+      userId: jwt.user._id
     }, {
       t: jwt.token
     }, plotData).then((data) => {
@@ -117,7 +119,7 @@ export default function NewPlot({ match }) {
           className={classes.textField}
           margin="normal"
         />
-        <TextField
+        {/* <TextField
           placeholder="Season"
           name='season'
           value={values.season}
@@ -125,6 +127,7 @@ export default function NewPlot({ match }) {
           className={classes.textField}
           margin="normal"
         />
+         */}
         <div>
           <TextField
             placeholder="prePlantSeeds"
@@ -193,6 +196,13 @@ export default function NewPlot({ match }) {
               shrink: true,
             }}
           />
+        </div>
+        <div className={classes.textField}>
+          <InputLabel id="season-select">Season</InputLabel>
+          <Select labelId="season-select" value={values.season} onChange={handleChange('season')} >
+            <MenuItem value={'Fall'}>Fall</MenuItem>
+            <MenuItem value={'Spring'}>Spring</MenuItem>
+          </Select>
         </div>
         {values.error && (<Typography component="p" color="error">
           <Icon color="error" className={classes.error}>error</Icon>

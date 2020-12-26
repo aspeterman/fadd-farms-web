@@ -1,4 +1,5 @@
-import { Card, Divider, makeStyles, Typography } from '@material-ui/core'
+import { Card, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
+import { ExpandMore } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import auth from '../auth/auth-helper'
 import { listLatest } from './api-harvest'
@@ -8,7 +9,6 @@ const useStyles = makeStyles(theme => ({
     card: {
         margin: 'auto',
         paddingTop: 0,
-        paddingBottom: theme.spacing(3)
     },
     title: {
         padding: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
@@ -17,12 +17,18 @@ const useStyles = makeStyles(theme => ({
     },
     media: {
         minHeight: 330
+    },
+    expand: {
+        margin: 'auto',
+        paddingBottom: 0,
+        '&:hover': { background: '#dbdbdb', },
     }
 }))
 
-const RecentActivity = (props) => {
+const RecentActivity = () => {
     const classes = useStyles()
     const [harvests, setHarvests] = useState([])
+    const [showing, setShowing] = useState(5)
 
     const jwt = auth.isAuthenticated()
 
@@ -50,13 +56,20 @@ const RecentActivity = (props) => {
         updatedHarvests.splice(index, 1)
         setHarvests(updatedHarvests)
     }
+    const showMore = () => {
+        setShowing(showing + 5)
+    }
     return (
         <Card className={classes.card}>
             <Typography type="title" className={classes.title}>
                 Recent Activity
           </Typography>
             <Divider />
-            <RecentList removeUpdate={removeHarvest} harvests={harvests} />
+            <RecentList removeUpdate={removeHarvest} harvests={harvests.slice(0, showing)} />
+            <Divider />
+            <div className={classes.expand} align="center" onClick={showMore} >
+                <IconButton color="secondary" size="small" onClick={showMore}><ExpandMore size="small" disabled={harvests.slice(0, showing).length = harvests.length} /></IconButton>
+            </div>
         </Card>
 
     )

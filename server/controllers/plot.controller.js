@@ -2,6 +2,7 @@ import formidable from 'formidable'
 import fs from 'fs'
 import extend from 'lodash/extend'
 import defaultImage from '../../client/assets/images/veg.jpg'
+import Harvest from '../models/harvest.model'
 import Plot from '../models/plot.model'
 import errorHandler from './../helpers/dbErrorHandler'
 
@@ -16,6 +17,7 @@ const create = (req, res, next) => {
         }
         let plot = new Plot(fields)
         plot.plant = req.plant
+        plot.postedBy = req.profile
         if (files.image) {
             plot.image.data = fs.readFileSync(files.image.path)
             plot.image.contentType = files.image.type
@@ -33,7 +35,10 @@ const create = (req, res, next) => {
 
 const plotById = async (req, res, next, id) => {
     try {
-        let plot = await Plot.findById(id).populate('plant', '_id plantname').exec()
+        let plot = await Plot.findById(id)
+            .populate('plant', '_id plantname')
+            .populate('postedBy', '_id name')
+            .exec()
         if (!plot)
             return res.status('400').json({
                 error: "plot not found"
@@ -92,8 +97,9 @@ const update = (req, res) => {
 const remove = async (req, res) => {
     try {
         let plot = req.plot
+        let deletedHarvests = await Harvest.deleteMany({ plot: plot._id })
         let deletedPlot = await plot.remove()
-        res.json(deletedPlot)
+        res.json({ deletedPlot, deletedHarvests })
 
     } catch (err) {
         return res.status(400).json({
@@ -104,7 +110,10 @@ const remove = async (req, res) => {
 
 const listByPlant = async (req, res) => {
     try {
-        let plots = await Plot.find({ plant: req.plant._id }).populate('plant', '_id name').select('-image')
+        let plots = await Plot.find({ plant: req.plant._id })
+            .populate('plant', '_id name')
+            .populate('postedBy', '_id name')
+            .select('-image')
         res.json(plots)
     } catch (err) {
         return res.status(400).json({
@@ -115,7 +124,11 @@ const listByPlant = async (req, res) => {
 
 const listLatest = async (req, res) => {
     try {
-        let plots = await Plot.find({}).sort('-createdAt').limit(5).populate('plant', '_id name').exec()
+        let plots = await Plot.find({})
+            .sort('-createdAt').limit(5)
+            .populate('plant', '_id name')
+            .populate('postedBy', '_id name')
+            .exec()
         res.json(plots)
     } catch (err) {
         return res.status(400).json({
@@ -142,7 +155,11 @@ const list = async (req, res) => {
     if (req.query.category && req.query.category != 'All')
         query.category = req.query.category
     try {
-        let plots = await Plot.find(query).populate('plant', '_id name').select('-image').exec()
+        let plots = await Plot.find(query)
+            .populate('plant', '_id name')
+            .select('-image')
+            .populate('postedBy', '_id name')
+            .exec()
         res.json(plots)
     } catch (err) {
         return res.status(400).json({

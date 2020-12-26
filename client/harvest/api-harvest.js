@@ -27,22 +27,6 @@ const read = async (params, signal) => {
     }
 }
 
-const listHarvestByUser = async (params, credentials) => {
-    try {
-        let response = await fetch('/api/harvests/feed/' + params.userId, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + credentials.t
-            }
-        })
-        return await response.json()
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 const listHarvestFeed = async (params, credentials, signal) => {
     try {
         let response = await fetch('/api/harvests/feed/' + params.userId, {
@@ -108,9 +92,9 @@ const listLatest = async (credentials, signal) => {
     try {
         let response = await fetch('/api/harvests/latest',
             {
-                params: {
-                    _limit: 10
-                },
+                // params: {
+                //     _limit: 10
+                // },
                 method: 'GET',
                 signal: signal,
                 headers: {
@@ -141,7 +125,6 @@ const list = async (params, signal) => {
 export {
     create,
     read,
-    listHarvestByUser,
     listHarvestFeed,
     update,
     remove,

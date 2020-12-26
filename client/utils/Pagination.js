@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core';
+import { Grid, makeStyles, MenuItem, Select, Typography } from '@material-ui/core';
 import Pagination from 'material-ui-flat-pagination';
-import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -10,48 +11,71 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper,
         margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
     },
+    pagination: {
+        margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
+        borderRadius: '3px 0 0 3px',
+        boxShadow: 'none'
+    },
+    grid: {
+        direction: "row",
+        justify: "space-between",
+        alignItems: "center",
+    },
 }))
 export default function Paginate(props) {
     const classes = useStyles()
-    const [values, setValues] = useState({
-        perPage: 10,
-        pageCount: 0,
-        offset: 0,
-        currentPage: 0,
-        options: [10, 20, 40]
-    })
-
-    // const handlePageSizeChange = (e) => {
-    //     setValues({ ...values, perPage: e.target.value })
-    //     console.log(values)
-    // }
-
-    // const handleClick = (offset, e) => {
-    //     setValues({ ...values, offset: offset, currentPage: offset / 10 });
-    //     let newData = props.data.slice(values.offset, values.offset + values.perPage)
-    //     props.handlePagination(newData)
-    //     console.log(values)
-    //     console.log('props', props)
-    // }
 
     return <div className={classes.root}>
-        <strong>Items per Page:</strong>
-        <select value={props.values.perPage} onChange={props.handlePageSizeChange}>
-            <option>10</option>
-            <option>20</option>
-            <option>50</option>
-            <option>100</option>
-        </select>
-        {props.data &&
-            <Pagination
-                limit={props.values.perPage}
-                page={props.values.currentPage}
-                offset={props.values.offset}
-                total={props.data.length}
-                onClick={(e, offset) => props.handleClick(offset)}
-                currentPageColor="primary"
-                otherPageColor="inherit"
-            />
-        }
+        <Grid container direction="column" justify="center" alignItems="stretch" className={classes.pagination}>
+            <Grid item>
+                <Grid
+                    container
+                    className={classes.grid}
+                    spacing={2}
+                >
+                    <Grid item>
+                        <Typography
+                            display="inline"
+                            variant="subtitle2"
+                            color="textSecondary"
+                            component="p"
+                        >
+                            Items Per Page
+              </Typography>
+                    </Grid>
+                    <Grid item>
+                        <div>
+                            <Select value={props.values.perPage} onChange={props.handlePageSizeChange}>
+                                <MenuItem value={10}>10</MenuItem>
+                                <MenuItem value={20}>20</MenuItem>
+                                <MenuItem value={50}>50</MenuItem>
+                                <MenuItem value={100}>100</MenuItem>
+                            </Select>
+                        </div>
+                    </Grid>
+                </Grid>
+                <Grid item >
+                    {props.data &&
+                        <Pagination
+                            limit={props.values.perPage}
+                            page={props.values.currentPage}
+                            offset={props.values.offset}
+                            total={props.data.length}
+                            onClick={(e, offset) => props.handleClick(offset)}
+                            currentPageColor="primary"
+                            otherPageColor="inherit"
+                            reduced
+                        />
+                    }
+                </Grid>
+            </Grid>
+        </Grid>
     </div>
+}
+
+Paginate.propTypes = {
+    values: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
+    handlePageSizeChange: PropTypes.func.isRequired,
+    handleClick: PropTypes.func.isRequired
 }

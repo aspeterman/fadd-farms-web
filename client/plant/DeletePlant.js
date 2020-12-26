@@ -7,36 +7,15 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
-import auth from '../auth/auth-helper'
+import React from 'react'
 
 export default function DeletePlant(props) {
-  const [open, setOpen] = useState(false)
 
-  const jwt = auth.isAuthenticated()
-  const clickButton = () => {
-    setOpen(true)
-  }
-  const deletePlant = () => {
-    remove({
-      plantId: props.plantId,
-    }, { t: jwt.token }).then((data) => {
-      if (data.error) {
-        console.log(data.error)
-      } else {
-        setOpen(false)
-        props.onRemove(props.plant)
-      }
-    })
-  }
-  const handleRequestClose = () => {
-    setOpen(false)
-  }
   return (<span>
-    <IconButton aria-label="Delete" onClick={clickButton} color="secondary">
+    <IconButton aria-label="Delete" onClick={props.clickButton} color="secondary">
       <DeleteIcon />
     </IconButton>
-    <Dialog open={open} onClose={handleRequestClose}>
+    <Dialog open={props.open} onClose={props.handleRequestClose}>
       <DialogTitle>{"Delete this record"}</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -44,7 +23,7 @@ export default function DeletePlant(props) {
           </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleRequestClose} color="primary">
+        <Button onClick={props.handleRequestClose} color="primary">
           Cancel
           </Button>
         <Button onClick={props.onRemove} color="secondary" autoFocus="autoFocus">

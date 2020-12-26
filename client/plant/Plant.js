@@ -53,6 +53,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Plant(props) {
   const classes = useStyles()
+  const [open, setOpen] = useState(false)
   const jwt = auth.isAuthenticated()
   const checkLike = (likes) => {
     let match = likes.indexOf(jwt.user._id) !== -1
@@ -68,14 +69,6 @@ export default function Plant(props) {
     commentsView: false,
     error: {}
   })
-
-  // const [commentsView, showCommentList] = useState(false)
-  // const [plotsView, showPlotsList] = useState(false)
-  // useEffect(() => {
-  //   setValues({...values, like:checkLike(props.plant.likes), likes: props.plant.likes.length, comments: props.plant.comments})
-  // }, [])
-
-
 
   const clickLike = () => {
     let callApi = values.like ? unlike : like
@@ -96,14 +89,6 @@ export default function Plant(props) {
     setValues({ ...values, comments: comments })
   }
 
-  const updatePlots = (plots) => {
-    setValues({ ...values, plots: plots })
-  }
-
-  const updateHarvests = (harvests) => {
-    setValues({ ...values, harvests: harvests })
-  }
-
   const deletePlant = () => {
     remove({
       plantId: props.plant._id
@@ -114,8 +99,17 @@ export default function Plant(props) {
         console.log(data.error)
       } else {
         props.onRemove(props.plant)
+        setOpen(false)
       }
     })
+  }
+
+  const clickButton = () => {
+    setOpen(true)
+  }
+
+  const handleRequestClose = () => {
+    setOpen(false)
   }
 
   const showComments = () => {
@@ -143,6 +137,9 @@ export default function Plant(props) {
             <DeletePlant
               plant={props.plant}
               plantId={props.plant._id}
+              clickButton={clickButton}
+              handleRequestClose={handleRequestClose}
+              open={open}
               onRemove={deletePlant} />
           }
           title={<Link to={"/user/" + props.plant.postedBy._id}>{props.plant.postedBy.name}</Link>}

@@ -1,3 +1,4 @@
+import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
@@ -20,11 +21,10 @@ const useStyles = makeStyles(theme => ({
     margin: 30,
   },
   card: {
+    maxWidth: 600,
     margin: 'auto',
     textAlign: 'center',
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
-    maxWidth: 500,
+    marginTop: theme.spacing(5),
     paddingBottom: theme.spacing(2)
   },
   title: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 400
+    width: 300
   },
   submit: {
     margin: 'auto',
@@ -150,14 +150,6 @@ export default function EditPlot({ match }) {
           className={classes.textField}
           margin="normal"
         />
-        <TextField
-          placeholder="Season"
-          name='season'
-          value={values.season}
-          onChange={handleChange('season')}
-          className={classes.textField}
-          margin="normal"
-        />
         <div>
           <TextField
             placeholder="prePlantSeeds"
@@ -225,7 +217,14 @@ export default function EditPlot({ match }) {
             InputLabelProps={{
               shrink: true,
             }}
-          /></div><br />
+          /></div>
+        <div className={classes.textField}>
+          <InputLabel id="season-select">Season</InputLabel>
+          <Select labelId="season-select" value={values.season} onChange={handleChange('season')} >
+            <MenuItem value={'Fall'}>Fall</MenuItem>
+            <MenuItem value={'Spring'}>Spring</MenuItem>
+          </Select>
+        </div>
         {
           values.error && (<Typography component="p" color="error">
             <Icon color="error" className={classes.error}>error</Icon>

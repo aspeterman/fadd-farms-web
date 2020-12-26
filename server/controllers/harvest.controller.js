@@ -40,7 +40,7 @@ const listHarvestFeed = async (req, res) => {
             .populate('plot', '_id name')
             .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
-            // .sort('-createdAt')
+            .sort('date')
             .exec()
         res.json(posts)
     } catch (err) {
@@ -132,6 +132,7 @@ const listByPlot = async (req, res) => {
             .populate('plot', '_id name').select('-image')
             .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
+            .sort('date')
         res.json(harvests)
     } catch (err) {
         return res.status(400).json({
@@ -162,7 +163,8 @@ const listLatest = async (req, res) => {
             .populate('postedBy', '_id name')
             .populate('plot', '_id name plant')
             .populate('plant', '_id plantname')
-            .sort('-date')
+            .sort('date')
+            // .limit(5)
             .exec()
         res.json(harvests)
     } catch (err) {

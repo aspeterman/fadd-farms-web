@@ -21,7 +21,7 @@ export default function PlantList(props) {
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      {props.showing === 'all' ? props.plants.map((item, i) => {
+      {props.showing === 'all' ? props.plants.slice(props.values.offset, props.values.offset + props.values.perPage).map((item, i) => {
         return (
           <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={3}>
             <Plant plant={item} key={i} onRemove={props.removeUpdate}
@@ -31,7 +31,7 @@ export default function PlantList(props) {
         )
       })
         :
-        props.plants.filter(item => item.active === true).map((item, i) => {
+        props.plants.filter(item => item.active === true).slice(props.values.offset, props.values.offset + props.values.perPage).map((item, i) => {
           return (
             <GridList cellHeight={'auto'} className={classes.gridList} key={i} cols={3}>
               <Plant plant={item} key={i} onRemove={props.removeUpdate}

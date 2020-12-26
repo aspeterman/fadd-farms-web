@@ -4,7 +4,6 @@ import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import PlantList from '../plant/PlantList'
 import PostList from './../post/PostList'
 import FollowGrid from './../user/FollowGrid'
 
@@ -25,16 +24,16 @@ export default function ProfileTabs(props) {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Plants" />
+          {/* <Tab label="Plants" /> */}
           <Tab label="Posts" />
           <Tab label="Following" />
           <Tab label="Followers" />
         </Tabs>
       </AppBar>
-      {tab === 0 && <TabContainer><PlantList removeUpdate={props.removePlantUpdate} plants={props.plants} /></TabContainer>}
-      {tab === 1 && <TabContainer><PostList removeUpdate={props.removePostUpdate} posts={props.posts} /></TabContainer>}
-      {tab === 2 && <TabContainer><FollowGrid people={props.user.following} /></TabContainer>}
-      {tab === 3 && <TabContainer><FollowGrid people={props.user.followers} /></TabContainer>}
+      {/* {tab === 0 && <TabContainer><PlantList removeUpdate={props.removePlantUpdate} plants={props.plants} /></TabContainer>} */}
+      {tab === 0 && <TabContainer><PostList removeUpdate={props.removePostUpdate} posts={props.posts} /></TabContainer>}
+      {tab === 1 && <TabContainer><FollowGrid people={props.user.following} /></TabContainer>}
+      {tab === 2 && <TabContainer><FollowGrid people={props.user.followers} /></TabContainer>}
     </div>)
 
 }

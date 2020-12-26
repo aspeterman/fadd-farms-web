@@ -124,7 +124,7 @@ export default function EditHarvest({ match }) {
         <input accept="image/*" onChange={handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
         <label htmlFor="icon-button-file">
           <Button variant="contained" color="secondary" component="span">
-            Upload Photo
+            Modify Photo
               <FileUpload />
           </Button>
         </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span><br />
@@ -159,7 +159,7 @@ export default function EditHarvest({ match }) {
       </CardContent>
       <CardActions>
         <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Update</Button>
-        <Link to={'/plants/' + match.params.plantId} className={classes.submit}><Button variant="contained">Cancel</Button></Link>
+        <Link to={'/plants/' + match.params.plantId + '/' + match.params.plotId} className={classes.submit}><Button variant="contained">Cancel</Button></Link>
       </CardActions>
     </Card>
   </div>)

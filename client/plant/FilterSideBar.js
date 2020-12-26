@@ -3,8 +3,9 @@ import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import { Filter, Settings, Sort } from '@material-ui/icons';
+import { Filter, Settings } from '@material-ui/icons';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const useStyles = makeStyles({
@@ -57,30 +58,10 @@ export default function FilterSideBar(props) {
                             <ListItemText>Filter</ListItemText>
                         </AccordionSummary>
                         <AccordionActions>
-                            {props.showing === 'active' ?
-                                <Button variant="outlined" color="primary" value="all" className={classes.button} onClick={props.handleShowAll}>Show All</Button>
-                                :
-                                <Button variant="outlined" color="primary" value="active" className={classes.button} onClick={props.handleShowActive}>Show Active</Button>
-                            }
-                            {/* <Select options={props.plants.map(plant => { if (plant.category !== '') return { label: plant.category, value: plant.category } })}
-                                onChange={opt => props.filterCategory(opt.value)} /> */}
+                            <Button value="all" className={classes.button} onClick={props.handleShowAll}>All</Button> |
+                            <Button value="active" className={classes.button} onClick={props.handleShowActive}>Active</Button>
                         </AccordionActions>
                     </Accordion>
-                </ListItem>
-                <ListItem button>
-                    <Accordion className={classes.accordion}>
-                        <AccordionSummary
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <ListItemIcon><Sort /></ListItemIcon>
-                            <ListItemText>Sort By</ListItemText>
-                        </AccordionSummary>
-                        <AccordionActions>
-
-                        </AccordionActions>
-                    </Accordion>
-
                 </ListItem>
             </List>
         </div>
@@ -103,4 +84,8 @@ export default function FilterSideBar(props) {
             ))}
         </div>
     );
+}
+FilterSideBar.propTypes = {
+    handleShowActive: PropTypes.func.isRequired,
+    handleShowAll: PropTypes.func.isRequired
 }

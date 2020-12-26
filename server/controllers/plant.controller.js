@@ -2,9 +2,10 @@ import formidable from 'formidable'
 import fs from 'fs'
 import extend from 'lodash/extend'
 import defaultImage from '../../client/assets/images/veg.jpg'
+import Harvest from '../models/harvest.model'
 import Plant from '../models/plant.model'
+import Plot from '../models/plot.model'
 import errorHandler from './../helpers/dbErrorHandler'
-
 
 const create = (req, res, next) => {
     let form = new formidable.IncomingForm()
@@ -99,8 +100,6 @@ const listNewsFeed = async (req, res) => {
     try {
         let plants = await Plant.find({ postedBy: { $in: req.profile.following } })
             .populate('comments.postedBy', '_id name')
-            .populate('plots.postedBy', '_id name')
-            .populate('harvests.postedBy', '_id name')
             .populate('postedBy', '_id name')
             .sort('plantname')
             .exec()
@@ -128,8 +127,10 @@ const getOne = async (req, res, data) => {
 const remove = async (req, res) => {
     let plant = req.plant
     try {
+        let deletedHarvests = await Harvest.deleteMany({ plant: plant._id })
+        let deletedPlots = await Plot.deleteMany({ plant: plant._id })
         let deletedPlant = await plant.remove()
-        res.json(deletedPlant)
+        res.json({ deletedPlant, deletedPlots, deletedHarvests })
     } catch (err) {
         return res.status(400).json({
             error: errorHandler.getErrorMessage(err)

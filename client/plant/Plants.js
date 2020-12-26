@@ -44,8 +44,7 @@ export default function Plants() {
   const [plants, setPlants] = useState([])
   const [newPlants, setNewPlants] = useState([])
   const [showing, setShowing] = useState('all')
-  const [category, setCategory] = useState('')
-  const [intPlants, setIntPlants] = useState([])
+  const [sorting, setSorting] = useState('plantname')
   const [values, setValues] = useState({
     total: 0,
     pageCount: 0,
@@ -53,13 +52,13 @@ export default function Plants() {
     perPage: 10,
     currentPage: 0,
   })
-  const [searchedPlants, setsearchedPlants] = useState([])
-  const [query, setQuery] = useState('')
 
   const handlePageSizeChange = (e) => {
-    setValues({ ...values, perPage: parseInt(e.target.value), pageCount: Math.ceil(values.total / parseInt(e.target.value)) })
+    setValues({ ...values, perPage: parseInt(e.target.value), pageCount: Math.ceil(values.total / parseInt(e.target.value)), currentPage: 0, offset: 0 })
     let newData = plants.slice(values.offset, values.offset + parseInt(e.target.value))
     setNewPlants(newData)
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+
   }
 
   const handleClick = (offset, e) => {
@@ -119,14 +118,8 @@ export default function Plants() {
     setShowing('all')
   }
 
-  const handlePagination = (data) => {
-    setNewPlants(data)
-  }
-
-  const handleChange = name => event => {
-    setValues({
-      ...values, [name]: event.target.value,
-    })
+  const handleSorting = (sort) => {
+    setSorting(sort)
   }
 
   const handleSearch = () => {
@@ -161,21 +154,23 @@ export default function Plants() {
           <FilterSideBar plants={newPlants}
             handleShowActive={handleShowActive}
             handleShowAll={handleShowAll}
+            handleSorting={handleSorting}
+            sorting={sorting}
             showing={showing} />
         </div>
         <Divider />
         <NewPlant
           addUpdate={addPlant}
-          handleShowActive={handleShowActive}
-          handleShowAll={handleShowAll}
-          showing={showing} />
-        <Divider />
-        <PlantList removeUpdate={removePlant}
-          plants={newPlants}
-          showing={showing}
         />
+        <Divider />
+        {plants ?
+          <PlantList removeUpdate={removePlant}
+            plants={plants}
+            values={values}
+            showing={showing}
+          /> : <Typography>You have no plants</Typography>}
       </Card>
-      <Paginate data={plants} handlePagination={handlePagination} handlePageSizeChange={handlePageSizeChange} newPlants={newPlants} handleClick={handleClick} values={values} />
+      <Paginate data={plants} handlePageSizeChange={handlePageSizeChange} handleClick={handleClick} values={values} />
     </>
   )
 }

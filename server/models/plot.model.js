@@ -8,7 +8,7 @@ const plotSchema = new Schema({
         data: Buffer,
         contentType: String
     },
-    season: { type: String },
+    season: { type: String, enum: ['Spring', 'Fall'] },
     description: { type: String },
     prePlantSeeds: { type: String },
     prePlantSeedsDate: String,
@@ -19,7 +19,8 @@ const plotSchema = new Schema({
     harvestYieldTally: Number,
     images: { type: [String] },
     created: { type: Date, default: Date.now },
-    plant: { type: mongoose.Schema.ObjectId, ref: 'Plant' }
+    plant: { type: mongoose.Schema.ObjectId, ref: 'Plant' },
+    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
 }, {
     timestamps: true
 })

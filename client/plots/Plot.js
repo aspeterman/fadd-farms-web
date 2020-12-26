@@ -60,7 +60,6 @@ const useStyles = makeStyles(theme => ({
 export default function Plot({ match }) {
   const classes = useStyles()
   const [plot, setPlot] = useState({ plant: {} })
-  const [suggestions, setSuggestions] = useState([])
   const [error, setError] = useState('')
   useEffect(() => {
     const abortController = new AbortController()
@@ -89,7 +88,6 @@ export default function Plot({ match }) {
           <Card className={classes.card}>
             <CardHeader
               title={plot.name}
-            // subheader={plot.quantity > 0? 'In Stock': 'Out of Stock'}
             />
             <div className={classes.flex}>
               <CardMedia

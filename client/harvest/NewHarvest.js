@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import FileUpload from '@material-ui/icons/AddPhotoAlternate'
+import moment from 'moment'
 import React, { useState } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import auth from './../auth/auth-helper'
@@ -66,12 +67,11 @@ export default function NewHarvest({ match }) {
         let harvestData = new FormData()
         values.observations && harvestData.append('observations', values.observations)
         values.yield && harvestData.append('yield', values.yield)
-        values.date && harvestData.append('date', values.date)
+        values.date && harvestData.append('date', moment(values.date).format('MMM-DD-YYYY'))
         values.image && harvestData.append('image', values.image)
         harvestData.append('postedBy', jwt.user._id)
         harvestData.append('plot', match.params.plotId)
         harvestData.append('plant', match.params.plantId)
-
         create({
             plotId: match.params.plotId,
             userId: jwt.user._id

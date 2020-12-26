@@ -1,15 +1,12 @@
-import { Avatar, CardContent, Divider, IconButton } from '@material-ui/core'
+import { Avatar, CardContent, Divider } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import DeleteIcon from '@material-ui/icons/Delete'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import auth from '../auth/auth-helper'
-import { remove } from './api-harvest'
 
 
 const useStyles = makeStyles(theme => ({
@@ -21,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex'
     },
     card: {
-        maxWidth: 600,
+        maxWidth: 300,
         margin: 'auto',
         marginBottom: theme.spacing(3),
         backgroundColor: 'rgba(0, 0, 0, 0.06)'
@@ -47,7 +44,7 @@ const useStyles = makeStyles(theme => ({
         color: '#375a53',
     },
     media: {
-        height: 200,
+        height: 100,
         // display: 'inline-block',
         // width: 200,
         // marginLeft: '24px'
@@ -72,30 +69,16 @@ const useStyles = makeStyles(theme => ({
     },
     text: {
         margin: theme.spacing(1)
+    },
+    link: {
+        // fontWeight: 'bold',
+        fontSize: 'large',
+        color: theme.palette.primary
     }
 }))
 
 export default function Harvest(props) {
     const classes = useStyles()
-
-    const jwt = auth.isAuthenticated()
-
-
-    const deleteHarvest = () => {
-        remove({
-            plotId: props.harvest.plot,
-            harvestId: props.harvest._id
-        }, {
-            t: jwt.token
-        }).then((data) => {
-            if (data.error) {
-                console.log(data.error)
-            } else {
-                props.removeUpdate(props.harvest)
-            }
-        })
-    }
-
 
     const imageUrl = props.harvest._id
         ? `/api/harvest/image/${props.harvest._id}?${new Date().getTime()}`
@@ -109,12 +92,6 @@ export default function Harvest(props) {
                             avatar={
                                 <Avatar src={imageUrl} />
                             }
-                            action={
-                                props.harvest.postedBy._id === auth.isAuthenticated().user._id &&
-                                <IconButton onClick={deleteHarvest}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            }
                             title={<Link to={"/user/" + props.harvest.postedBy._id}>{props.harvest.postedBy.name}</Link>}
                             subheader={props.harvest.date ? props.harvest.date.slice(0, 10) : props.harvest.createdAt}
                             className={classes.cardHeader}
@@ -126,10 +103,10 @@ export default function Harvest(props) {
                             <CardMedia
                                 className={classes.media}
                                 image={imageUrl}
-                                title={props.harvest.yield}
+                                title={props.harvest.plant.plantname}
                             />
-                            <Typography component="h4" variant="subtitle1" className={classes.price}>
-                                Harvested From:<Link className={classes.price} to={`/plants/${props.harvest.plot.plant}/${props.harvest.plot._id}`}> {props.harvest.plant.plantname}</Link><br />
+                            <Typography component="h4" variant="subtitle1" className={classes.text}>
+                                Harvested From: <Link className={classes.link} to={`/plants/${props.harvest.plot.plant}/${props.harvest.plot._id}`}>{props.harvest.plant.plantname}</Link><br />
                             </Typography>
                             <Typography component="p" variant="subtitle1" className={classes.text}>
                                 Yield: {props.harvest.yield}<br />

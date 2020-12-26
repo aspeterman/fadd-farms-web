@@ -50,7 +50,7 @@ const listPlantByUser = async (params, credentials) => {
 
 const listPlants = async (params, credentials, signal) => {
     try {
-        let response = await fetch('/api/plants/feed/' + params.userId, {
+        let response = await fetch(`/api/plants/feed/${params.userId}`, {
             method: 'GET',
             signal: signal,
             headers: {

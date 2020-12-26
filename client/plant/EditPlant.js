@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { PhotoCamera } from '@material-ui/icons'
+import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import auth from '../auth/auth-helper'
@@ -67,7 +68,6 @@ export default function EditPlant(props) {
     careDuringGrowth: '',
     spacing: '',
     active: props.plant.active,
-    plantId: props.plantId,
     redirectToPlant: false,
   })
 
@@ -78,7 +78,7 @@ export default function EditPlant(props) {
     const signal = abortController.signal
 
     getOne({
-      plantId: props.plantId
+      plantId: props.plant._id
     }, { t: jwt.token }, signal).then((data) => {
       if (data & data.error) {
         setValues({ ...values, error: data.error })
@@ -101,7 +101,7 @@ export default function EditPlant(props) {
     return function cleanup() {
       abortController.abort()
     }
-  }, [props.plantId])
+  }, [props.plant._id])
 
 
   const clickSubmit = () => {
@@ -117,7 +117,7 @@ export default function EditPlant(props) {
     values.image && plantData.append('image', values.image)
     plantData.append('active', values.active)
     update({
-      plantId: props.plantId
+      plantId: props.plant._id
     }, {
       t: jwt.token
     }, plantData).then((data) => {
@@ -139,7 +139,6 @@ export default function EditPlant(props) {
 
   const handleToggleActive = event => {
     setValues({ ...values, active: !values.active })
-    console.log(props)
   }
   const photoUrl = values.id
     ? `/api/users/photo/${values.id}?${new Date().getTime()}`
@@ -200,7 +199,14 @@ export default function EditPlant(props) {
           </DialogContent>
         </Dialog>
       </Grid>
-      <MyPlots plantId={values.plantId} searched={false} />
+      <MyPlots plantId={props.plant._id} searched={false} />
     </>
   )
+}
+
+EditPlant.propTypes = {
+  plant: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  updatePlant: PropTypes.func.isRequired
 }

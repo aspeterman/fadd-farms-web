@@ -1,7 +1,7 @@
 import queryString from 'query-string'
 const create = async (params, credentials, plot) => {
     try {
-        let response = await fetch('/api/plots/by/' + params.plantId, {
+        let response = await fetch('/api/plots/by/' + params.plantId + '/' + params.userId, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -61,7 +61,7 @@ const remove = async (params, credentials) => {
 
 const listByPlant = async (params, signal) => {
     try {
-        let response = await fetch('/api/plots/by/' + params.plantId, {
+        let response = await fetch('/api/plots/by/' + params.plantId + '/' + params.userId, {
             method: 'GET',
             signal: signal
         })
@@ -71,9 +71,9 @@ const listByPlant = async (params, signal) => {
     }
 }
 
-const listLatest = async (signal) => {
+const listLatest = async (params, signal) => {
     try {
-        let response = await fetch('/api/plots/latest', {
+        let response = await fetch('/api/plots/latest/' + params.userId, {
             method: 'GET',
             signal: signal
         })
