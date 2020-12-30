@@ -143,52 +143,52 @@ export default function PlantLog({ match }) {
     }
 
     return (
-        screenWidth ?
-            <div className={classes.root}>
-                <>
-                    <Typography className={classes.title}>{toUpper(values.plant.plantname)}
-                        <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={handleShow}>Edit</Button>
-                    </Typography>
-                    <Grid container spacing={8}>
-                        <Grid item xs={6} sm={6}>
-                            <Card className={classes.card}
-                            >
-                                <CardContent>
-                                    <Typography className={classes.text}><strong>Status: </strong>{values.plant.active ? "Currently Active" : "Not Currently Active"}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
-                                    </Typography>
-                                    <Typography className={classes.text}><strong>Common Pests: </strong>{values.plant.pests}
-                                    </Typography>
-                                    <Typography className={classes.text}>
-                                        <strong>Soil Requirements: </strong>{values.plant.soil}
-                                    </Typography>
-                                    <Typography className={classes.text}>
-                                        <strong>Total Plots: </strong>{values.plant.plots && values.plant.plots.length}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            <Divider />
+        screenWidth &&
+        <div className={classes.root}>
+            <>
+                <Typography className={classes.title}>{toUpper(values.plant.plantname)}
+                    <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={handleShow}>Edit</Button>
+                </Typography>
+                <Grid container spacing={8}>
+                    <Grid item xs={6} sm={6}>
+                        <Card className={classes.card}
+                        >
+                            <CardContent>
+                                <Typography className={classes.text}><strong>Status: </strong>{values.plant.active ? "Currently Active" : "Not Currently Active"}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
+                                </Typography>
+                                <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
+                                </Typography>
+                                <Typography className={classes.text}><strong>Common Pests: </strong>{values.plant.pests}
+                                </Typography>
+                                <Typography className={classes.text}>
+                                    <strong>Soil Requirements: </strong>{values.plant.soil}
+                                </Typography>
+                                <Typography className={classes.text}>
+                                    <strong>Total Plots: </strong>{values.plant.plots && values.plant.plots.length}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Divider />
 
-                            <Typography className={classes.text}>General Comments</Typography>
-                            {values.loading ? <CircularProgress /> :
-                                <Comments plantId={match.params.plantId} comments={values.comments} updateComments={updateComments} />}
-                        </Grid>
-                        <Grid item xs={6} sm={6}>
-                            {values.loading ? <CircularProgress /> :
-                                <EditPlant plantId={match.params.plantId} plant={values.plant} updatePlant={updatePlant} handleShow={handleShow} handleClose={handleClose} open={open} />}
-                        </Grid>
+                        <Typography className={classes.text}>General Comments</Typography>
+                        {values.loading ? <CircularProgress /> :
+                            <Comments plantId={match.params.plantId} comments={values.comments} updateComments={updateComments} />}
                     </Grid>
-                </>
-            </div> : <CircularProgress />
+                    <Grid item xs={6} sm={6}>
+                        {values.loading ? <CircularProgress /> :
+                            <EditPlant plantId={match.params.plantId} plant={values.plant} updatePlant={updatePlant} handleShow={handleShow} handleClose={handleClose} open={open} />}
+                    </Grid>
+                </Grid>
+            </>
+        </div>
 
     )
 }

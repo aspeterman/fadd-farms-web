@@ -48,24 +48,23 @@
 //     )
 // }
 
-import Button from '@material-ui/core/Button'
+import { Icon, IconButton, InputAdornment, MenuItem } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
-import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
-import SearchIcon from '@material-ui/icons/Search'
-import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import { withRouter } from 'react-router'
+import auth from '../auth/auth-helper.js'
 import { list } from './api-plant.js'
-import Products from './Products'
 
 const useStyles = makeStyles(theme => ({
     card: {
         margin: 'auto',
         textAlign: 'center',
-        paddingTop: 10,
-        backgroundColor: '#80808024'
+        width: 600
+        // paddingTop: 10,
+        // backgroundColor: '#80808024'
     },
     menu: {
         width: 200,
@@ -81,7 +80,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: 300,
-        marginBottom: '20px'
+        marginBottom: '20px',
     },
     searchButton: {
         minWidth: '20px',
@@ -91,28 +90,34 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function PlantSearch(props) {
+const PlantSearch = withRouter((props) => {
     const classes = useStyles()
     const [values, setValues] = useState({
         category: '',
         search: '',
         results: [],
-        searched: false
+        searched: false,
+        active: true,
+        showing: 'all'
     })
     const handleChange = name => event => {
         setValues({
             ...values, [name]: event.target.value,
         })
     }
+
+    const jwt = auth.isAuthenticated()
     const search = () => {
         if (values.search) {
             list({
-                search: values.search || undefined, category: values.category
-            }).then((data) => {
+                search: values.search || undefined, category: values.category, active: values.active,
+                userId: jwt.user._id
+            }, { t: jwt.token }).then((data) => {
                 if (data.error) {
                     console.log(data.error)
                 } else {
                     setValues({ ...values, results: data, searched: true })
+                    props.handleSearch(data)
                 }
             })
         }
@@ -123,10 +128,16 @@ export default function PlantSearch(props) {
             search()
         }
     }
+
+    const handleShowAll = () => {
+        setValues({ ...values, showing: 'all', search: '', active: true, category: '', searched: false })
+        props.handleShowAll()
+        handleChange('')
+    }
     return (
         <div>
             <Card className={classes.card}>
-                <TextField
+                {/* <TextField
                     id="select-category"
                     select
                     label="Select category"
@@ -147,25 +158,63 @@ export default function PlantSearch(props) {
                             {option}
                         </MenuItem>
                     ))}
+                </TextField> */}
+                <TextField
+                    id="select-active"
+                    select
+                    label="Active?"
+                    className={classes.textField}
+                    value={values.active}
+                    onChange={handleChange('active')}
+                    SelectProps={{
+                        MenuProps: {
+                            className: classes.menu,
+                        },
+                    }}
+                    margin="normal">
+                    <MenuItem value={true}>
+                        Active
+            </MenuItem>
+                    <MenuItem value={false}>
+                        Inactive
+            </MenuItem>
                 </TextField>
+                {/* {location} */}
                 <TextField
                     id="search"
-                    label="Search products"
-                    type="search"
+                    label="Search your garden"
+                    type="text"
                     onKeyDown={enterKey}
                     onChange={handleChange('search')}
                     className={classes.searchField}
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment>
+                                <IconButton disabled={!values.search} onClick={handleShowAll}>
+                                    <Icon >clear</Icon>
+                                </IconButton>
+                                <IconButton onClick={search}>
+                                    <Icon >search</Icon>
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
                 />
-                <Button variant="contained" color={'primary'} className={classes.searchButton} onClick={props.handleSearch}>
-                    <SearchIcon />
+                {/* <Button valiant="contained" color={"secondary"} onClick={props.handleShowAll}>
+                    <Cancel />
                 </Button>
+                <Button variant="contained" color={'primary'} className={classes.searchButton} onClick={search}>
+                    <SearchIcon />
+                </Button> */}
                 <Divider />
-                <Products products={values.results} searched={values.searched} />
+                {/* <Plants results={values.results} searched={values.searched} showing={values.showing} /> */}
             </Card>
         </div>
     )
+})
+PlantSearch.propTypes = {
+    // categories: PropTypes.array.isRequired
 }
-Search.propTypes = {
-    categories: PropTypes.array.isRequired
-}
+
+export default PlantSearch

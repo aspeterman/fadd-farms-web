@@ -16,6 +16,7 @@ import EditProfile from './user/EditProfile'
 import Profile from './user/Profile'
 import Signup from './user/Signup'
 import Users from './user/Users'
+import ScrollToTop from './utils/ScrollToTop'
 
 const MainRouter = () => {
   return (<div>
@@ -36,6 +37,7 @@ const MainRouter = () => {
       <PrivateRoute path="/user/:userId" component={Profile} />
       <Route path="*" component={NotFound} />
     </Switch>
+    <ScrollToTop />
   </div>)
 }
 

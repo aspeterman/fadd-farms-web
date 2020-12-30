@@ -48,7 +48,7 @@ const listPlantByUser = async (params, credentials) => {
     }
 }
 
-const listPlants = async (params, credentials, signal) => {
+const listPlants = async (params, credentials, signal, perPage, pageNo) => {
     try {
         let response = await fetch(`/api/plants/feed/${params.userId}`, {
             method: 'GET',
@@ -190,7 +190,7 @@ const list = async (params, signal) => {
     try {
         let response = await fetch('/api/plants?' + query, {
             method: 'GET',
-            signal: signal
+            // signal: signal
         })
         return response.json()
     } catch (err) {
