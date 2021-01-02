@@ -6,6 +6,7 @@ import DiscussionHome from './core/DiscussionHome'
 import Home from './core/Home'
 import MenuBar from './core/Menu'
 import NotFound from './core/NotFound'
+import RecentHome from './core/RecentHome'
 import EditHarvest from './harvest/EditHarvest'
 import NewHarvest from './harvest/NewHarvest'
 import PlantLog from './plant/PlantInfo'
@@ -16,14 +17,14 @@ import EditProfile from './user/EditProfile'
 import Profile from './user/Profile'
 import Signup from './user/Signup'
 import Users from './user/Users'
-import ScrollToTop from './utils/ScrollToTop'
 
 const MainRouter = () => {
-  return (<div>
+  return (<>
     <MenuBar />
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/news" component={DiscussionHome} />
+      <Route exact path="/activity" component={RecentHome} />
       <PrivateRoute exact path="/plants/:plantId" component={PlantLog} />
       <PrivateRoute path="/plants/:plantId/plots/new" component={NewPlot} />
       <PrivateRoute path="/plants/:plantId/:plotId/edit" component={EditPlot} />
@@ -37,8 +38,8 @@ const MainRouter = () => {
       <PrivateRoute path="/user/:userId" component={Profile} />
       <Route path="*" component={NotFound} />
     </Switch>
-    <ScrollToTop />
-  </div>)
+  </>
+  )
 }
 
 export default MainRouter

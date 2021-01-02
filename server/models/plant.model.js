@@ -9,7 +9,8 @@ const plantSchema = new Schema({
     // unique: true
   },
   category: {
-    type: String
+    type: String,
+    default: 'General'
   },
   description: {
     type: String,

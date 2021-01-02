@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex'
     },
     card: {
-        maxWidth: 300,
+        maxWidth: 400,
         margin: 'auto',
         marginBottom: theme.spacing(3),
         backgroundColor: 'rgba(0, 0, 0, 0.06)'
@@ -46,8 +46,8 @@ const useStyles = makeStyles(theme => ({
     media: {
         height: 100,
         // display: 'inline-block',
-        // width: 200,
-        // marginLeft: '24px'
+        width: 200,
+        marginLeft: '24px'
     },
     icon: {
         verticalAlign: 'sub'
@@ -99,12 +99,12 @@ export default function Harvest(props) {
                         <Divider />
                         {/* <div className={classes.flex}> */}
                         <CardContent className={classes.cardContent}>
-
-                            <CardMedia
-                                className={classes.media}
-                                image={imageUrl}
-                                title={props.harvest.plant.plantname}
-                            />
+                            <Link to={`/plants/${props.harvest.plot.plant}/${props.harvest.plot._id}`}>
+                                <CardMedia
+                                    className={classes.media}
+                                    image={imageUrl}
+                                    title={props.harvest.plant.plantname}
+                                /></Link>
                             <Typography component="h4" variant="subtitle1" className={classes.text}>
                                 Harvested From: <Link className={classes.link} to={`/plants/${props.harvest.plot.plant}/${props.harvest.plot._id}`}>{props.harvest.plant.plantname}</Link><br />
                             </Typography>

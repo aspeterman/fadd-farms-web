@@ -120,13 +120,13 @@ export default function Plot({ match }) {
                     <Card className={classes.card}>
                         <CardHeader
                             action={values.postedBy === jwt.user._id &&
-                                <Link to={"/plants/" + values.plantId + '/' + values.plotId + "/edit"}>
+                                <Link to={"/plants/" + match.params.plantId + '/' + match.params.plotId + "/edit"}>
                                     <IconButton aria-label="Edit" color="primary">
                                         <Edit />
                                     </IconButton>
                                 </Link>
                             }
-                            title={<Link to={'/plants/' + values.plantId} className={classes.link}><ArrowBackTwoTone />
+                            title={<Link to={'/plants/' + match.params.plantId} className={classes.link}><ArrowBackTwoTone />
                             </Link>}
                             subheader={values.name}
                         />

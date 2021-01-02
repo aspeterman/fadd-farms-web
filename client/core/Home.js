@@ -12,7 +12,7 @@ import auth from './../auth/auth-helper'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    margin: 30,
+    margin: 40,
   },
   card: {
     maxWidth: 600,
@@ -73,9 +73,12 @@ export default function Home({ history }) {
       }
       {defaultPage &&
         <>
-          <Grid container spacing={10}>
-            <Grid item xs={12} sm={12}>
-              <Plants />
+          <Grid container spacing={10} className={classes.root}>
+            <Grid container>
+
+              <Grid item xs={10} sm={10}>
+                <Plants />
+              </Grid>
             </Grid>
           </Grid>
         </>

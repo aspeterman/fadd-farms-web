@@ -1,49 +1,37 @@
-import { Fab, makeStyles } from "@material-ui/core";
-import { ArrowUpward } from "@material-ui/icons";
-import React, { useState } from "react";
+import { makeStyles, useScrollTrigger, Zoom } from "@material-ui/core";
+import React from "react";
 
-const useStyles = makeStyles(theme => ({
-    scroll: {
-        display: 'flex',
-        float: 'right',
-        margin: theme.spacing(3)
-    }
-}))
+const useStyles = makeStyles((theme) => ({
+    root: {
+        position: 'fixed',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+    },
+}));
 
-export default function ScrollToTop() {
-    const classes = useStyles()
+export default function ScrollTop(props) {
+    const { children, window } = props;
+    const classes = useStyles();
 
-    const [isVisible, setVisible] = useState(false)
-
-    const toggleVisibility = () => {
-        if (window.pageYOffset > 100) {
-            setVisible(true)
-        } else {
-            setVisible(false)
-        }
-    }
-
-    document.addEventListener("scroll", function () {
-        toggleVisibility();
+    const trigger = useScrollTrigger({
+        target: window ? window() : undefined,
+        disableHysteresis: true,
+        threshold: 100,
     });
 
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    }
+    const handleClick = (event) => {
+        const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');
 
+        if (anchor) {
+            anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    };
 
     return (
-        <div className={classes.scroll}>
-            {isVisible && (
-                <div onClick={() => scrollToTop()}>
-                    <Fab color="primary" size="small" aria-label="scroll back to top">
-                        <ArrowUpward />
-                    </Fab>
-                </div>
-            )}
-        </div>
+        <Zoom in={trigger}>
+            <div onClick={handleClick} role="presentation" className={classes.root}>
+                {children}
+            </div>
+        </Zoom>
     );
 }

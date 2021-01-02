@@ -4,11 +4,10 @@ import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import useAxios from 'axios-hooks'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import auth from '../auth/auth-helper'
 import Pagination from '../utils/Pagination'
-import FilterSideBar from './FilterSideBar'
-import NewPlant from './NewPlant'
+import { listCategories } from './api-plant'
 import PlantList from './PlantList'
 import PlantSearch from './PlantSearch'
 
@@ -60,61 +59,45 @@ export default function Plants(props) {
     total: 0,
     pageCount: 0,
     offset: 0,
-    perPage: 10,
+    perPage: 20,
     currentPage: 0,
     category: '',
     search: '',
     searchedPlants: [],
-    searched: false
+    searched: false,
+    added: false,
+    removed: false,
+    newPlant: {},
+    removedPlant: {},
+    updatedPlants: [],
+    categories: []
   })
 
 
   const jwt = auth.isAuthenticated()
 
-  // useEffect(() => {
-  //   const abortController = new AbortController()
-  //   const signal = abortController.signal
+  useEffect(() => {
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
-  //   listPlants({
-  //     userId: jwt.user._id
-  //   }, {
-  //     t: jwt.token
-  //   }, signal).then((data) => {
-  //     if (data.error) {
-  //       console.log(data.error)
-  //     } else {
-  //       setPlants(data)
-  //       setNewPlants(data.slice(values.offset, values.offset + values.perPage))
-  //       setValues({ ...values, pageCount: Math.ceil(data.length / values.perPage), total: data.length })
-  //     }
-  //   })
-  //   return function cleanup() {
-  //     abortController.abort()
-  //   }
+    listCategories(signal).then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        setValues({ ...values, categories: data })
+      }
+    })
+    return function cleanup() {
+      abortController.abort()
+    }
 
-  // }, [])
+  }, [])
 
   const handlePageSizeChange = (e) => {
-    // setValues({ ...values, perPage: parseInt(e.target.value), pageCount: Math.ceil(values.total / parseInt(e.target.value)), currentPage: 0, offset: 0 })
-    // let newData = plants.slice(values.offset, values.offset + parseInt(e.target.value))
-    // setNewPlants(newData)
     setValues({ ...values, perPage: parseInt(e.target.value) })
-    // window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-
   }
 
-  // const handleClick = (offset, e) => {
-  //   setValues({
-  //     ...values,
-  //     offset: offset,
-  //     currentPage: offset / values.perPage
-  //   });
-  //   let newData = plants.slice(offset, offset + values.perPage)
-  //   setNewPlants(newData)
-  //   window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  // }
-
-  //-----------------
+  //PAGINATION-------------------------------------------
   const [page, setPage] = useState(1)
   const [{ data, loading, error }] = useAxios({
     url: `/api/plants/feed/${jwt.user._id}`,
@@ -144,7 +127,7 @@ export default function Plants(props) {
 
   //------------
 
-  //Search
+  //Search-----------------------
 
   const handleSearch = (results) => {
     setValues({ ...values, searchedPlants: results, searched: true })
@@ -156,17 +139,29 @@ export default function Plants(props) {
 
   //-----------
 
+  const handleReset = () => {
+    setValues({ ...values, added: false, removed: false })
+  }
+
   const addPlant = (plant) => {
-    const updatedPlants = [...plants]
-    updatedPlants.unshift(plant)
-    setPlants(updatedPlants)
+    // const updatedPlants = [...plants]
+    // updatedPlants.unshift(plant)
+    // setPlants(updatedPlants)
+    // const updatedPlants = [...data]
+    // data = updatedPlants
+    setValues({ ...values, newPlant: plant, added: true })
+    handleReset()
   }
   const removePlant = (plant) => {
-    const updatedPlants = [...plants]
-    const index = updatedPlants.indexOf(plant)
-    updatedPlants.splice(index, 1)
-    setPlants(updatedPlants)
+    // const updatedPlants = [...plants]
+    // const index = updatedPlants.indexOf(plant)
+    // updatedPlants.splice(index, 1)
+    // setPlants(updatedPlants)
+    setValues({ ...values, removedPlant: plant, removed: true })
+    handleReset()
   }
+
+
 
   const handleShowActive = () => {
     setShowing('active')
@@ -178,7 +173,6 @@ export default function Plants(props) {
 
   if (loading) return <><CircularProgress /></>
   if (error) return <p>Error!</p>
-  if (data) console.log(data)
 
   return (
     <>
@@ -187,30 +181,29 @@ export default function Plants(props) {
           <Typography type="title">
             Garden Plants
         </Typography>
-          <PlantSearch handleSearch={handleSearch} handleShowAll={handleShowAll} />
-          <FilterSideBar plants={newPlants}
+          <PlantSearch handleSearch={handleSearch} handleShowAll={handleShowAll} categories={values.categories} />
+          {/* <FilterSideBar plants={data.plants}
             handleShowActive={handleShowActive}
             handleShowAll={handleShowAll}
             handleSorting={handleSorting}
             sorting={sorting}
-            showing={showing} />
+            showing={showing} /> */}
         </div>
         <Divider />
-        <NewPlant
+        {/* <NewPlant
           addUpdate={addPlant}
-        />
+        /> */}
         <Divider />
         {plants ?
           <PlantList removeUpdate={removePlant}
+            addUpdate={addPlant}
             plants={data.plants}
             values={values}
             showing={showing}
             searched={values.searched}
             results={values.searchedPlants}
-          // results={props.results}
           /> : <Typography>You have no plants</Typography>}
       </Card>
-      {/* <Paginate data={plants} handlePageSizeChange={handlePageSizeChange} handleClick={handleClick} values={values} /> */}
       <Pagination handleClick={handlePageChange} totalPages={data.totalPages} currentPage={data.currentPage} values={values} handlePageUp={handlePageUp} handlePageDown={handlePageDown} handlePageSizeChange={handlePageSizeChange} />
     </>
   )

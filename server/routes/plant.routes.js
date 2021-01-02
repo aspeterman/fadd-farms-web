@@ -22,7 +22,7 @@ router.route('/api/plants/feed/:userId')
 router.route('/api/plants')
     .get(plantCtrl.list)
 
-router.route('/api/products/categories')
+router.route('/api/plants/categories')
     .get(plantCtrl.listCategories)
 
 router.route('/api/plants/like')

@@ -107,11 +107,12 @@ const listNewsFeed = async (req, res) => {
             .skip((page - 1) * limit)
             .sort('plantname')
             .exec()
-        const count = await Plant.countDocuments();
+        // const count = await Plant.countDocuments();
         res.json({
             plants,
-            totalPages: Math.ceil(count / limit),
-            currentPage: page
+            // totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            totalPages: Math.ceil(plants.length / limit)
         })
     } catch (err) {
         return res.status(400).json({

@@ -13,7 +13,6 @@ import { StaticRouter } from 'react-router-dom'
 import MainRouter from './../client/MainRouter'
 import theme from './../client/theme'
 import Template from './../template'
-import devBundle from './devBundle'
 import authRoutes from './routes/auth.routes'
 import harvestRoutes from './routes/harvest.routes'
 import plantRoutes from './routes/plant.routes'
@@ -21,11 +20,12 @@ import plotRoutes from './routes/plot.routes.js'
 import postRoutes from './routes/post.routes'
 import userRoutes from './routes/user.routes'
 
+
 const CURRENT_WORKING_DIR = process.cwd()
 const app = express()
 
 //comment out before building for production
-devBundle.compile(app)
+// devBundle.compile(app)
 
 // parse body params and attache them to req.body
 app.use(bodyParser.json())
@@ -60,9 +60,9 @@ app.get('*', (req, res) => {
       </StaticRouter>
     )
   )
-  // if (context.url) {
-  //   return res.redirect(303, context.url)
-  // }
+  if (context.url) {
+    return res.redirect(303, context.url)
+  }
   const css = sheets.toString()
   res.status(200).send(Template({
     markup: markup,

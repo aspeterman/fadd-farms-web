@@ -3,12 +3,20 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import unicornbikeImg from '../assets/images/unicornbike.jpg'
 import auth from '../auth/auth-helper'
-import NewsFeed from '../post/Newsfeed'
+import RecentActivity from '../harvest/RecentActivity'
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        margin: 30,
+        marginTop: 30,
+    },
+    Grid: {
+        display: 'flex',
+        alignItems: 'center',
+        alignContent: 'center',
+        paddingLeft: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+        paddingRight: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+        justifyContent: 'center'
     },
     card: {
         maxWidth: 600,
@@ -34,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function PlantHome({ history }) {
+export default function RecentHome({ history }) {
     const classes = useStyles()
     const [defaultPage, setDefaultPage] = useState(false)
 
@@ -68,13 +76,12 @@ export default function PlantHome({ history }) {
                 </Grid>
             }
             {defaultPage &&
-                <Grid >
-                    {/* <Grid item xs={7} sm={7}> */}
-                    <NewsFeed />
-                    {/* </Grid> */}
-                    {/* <Grid item xs={5} sm={5}>
-                        <RecentActivity />
-                    </Grid> */}
+                <Grid container spacing={2} className={classes.root}>
+                    <Grid container justify='center' spacing={2} >
+                        <Grid item xs={10} sm={10} >
+                            <RecentActivity />
+                        </Grid>
+                    </Grid>
                 </Grid>
             }
 

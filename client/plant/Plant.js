@@ -1,4 +1,4 @@
-import { GridListTile, Tooltip } from '@material-ui/core'
+import { CardMedia, GridListTile, Tooltip } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -147,19 +147,25 @@ export default function Plant(props) {
           className={classes.cardHeader}
         />
         <CardContent className={classes.cardContent}>
+          <div className={classes.photo}>
+            <CardMedia
+              className={classes.media}
+              image={imageUrl}
+              title={props.plant.plantname}
+            /></div>
           <Typography component="p" className={classes.text}>
             Common Name: {props.plant.plantname}
           </Typography>
           <Typography component="p" className={classes.text}>
             Overview: {props.plant.description}
           </Typography>
-          {props.plant.image &&
+          {/* {props.plant.image &&
             (<div className={classes.photo}>
               <img
                 className={classes.media}
                 src={imageUrl}
               />
-            </div>)}
+            </div>)} */}
         </CardContent>
         <CardActions>
           {values.like
