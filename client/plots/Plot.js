@@ -76,10 +76,10 @@ export default function Plot({ match }) {
       abortController.abort()
     }
   }, [match.params.plotId])
+  console.log(match.params)
 
-
-  const imageUrl = plot._id
-    ? `/api/plot/image/${plot._id}?${new Date().getTime()}`
+  const imageUrl = match.params.plotId
+    ? `/api/plot/image/${match.params.plotId}?${new Date().getTime()}`
     : '/api/plot/defaultphoto'
   return (
     <div className={classes.root}>

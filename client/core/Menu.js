@@ -113,88 +113,88 @@ const MenuBar = withRouter(({ history }, props) => {
 
   const screenWidth = isSsr ? null : window.innerWidth;
   return (
-    screenWidth ?
-      <>
-        <AppBar position="static">
-          <div id='back-to-top-anchor'>
-            <Toolbar>
-              <Typography variant="h6" color="inherit">
-                FADD
+    screenWidth &&
+    <>
+      <AppBar position="static">
+        <div id='back-to-top-anchor'>
+          <Toolbar>
+            <Typography variant="h6" color="inherit">
+              FADD
       </Typography>
-              <div>
-                <Link to="/">
-                  <IconButton aria-label="Home" style={isActive(history, "/")}>
-                    <HomeIcon />
-                  </IconButton>
-                </Link>
-                <Link to="/activity">
-                  <Button style={isActive(history, "/activity")}>Recent Activity</Button>
-                </Link>
-                <Link to="/news">
-                  <Button style={isActive(history, "/news")}>News</Button>
-                </Link>
+            <div>
+              <Link to="/">
+                <IconButton aria-label="Home" style={isActive(history, "/")}>
+                  <HomeIcon />
+                </IconButton>
+              </Link>
+              <Link to="/activity">
+                <Button style={isActive(history, "/activity")}>Recent Activity</Button>
+              </Link>
+              <Link to="/news">
+                <Button style={isActive(history, "/news")}>News</Button>
+              </Link>
+            </div>
+            <div style={{ 'position': 'absolute', 'right': '10px' }}>
+              <div style={{ 'float': 'right' }}>
+                {
+                  !auth.isAuthenticated() && (<>
+                    <Link to="/signup">
+                      <Button style={isActive(history, "/signup")}>Sign up
+            </Button>
+                    </Link>
+                    <Link to="/signin">
+                      <Button style={isActive(history, "/signin")}>Sign In
+            </Button>
+                    </Link>
+                  </>)
+                }
               </div>
-              <div style={{ 'position': 'absolute', 'right': '10px' }}>
-                <div style={{ 'float': 'right' }}>
-                  {
-                    !auth.isAuthenticated() && (<>
-                      <Link to="/signup">
-                        <Button style={isActive(history, "/signup")}>Sign up
-            </Button>
-                      </Link>
-                      <Link to="/signin">
-                        <Button style={isActive(history, "/signin")}>Sign In
-            </Button>
-                      </Link>
-                    </>)
-                  }
-                </div>
-                <div style={{ 'float': 'right' }}>
-                  {
-                    auth.isAuthenticated() && (<>
-                      <PopupState variant="popover" popupId="demo-popup-menu">
-                        {(popupState) => (
-                          <>
-                            <Button {...bindTrigger(popupState)}>
-                              <Avatar src={'../images/profile-pic.png'} />
-                            </Button>
-                            <Menu {...bindMenu(popupState)}>
-                              <MenuItem onClick={popupState.close}>
-                                <Button>
-                                  <Link to={"/user/" + auth.isAuthenticated().user._id}>
-                                    My Profile
+              <div style={{ 'float': 'right' }}>
+                {
+                  auth.isAuthenticated() && (<>
+                    <PopupState variant="popover" popupId="demo-popup-menu">
+                      {(popupState) => (
+                        <>
+                          <Button {...bindTrigger(popupState)}>
+                            <Avatar src={'../images/profile-pic.png'} />
+                          </Button>
+                          <Menu {...bindMenu(popupState)}>
+                            <MenuItem onClick={popupState.close}>
+                              <Button>
+                                <Link to={"/user/" + auth.isAuthenticated().user._id}>
+                                  My Profile
                               </Link>
-                                </Button>
-                              </MenuItem>
-                              <MenuItem onClick={popupState.close}>
-                                <Button color="inherit" onClick={() => {
-                                  auth.clearJWT(() => history.push('/'))
-                                }}>Sign out</Button>
-                              </MenuItem>
-                              <MenuItem>
-                                <SideBar />
-                              </MenuItem>
-                            </Menu>
-                          </>
-                        )}
-                      </PopupState>
+                              </Button>
+                            </MenuItem>
+                            <MenuItem onClick={popupState.close}>
+                              <Button color="inherit" onClick={() => {
+                                auth.clearJWT(() => history.push('/'))
+                              }}>Sign out</Button>
+                            </MenuItem>
+                            <MenuItem>
+                              <SideBar />
+                            </MenuItem>
+                          </Menu>
+                        </>
+                      )}
+                    </PopupState>
 
 
 
-                    </>)
-                  }
-                </div>
+                  </>)
+                }
               </div>
-            </Toolbar>
-          </div>
-        </AppBar>
-        <ScrollTop {...props}>
-          <Fab color="primary" size="small" aria-label="scroll back to top">
-            <ArrowUpward />
-          </Fab>
-        </ScrollTop>
-      </>
-      : <AppBar></AppBar>)
+            </div>
+          </Toolbar>
+        </div>
+      </AppBar>
+      <ScrollTop {...props}>
+        <Fab color="primary" size="small" aria-label="scroll back to top">
+          <ArrowUpward />
+        </Fab>
+      </ScrollTop>
+    </>
+  )
 })
 
 export default MenuBar

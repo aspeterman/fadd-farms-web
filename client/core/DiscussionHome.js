@@ -1,9 +1,10 @@
-import { Card, CardContent, CardMedia, Grid, Typography } from '@material-ui/core'
+import { Card, CardMedia, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import unicornbikeImg from '../assets/images/unicornbike.jpg'
 import auth from '../auth/auth-helper'
 import NewsFeed from '../post/Newsfeed'
+import useIsSsr from '../utils/useIsSsr'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,21 +49,21 @@ export default function PlantHome({ history }) {
         }
     }, [])
 
+    const isSsr = useIsSsr()
+
+    const screenWidth = isSsr ? null : window.innerWidth;
+
     return (
+        // screenWidth &&
         <div className={classes.root}>
-            { !defaultPage &&
+            {!defaultPage &&
                 <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <Card className={classes.card}>
                             <Typography variant="h6" className={classes.title}>
-                                Garden Page
+                                News Feed
                 </Typography>
                             <CardMedia className={classes.media} image={unicornbikeImg} title="Unicorn Bicycle" />
-                            <CardContent>
-                                <Typography type="body1" component="p">
-                                    Welcome to Your Garden.
-                  </Typography>
-                            </CardContent>
                         </Card>
                     </Grid>
                 </Grid>

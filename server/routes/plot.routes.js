@@ -29,8 +29,8 @@ router.route('/api/plot/defaultphoto')
     .get(plotCtrl.defaultPhoto)
 
 router.route('/api/plot/:plantId/:plotId')
-    .put(authCtrl.requireSignin, plantCtrl.isPoster, plotCtrl.update)
-    .delete(authCtrl.requireSignin, plantCtrl.isPoster, plotCtrl.remove)
+    .put(authCtrl.requireSignin, plotCtrl.update)
+    .delete(authCtrl.requireSignin, plotCtrl.remove)
 
 router.param('plantId', plantCtrl.postByID)
 router.param('plotId', plotCtrl.plotById)

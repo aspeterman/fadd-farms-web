@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import HarvestList from '../harvest/HarvestsList'
+import useIsSsr from '../utils/useIsSsr'
 import { read } from './api-plot'
 
 const useStyles = makeStyles(theme => ({
@@ -88,6 +89,10 @@ export default function Plot({ match }) {
         error: ''
     })
 
+    const isSsr = useIsSsr()
+
+    const screenWidth = isSsr ? null : window.innerWidth;
+
     const jwt = auth.isAuthenticated()
     useEffect(() => {
         const abortController = new AbortController()
@@ -98,7 +103,7 @@ export default function Plot({ match }) {
             if (data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                setValues({ ...values, plotId: data._id, plantId: data.plant._id, plantname: data.plant.plantname, name: data.name, season: data.season, prePlantSeeds: data.prePlantSeeds, prePlantSeedsDate: data.prePlantSeedsDate, prePlantGerminated: data.prePlantGerminated, prePlantGerminatedDate: data.prePlantGerminatedDate, seedsTransferred: data.seedsTransferred, seedsTransferredDate: data.seedsTransferredDate, postedBy: data.postedBy._id })
+                setValues({ ...values, plantname: data.plant.plantname, name: data.name, season: data.season, prePlantSeeds: data.prePlantSeeds, prePlantSeedsDate: data.prePlantSeedsDate, prePlantGerminated: data.prePlantGerminated, prePlantGerminatedDate: data.prePlantGerminatedDate, seedsTransferred: data.seedsTransferred, seedsTransferredDate: data.seedsTransferredDate, postedBy: data.postedBy._id })
             }
         })
         return function cleanup() {
@@ -110,10 +115,13 @@ export default function Plot({ match }) {
         setYield(data)
     }
 
-    const imageUrl = values.plotId
-        ? `/api/plot/image/${values.plotId}?${new Date().getTime()}`
+    console.log(match.params)
+
+    const imageUrl = match.params.plotId
+        ? `/api/plot/image/${match.params.plotId}?${new Date().getTime()}`
         : '/api/plot/defaultphoto'
     return (
+        screenWidth &&
         <div className={classes.root}>
             <Grid container spacing={10}>
                 <Grid item xs={7} sm={7}>

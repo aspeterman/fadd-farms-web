@@ -1,4 +1,4 @@
-import { Card, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
+import { Card, CircularProgress, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { ExpandMore } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import auth from '../auth/auth-helper'
@@ -59,6 +59,8 @@ const RecentActivity = () => {
     const showMore = () => {
         setShowing(showing + 5)
     }
+
+    if (!harvests) return <><CircularProgress /></>
     return (
         <Card className={classes.card}>
             <Typography type="title" className={classes.title}>
