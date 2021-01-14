@@ -1,12 +1,9 @@
-import { Accordion, AccordionActions, AccordionSummary, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import { Filter, Settings } from '@material-ui/icons';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import React from 'react';
+import Comments from './Comments';
 
 const useStyles = makeStyles({
     list: {
@@ -21,7 +18,7 @@ const useStyles = makeStyles({
     }
 });
 
-export default function FilterSideBar(props) {
+export default function CommentDrawer(props) {
     const classes = useStyles();
     const [state, setState] = React.useState({
         top: false,
@@ -47,23 +44,7 @@ export default function FilterSideBar(props) {
         // onClick={toggleDrawer(anchor, false)}
         // onKeyDown={toggleDrawer(anchor, false)}
         >
-            <List>
-                <ListItem button>
-                    <Accordion className={classes.accordion}>
-                        <AccordionSummary
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <ListItemIcon><Filter /></ListItemIcon>
-                            <ListItemText>Filter</ListItemText>
-                        </AccordionSummary>
-                        <AccordionActions>
-                            <Button value="all" className={classes.button} onClick={props.handleShowAll}>All</Button> |
-                            <Button value="active" className={classes.button} onClick={props.handleShowActive}>Active</Button>
-                        </AccordionActions>
-                    </Accordion>
-                </ListItem>
-            </List>
+            <Comments plantId={props.plantId} comments={props.comments} updateComments={props.updateComments} />
         </div>
     );
 
@@ -71,7 +52,7 @@ export default function FilterSideBar(props) {
         <div>
             {['right'].map((anchor) => (
                 <React.Fragment key={anchor}>
-                    <Button onClick={toggleDrawer(anchor, true)}><Settings /></Button>
+                    <Button variant='contained' color='primary' onClick={toggleDrawer(anchor, true)}>View Discussion</Button>
                     <SwipeableDrawer
                         anchor={anchor}
                         open={state[anchor]}
@@ -84,8 +65,4 @@ export default function FilterSideBar(props) {
             ))}
         </div>
     );
-}
-FilterSideBar.propTypes = {
-    handleShowActive: PropTypes.func.isRequired,
-    handleShowAll: PropTypes.func.isRequired
 }

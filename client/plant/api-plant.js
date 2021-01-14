@@ -48,9 +48,9 @@ const listPlantByUser = async (params, credentials) => {
     }
 }
 
-const listPlants = async (params, credentials, signal, perPage, pageNo) => {
+const listPlants = async (params, credentials, signal, perPage, offset) => {
     try {
-        let response = await fetch(`/api/plants/feed/${params.userId}`, {
+        let response = await fetch(`/api/plants/feed/${params.userId}?limit=${params.limit}&offset=${params.offset}`, {
             method: 'GET',
             signal: signal,
             headers: {
@@ -185,12 +185,12 @@ const uncomment = async (params, credentials, plantId, comment) => {
     }
 }
 
-const list = async (params, signal) => {
+const list = async (params, credentials, signal) => {
     const query = queryString.stringify(params)
     try {
-        let response = await fetch('/api/plants?' + query, {
+        let response = await fetch(`api/plants?${query}`, {
             method: 'GET',
-            // signal: signal
+            signal: signal
         })
         return response.json()
     } catch (err) {

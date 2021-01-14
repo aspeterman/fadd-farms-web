@@ -52,13 +52,10 @@ import { Divider, Icon, IconButton, InputBase, MenuItem, Paper } from '@material
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuIcon from '@material-ui/icons/Menu';
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { withRouter } from 'react-router';
+import { useHistory, withRouter } from 'react-router';
 import auth from '../auth/auth-helper.js';
 import StyledMenu from '../utils/StyledMenu';
-import StyledMenuItem from '../utils/StyledMenuItem';
-import { list } from './api-plant.js';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -111,6 +108,7 @@ const useStyles = makeStyles(theme => ({
 
 const PlantSearch = withRouter((props) => {
     const classes = useStyles()
+    const history = useHistory()
     const [values, setValues] = useState({
         category: '',
         search: '',
@@ -129,18 +127,22 @@ const PlantSearch = withRouter((props) => {
     const jwt = auth.isAuthenticated()
     const search = () => {
         if (values.search) {
-            list({
-                search: values.search || undefined, category: values.category, active: values.active,
-                userId: jwt.user._id
-            }, { t: jwt.token }).then((data) => {
-                if (data.error) {
-                    console.log(data.error)
-                } else {
-                    setValues({ ...values, results: data, searched: true })
-                    props.handleSearch(data)
-                    handleClose()
-                }
-            })
+            let url = `/search=${values.search}`
+            // list({
+            //     search: values.search || undefined, category: values.category, active: values.active,
+            //     userId: jwt.user._id
+            // }, { t: jwt.token }).then((data) => {
+            //     if (data.error) {
+            //         console.log(data.error)
+            //     } else {
+            //         setValues({ ...values, results: data, searched: true })
+            //         props.handleSearch(data)
+            //         handleClose()
+            //         history.push(url)
+            //     }
+            // })
+            history.push(url)
+
         }
     }
     const enterKey = (event) => {
@@ -195,7 +197,7 @@ const PlantSearch = withRouter((props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <StyledMenuItem>
+                <MenuItem>
                     <TextField
                         id="select-category"
                         select
@@ -210,42 +212,16 @@ const PlantSearch = withRouter((props) => {
                         }}
                         margin="normal">
                         <MenuItem value="All">All</MenuItem>
-                        {props.categories.map(option => (
+                        {props.values.categories.map(option => (
                             <MenuItem key={option} value={option}>
                                 {option}
                             </MenuItem>
                         ))}
                     </TextField>
-                </StyledMenuItem>
-                <StyledMenuItem>
-                    <TextField
-                        id="select-active"
-                        select
-                        label="Active?"
-                        className={classes.textField}
-                        value={values.active}
-                        onChange={handleChange('active')}
-                        SelectProps={{
-                            MenuProps: {
-                                className: classes.menu,
-                            },
-                        }}
-                        margin="normal">
-                        <MenuItem value="All">All</MenuItem>
-                        <MenuItem value={true}>
-                            Active
-            </MenuItem>
-                        <MenuItem value={false}>
-                            Inactive
-            </MenuItem>
-                    </TextField>
-                </StyledMenuItem>
+                </MenuItem>
             </StyledMenu>
         </Paper>
     )
 })
-PlantSearch.propTypes = {
-    categories: PropTypes.array.isRequired
-}
 
 export default PlantSearch

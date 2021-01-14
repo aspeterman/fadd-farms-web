@@ -12,8 +12,8 @@ import { create } from './api-plant.js'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: '#efefef',
-        padding: `${theme.spacing(3)}px 0px 1px`
+        // backgroundColor: '#efefef',
+        // padding: `${theme.spacing(3)}px 0px 1px`
     },
     card: {
         maxWidth: 600,

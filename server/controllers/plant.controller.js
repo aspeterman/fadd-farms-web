@@ -97,9 +97,13 @@ const listByUser = async (req, res) => {
 const listNewsFeed = async (req, res) => {
     let following = req.profile.following
     following.push(req.profile._id)
-    const { page, limit } = req.query;
-
+    const { limit, offset } = req.query;
+    const page = offset / limit || 1
     try {
+        let countPlants = await Plant.find({ postedBy: { $in: req.profile.following } })
+            .populate('comments.postedBy', '_id name')
+            .populate('postedBy', '_id name')
+            .exec()
         let plants = await Plant.find({ postedBy: { $in: req.profile.following } })
             .populate('comments.postedBy', '_id name')
             .populate('postedBy', '_id name')
@@ -107,12 +111,13 @@ const listNewsFeed = async (req, res) => {
             .skip((page - 1) * limit)
             .sort('plantname')
             .exec()
-        // const count = await Plant.countDocuments();
+        let totalPages = countPlants.length
+
         res.json({
             plants,
-            // totalPages: Math.ceil(count / limit),
             currentPage: page,
-            totalPages: Math.ceil(plants.length / limit)
+            totalPages: Math.ceil(totalPages / limit),
+            perPage: limit
         })
     } catch (err) {
         return res.status(400).json({
@@ -231,6 +236,7 @@ const list = async (req, res) => {
         let plants = await Plant.find(query)
             .populate('comments.postedBy', '_id name')
             .populate('postedBy', '_id name')
+            .sort('plantname')
             .exec()
         res.json(plants)
     } catch (err) {

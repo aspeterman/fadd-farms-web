@@ -1,11 +1,13 @@
-import { Button, Card, CardContent, CircularProgress, Divider, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CircularProgress, Divider, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { ArrowBack } from '@material-ui/icons';
 import { toUpper } from 'lodash';
 // import Highcharts from 'highcharts';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import auth from '../auth/auth-helper';
 import useIsSsr from '../utils/useIsSsr';
 import { getOne } from './api-plant';
-import Comments from './Comments';
+import CommentDrawer from './CommentDrawer';
 import EditPlant from './EditPlant';
 
 // require('highcharts/highcharts-more')(Highcharts);
@@ -45,12 +47,13 @@ import EditPlant from './EditPlant';
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        marginTop: 60,
+        // marginTop: 60,
         margin: 30,
     },
     title: {
         textAlign: 'center',
-        fontSize: '3em'
+        fontSize: '2em',
+        color: 'green'
     },
     expansion: {
         paddingLeft: `${theme.spacing(2)}px 0px`,
@@ -100,7 +103,7 @@ export default function PlantLog({ match }) {
         comments: [],
         loading: true
     })
-
+    const history = useHistory()
     const isSsr = useIsSsr()
 
     const screenWidth = isSsr ? null : window.innerWidth;
@@ -142,54 +145,59 @@ export default function PlantLog({ match }) {
         setValues({ ...values, comments: comments })
     }
 
-    return (
-        screenWidth &&
-        <div className={classes.root}>
-            <>
-                <Typography className={classes.title}>{toUpper(values.plant.plantname)}
-                    <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={handleShow}>Edit</Button>
-                </Typography>
-                <Grid container spacing={8}>
-                    <Grid item xs={6} sm={6}>
-                        <Card className={classes.card}
-                        >
-                            <CardContent>
-                                <Typography className={classes.text}><strong>Status: </strong>{values.plant.active ? "Currently Active" : "Not Currently Active"}
-                                </Typography>
-                                <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
-                                </Typography>
-                                <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
-                                </Typography>
-                                <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
-                                </Typography>
-                                <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
-                                </Typography>
-                                <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
-                                </Typography>
-                                <Typography className={classes.text}><strong>Common Pests: </strong>{values.plant.pests}
-                                </Typography>
-                                <Typography className={classes.text}>
-                                    <strong>Soil Requirements: </strong>{values.plant.soil}
-                                </Typography>
-                                <Typography className={classes.text}>
-                                    <strong>Total Plots: </strong>{values.plant.plots && values.plant.plots.length}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                        <Divider />
+    const handleGoBack = () => {
+        const url = '/'
+        let state = { 'currentPage': history.location.state.currentPage }
+        // history.push(url, state)
+        history.goBack()
+    }
 
-                        <Typography className={classes.text}>General Comments</Typography>
-                        {values.loading ? <CircularProgress /> :
-                            <Comments plantId={match.params.plantId} comments={values.comments} updateComments={updateComments} />}
-                    </Grid>
-                    <Grid item xs={6} sm={6}>
-                        {values.loading ? <CircularProgress /> :
-                            <EditPlant plantId={match.params.plantId} plant={values.plant} updatePlant={updatePlant} handleShow={handleShow} handleClose={handleClose} open={open} />}
+    return (
+        // screenWidth &&
+        <div className={classes.root}>
+            <div>
+                <IconButton onClick={handleGoBack}><ArrowBack /></IconButton>
+                <div className={classes.title}>
+                    <Typography className={classes.title}>{toUpper(values.plant.plantname)}
+                        <Button size="small" variant="outlined" color="primary" className={classes.button} onClick={handleShow}>Edit</Button>
+                    </Typography>
+                    <CommentDrawer plantId={match.params.plantId} comments={values.comments} updateComments={updateComments} />
+                </div>
+                <Grid container spacing={2} className={classes.root}>
+                    <Grid justify='center' container spacing={2}>
+                        <Grid item xs={10} sm={10}>
+                            <Card className={classes.card}
+                            >
+                                <CardContent>
+                                    <Typography className={classes.text}><strong>Status: </strong>{values.plant.active ? "Currently Active" : "Not Currently Active"}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Common Pests Or Diseases: </strong>{values.plant.pests}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Average Plant Height: </strong>{values.plant.plantHeight}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Care During Growth: </strong>{values.plant.careDuringGrowth}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
+                                    </Typography>
+                                    <Typography className={classes.text}><strong>Common Pests: </strong>{values.plant.pests}
+                                    </Typography>
+                                    <Typography className={classes.text}>
+                                        <strong>Soil Requirements: </strong>{values.plant.soil}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={10} sm={10}>
+                            {values.loading ? <CircularProgress /> :
+                                <EditPlant plantId={match.params.plantId} plant={values.plant} updatePlant={updatePlant} handleShow={handleShow} handleClose={handleClose} open={open} />}
+                        </Grid>
                     </Grid>
                 </Grid>
-            </>
+            </div>
         </div>
-
     )
 }
 

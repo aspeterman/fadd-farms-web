@@ -137,7 +137,7 @@ import Typography from '@material-ui/core/Typography'
 import Edit from '@material-ui/icons/Edit'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import auth from '../auth/auth-helper.js'
 import { listByPlant } from './api-plot.js'
 import DeletePlot from './DeletePlot'
@@ -176,6 +176,7 @@ const useStyles = makeStyles(theme => ({
 export default function MyPlots(props) {
   const classes = useStyles()
   const [plots, setPlots] = useState([])
+  const history = useHistory()
 
   const jwt = auth.isAuthenticated()
 
@@ -203,6 +204,12 @@ export default function MyPlots(props) {
     const index = updatedPlotts.indexOf(plot)
     updatedPlotts.splice(index, 1)
     setPlots(updatedPlotts)
+  }
+
+  const handleGoForward = () => {
+    const url = `/plants/${plot.plant._id}/${plot._id}`
+    const state = {}
+    history.push(url, state)
   }
 
   return (

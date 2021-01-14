@@ -10,6 +10,7 @@ import RecentHome from './core/RecentHome'
 import EditHarvest from './harvest/EditHarvest'
 import NewHarvest from './harvest/NewHarvest'
 import PlantLog from './plant/PlantInfo'
+import Search from './plant/Search'
 import EditPlot from './plots/EditPlot'
 import NewPlot from './plots/NewPlot'
 import PlotInfo from './plots/PlotInfo'
@@ -23,6 +24,7 @@ const MainRouter = () => {
     <MenuBar />
     <Switch>
       <Route exact path="/" component={Home} />
+      <Route path="/search=:search" component={Search} />
       <Route path="/news" component={DiscussionHome} />
       <Route path="/activity" component={RecentHome} />
       <Route exact path="/plants/:plantId" component={PlantLog} />

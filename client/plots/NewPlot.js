@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import React, { useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import { create } from './api-plot.js'
 
@@ -61,6 +61,7 @@ export default function NewPlot({ match }) {
     redirect: false,
     error: ''
   })
+  const history = useHistory()
   const jwt = auth.isAuthenticated()
   const handleChange = name => event => {
     const value = name === 'image'
@@ -95,7 +96,8 @@ export default function NewPlot({ match }) {
   }
 
   if (values.redirect) {
-    return (<Redirect to={'/plants/' + match.params.plantId} />)
+    // return (<Redirect to={'/plants/' + match.params.plantId} />)
+    history.push(`/plants/${match.params.plantId}`)
   }
   return (<div>
     <Card className={classes.card}>

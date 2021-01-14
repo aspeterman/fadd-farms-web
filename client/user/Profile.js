@@ -123,12 +123,6 @@ export default function Profile({ match }) {
     updatedPosts.splice(index, 1)
     setPosts(updatedPosts)
   }
-  const removePlant = (plant) => {
-    const updatedPlants = plants
-    const index = updatedPlants.indexOf(plant)
-    updatedPlants.splice(index, 1)
-    setPlants(updatedPlants)
-  }
 
   const photoUrl = values.user._id
     ? `/api/users/photo/${values.user._id}?${new Date().getTime()}`
@@ -165,7 +159,7 @@ export default function Profile({ match }) {
             new Date(values.user.created)).toDateString()} />
         </ListItem>
       </List>
-      <ProfileTabs user={values.user} posts={posts} removePostUpdate={removePost} plants={plants} removePlantUpdate={removePlant} />
+      <ProfileTabs user={values.user} posts={posts} removePostUpdate={removePost} plants={plants} />
     </Paper>
   )
 }

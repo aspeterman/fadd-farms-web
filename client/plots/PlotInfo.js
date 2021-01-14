@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core'
+import { Divider, IconButton } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import { ArrowBackTwoTone, Edit } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import auth from '../auth/auth-helper'
 import HarvestList from '../harvest/HarvestsList'
 import useIsSsr from '../utils/useIsSsr'
@@ -16,7 +16,7 @@ import { read } from './api-plot'
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        margin: 30,
+        margin: 40,
     },
     flex: {
         display: 'block'
@@ -27,14 +27,6 @@ const useStyles = makeStyles(theme => ({
     subheading: {
         margin: '24px',
         color: theme.palette.openTitle
-    },
-    price: {
-        padding: '16px',
-        margin: '16px 0px',
-        display: 'flex',
-        backgroundColor: '#93c5ae3d',
-        fontSize: '1.3em',
-        color: '#375a53',
     },
     media: {
         height: 200,
@@ -48,13 +40,6 @@ const useStyles = makeStyles(theme => ({
     link: {
         color: '#3e4c54b3',
         fontSize: '0.9em'
-    },
-    addCart: {
-        width: '35px',
-        height: '35px',
-        padding: '10px 12px',
-        borderRadius: '0.25em',
-        backgroundColor: '#5f7c8b'
     },
     action: {
         margin: '8px 24px',
@@ -92,7 +77,7 @@ export default function Plot({ match }) {
     const isSsr = useIsSsr()
 
     const screenWidth = isSsr ? null : window.innerWidth;
-
+    const history = useHistory()
     const jwt = auth.isAuthenticated()
     useEffect(() => {
         const abortController = new AbortController()
@@ -115,7 +100,12 @@ export default function Plot({ match }) {
         setYield(data)
     }
 
-    console.log(match.params)
+    const handleGoBack = () => {
+        const state = { 'plantId': match.params.plantId }
+        const url = `/plants/${match.params.plantId}`
+        history.push(url, state)
+        console.log(history)
+    }
 
     const imageUrl = match.params.plotId
         ? `/api/plot/image/${match.params.plotId}?${new Date().getTime()}`
@@ -123,22 +113,23 @@ export default function Plot({ match }) {
     return (
         screenWidth &&
         <div className={classes.root}>
-            <Grid container spacing={10}>
-                <Grid item xs={7} sm={7}>
-                    <Card className={classes.card}>
-                        <CardHeader
-                            action={values.postedBy === jwt.user._id &&
-                                <Link to={"/plants/" + match.params.plantId + '/' + match.params.plotId + "/edit"}>
-                                    <IconButton aria-label="Edit" color="primary">
-                                        <Edit />
-                                    </IconButton>
-                                </Link>
-                            }
-                            title={<Link to={'/plants/' + match.params.plantId} className={classes.link}><ArrowBackTwoTone />
-                            </Link>}
-                            subheader={values.name}
-                        />
-                        <div className={classes.flex}>
+            <Grid container spacing={2}>
+                <Grid container justify='center' spacing={2} >
+                    <Grid item xs={10} sm={10}>
+                        <IconButton onClick={handleGoBack}>
+                            <ArrowBackTwoTone />
+                        </IconButton>
+                        <Card className={classes.card}>
+                            <CardHeader
+                                action={values.postedBy === jwt.user._id &&
+                                    <Link to={"/plants/" + match.params.plantId + '/' + match.params.plotId + "/edit"}>
+                                        <IconButton aria-label="Edit" color="primary">
+                                            <Edit />
+                                        </IconButton>
+                                    </Link>
+                                }
+                                subheader={values.name}
+                            />
                             <CardMedia
                                 className={classes.media}
                                 image={imageUrl}
@@ -159,11 +150,12 @@ export default function Plot({ match }) {
                             <Typography component="p" variant="subtitle1" className={classes.text}>
                                 Total Yield: {totalYield}
                             </Typography>
-                        </div>
-                    </Card>
-                </Grid>
-                <Grid item xs={5} sm={5}>
-                    <HarvestList plantId={match.params.plantId} plotId={match.params.plotId} setYieldData={setYieldData} />
+                            <Divider />
+                            <div className={classes.card}>
+                                <HarvestList plantId={match.params.plantId} plotId={match.params.plotId} setYieldData={setYieldData} />
+                            </div>
+                        </Card>
+                    </Grid>
                 </Grid>
             </Grid>
         </div>)
