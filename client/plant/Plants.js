@@ -67,7 +67,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '20px'
   },
   loading: {
-    textAlign: 'center'
+    textAlign: 'center',
+    height: 500
   }
 }))
 export default function Plants() {
@@ -81,15 +82,6 @@ export default function Plants() {
     offset: 0,
     perPage: 30,
     currentPage: 1,
-    category: '',
-    search: '',
-    searchedPlants: [],
-    searched: false,
-    added: false,
-    removed: false,
-    newPlant: {},
-    removedPlant: {},
-    updatedPlants: [],
     categories: [],
     filtered: '',
     loading: true
@@ -108,7 +100,7 @@ export default function Plants() {
         console.log(data.error)
       else {
         setPlants(data.plants)
-        setValues({ ...values, displayedPlants: data.plants, totalPages: data.totalPages, perPage: data.perPage, loading: false, })
+        setValues({ ...values, displayedPlants: data.plants, totalPages: data.totalPages, perPage: data.perPage, currentPage: data.currentPage, offset: (data.perPage * data.currentPage), loading: false, })
       }
     })
   }
@@ -116,8 +108,13 @@ export default function Plants() {
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
-
-    getData(signal, values.perPage, values.offset)
+    if (history.location.state !== undefined) {
+      console.log(history.location.state)
+      setValues({ ...values, displayedPlants: history.location.state.displayedPlants, currentPage: history.location.state.currentPage, offset: history.location.state.offset, perPage: history.location.state.perPage, loading: history.location.state.loading })
+      getData(signal, history.location.state.perPage, history.location.state.offset)
+    } else {
+      getData(signal, values.perPage, values.offset)
+    }
 
     listCategories(signal).then((data) => {
       if (data.error) {
@@ -141,29 +138,19 @@ export default function Plants() {
     const signal = abortController.signal
     setValues({ ...values, perPage: parseInt(e.target.value), loading: true })
     getData(signal, parseInt(e.target.value), 0)
-
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
   const handlePageChange = (e) => {
     const abortController = new AbortController()
     const signal = abortController.signal
-    setValues({ ...values, currentPage: e, loading: true })
+    setValues({ ...values, displayedPlants: [], currentPage: e, offset: e * values.perPage, loading: true })
     getData(signal, values.perPage, e * values.perPage)
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
   //------------
 
-  //Search-----------------------
-
-  const handleSearch = (results) => {
-    setValues({ ...values, displayedPlants: results, searched: true })
-  }
-
-  const handleShowAll = () => {
-    setValues({ ...values, showing: 'all', search: '', searched: false, displayedPlants: plants })
-  }
-
-  //-----------
 
   const addPlant = (plant) => {
     setValues({ ...values, loading: true })
@@ -216,13 +203,13 @@ export default function Plants() {
           <Typography type="title">
             Garden Plants
         </Typography>
-          <PlantSearch handleSearch={handleSearch} handleShowAll={handleShowAll} values={values} />
+          <PlantSearch values={values} />
           <PlantSort handleFilter={handleFilter} handleClickOpen={handleClickOpen} handleClose={handleClose} anchorEl={anchorEl} values={values} />
         </div>
         <Divider />
         <div className={classes.pagination}>
           <Pagination handleClick={handlePageChange} totalPages={values.totalPages} currentPage={values.currentPage} values={values} handlePageSizeChange={handlePageSizeChange} />
-          <NewPlant />
+          <NewPlant addUpdate={addPlant} onRemove={removePlant} />
         </div>
         {values.loading && <div className={classes.loading}><CircularProgress /></div>}
         {plants ?
@@ -236,6 +223,7 @@ export default function Plants() {
       <div className={classes.pagination}>
         <Pagination handleClick={handlePageChange} totalPages={values.totalPages} currentPage={values.currentPage} values={values} handlePageSizeChange={handlePageSizeChange} />
       </div>
+      {/* <PlanGarden plants={values.displayedPlants} /> */}
     </>
   )
 }

@@ -121,7 +121,7 @@ export default function Plant(props) {
   }
   const handleGoForward = () => {
     const url = `/plants/${props.plant._id}`
-    const state = { currentPage: props.currentPage, setValues: props.setValues }
+    const state = { values: props.values }
     history.push(url, state)
   }
   const imageUrl = props.plant._id

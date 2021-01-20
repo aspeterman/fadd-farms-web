@@ -33,7 +33,8 @@ const useStyles = makeStyles(theme => ({
         padding: 10,
     },
     loading: {
-        textAlign: 'center'
+        textAlign: 'center',
+        heeight: 500
     }
 }))
 export default function Search({ match }) {
@@ -68,7 +69,7 @@ export default function Search({ match }) {
 
 
     const handleBack = () => {
-        history.push('/')
+        history.goBack()
     }
 
 

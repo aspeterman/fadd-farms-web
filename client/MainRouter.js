@@ -7,6 +7,7 @@ import Home from './core/Home'
 import MenuBar from './core/Menu'
 import NotFound from './core/NotFound'
 import RecentHome from './core/RecentHome'
+import PlanGarden from './Garden/PlanGarden'
 import EditHarvest from './harvest/EditHarvest'
 import NewHarvest from './harvest/NewHarvest'
 import PlantLog from './plant/PlantInfo'
@@ -27,6 +28,7 @@ const MainRouter = () => {
       <Route path="/search=:search" component={Search} />
       <Route path="/news" component={DiscussionHome} />
       <Route path="/activity" component={RecentHome} />
+      <Route path='/plan' component={PlanGarden} />
       <Route exact path="/plants/:plantId" component={PlantLog} />
       <Route path="/plants/:plantId/plots/new" component={NewPlot} />
       <Route path="/plants/:plantId/:plotId/edit" component={EditPlot} />

@@ -117,7 +117,7 @@ const listNewsFeed = async (req, res) => {
             plants,
             currentPage: page,
             totalPages: Math.ceil(totalPages / limit),
-            perPage: limit
+            perPage: parseInt(limit)
         })
     } catch (err) {
         return res.status(400).json({

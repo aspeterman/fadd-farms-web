@@ -122,14 +122,14 @@ const Pagination = (props) => {
                 <MenuItem value={90}>90</MenuItem>
             </Select>
             {pages.map(number => (
-                <a
+                <button
                     key={number}
-                    href="/#"
+                    // href="/#"
                     onClick={() => props.handleClick(number)}
                     className={classes.link}
                 >
                     {number}
-                </a>
+                </button>
             ))}
         </div>
     );

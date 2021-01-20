@@ -152,13 +152,6 @@ const PlantSearch = withRouter((props) => {
         }
     }
 
-    const handleShowAll = () => {
-        setValues({ ...values, showing: 'all', search: '', active: true, category: '', searched: false })
-        props.handleShowAll()
-        handleChange('')
-        handleClose()
-    }
-
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -182,9 +175,6 @@ const PlantSearch = withRouter((props) => {
                 className={classes.input}
                 margin="dense"
             />
-            <IconButton className={classes.iconButton} disabled={!values.search} onClick={handleShowAll}>
-                <Icon >clear</Icon>
-            </IconButton>
             <Divider className={classes.divider} orientation="vertical" />
             <IconButton className={classes.iconButton} onClick={search}>
                 <Icon >search</Icon>
