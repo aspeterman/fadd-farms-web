@@ -147,7 +147,7 @@ export default function PlantLog({ match }) {
 
     const handleGoBack = () => {
         const url = '/'
-        let state = { 'currentPage': history.location.state.currentPage }
+        // let state = { 'currentPage': history.location.state.currentPage }
         // history.push(url, state)
         history.goBack()
     }

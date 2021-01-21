@@ -128,7 +128,7 @@ const MenuBar = withRouter(({ history }, props) => {
                 </IconButton>
               </Link>
               <Link to="/plan">
-                <Button style={isActive(history, "/plan")}>Plan Your Garden</Button>
+                <Button style={isActive(history, "/plan")}>Your Garden</Button>
               </Link>
               <Link to="/activity">
                 <Button style={isActive(history, "/activity")}>Recent Activity</Button>

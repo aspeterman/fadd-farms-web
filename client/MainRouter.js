@@ -3,11 +3,11 @@ import { Route, Switch } from 'react-router-dom'
 import PrivateRoute from './auth/PrivateRoute'
 import Signin from './auth/Signin'
 import DiscussionHome from './core/DiscussionHome'
+import GardenHome from './core/GardenHome'
 import Home from './core/Home'
 import MenuBar from './core/Menu'
 import NotFound from './core/NotFound'
 import RecentHome from './core/RecentHome'
-import PlanGarden from './Garden/PlanGarden'
 import EditHarvest from './harvest/EditHarvest'
 import NewHarvest from './harvest/NewHarvest'
 import PlantLog from './plant/PlantInfo'
@@ -26,9 +26,10 @@ const MainRouter = () => {
     <Switch>
       <Route exact path="/" component={Home} />
       <Route path="/search=:search" component={Search} />
-      <Route path="/news" component={DiscussionHome} />
-      <Route path="/activity" component={RecentHome} />
-      <Route path='/plan' component={PlanGarden} />
+      <Route exact path="/news" component={DiscussionHome} />
+      <Route exact path="/activity" component={RecentHome} />
+      <Route exact path='/plan' component={GardenHome} />
+      {/* <Route exact path='/garden/:gardenId' component={CurrentGarden} /> */}
       <Route exact path="/plants/:plantId" component={PlantLog} />
       <Route path="/plants/:plantId/plots/new" component={NewPlot} />
       <Route path="/plants/:plantId/:plotId/edit" component={EditPlot} />
