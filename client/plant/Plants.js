@@ -4,7 +4,7 @@ import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import auth from '../auth/auth-helper'
 import Pagination from '../utils/Pagination'
 import { listCategories, listPlants } from './api-plant'
@@ -88,6 +88,8 @@ export default function Plants() {
   })
 
   const history = useHistory()
+  const paramsHistory = useParams()
+  console.log(paramsHistory)
   const jwt = auth.isAuthenticated()
 
   const getData = (signal, limit, offset) => {

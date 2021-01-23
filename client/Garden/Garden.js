@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import auth from '../auth/auth-helper';
 import { listPlants } from '../plant/api-plant';
-import { create, update } from './api-garden';
+import { create, listGardenSchema } from './api-garden';
 import MyGarden from './MyGarden';
 import NewGarden from './NewGarden';
 import PlanGarden from './PlanGarden';
 
-export default function Garden(props) {
+export default function Garden() {
     const jwt = auth.isAuthenticated()
     const [plants, setPlants] = useState([])
+    const [gardens, setGardens] = useState([])
     const [values, setValues] = useState({
         image: '',
         season: 'Spring',
@@ -42,6 +43,15 @@ export default function Garden(props) {
             else {
                 data.plants.map(plant => plant.image = '')
                 setPlants([data.plants])
+            }
+        })
+        listGardenSchema({
+            userId: jwt.user._id,
+        }, { t: jwt.token }, signal).then((data) => {
+            if (data.error)
+                console.log(data.error)
+            else {
+                setGardens(data)
             }
         })
         // getPlants(1)
@@ -125,18 +135,6 @@ export default function Garden(props) {
         })
     }
 
-    const clickUpdate = () => {
-        update({
-            userId: jwt.user._id,
-            gardenId: values.gardenId
-        }, { t: jwt.token }, plants).then((data) => {
-            if (data.error)
-                setValues({ ...values, error: data.error })
-            else {
-                setOpen(false)
-            }
-        })
-    }
 
     const handleChange = name => event => {
         const value = name === 'image'
@@ -159,10 +157,25 @@ export default function Garden(props) {
 
     //-----------------------
 
+    const removeGarden = (garden) => {
+        const updatedGardens = [...gardens]
+        const index = updatedGardens.indexOf(garden)
+        updatedGardens.splice(index, 1)
+        setGardens(updatedGardens)
+    }
+
+    const addGarden = (garden) => {
+        const updatedGardens = [...gardens]
+        updatedGardens.unshift(garden)
+        setGardens(updatedGardens)
+    }
+
+
     return (
         <>
-            <MyGarden handleCreate={handleCreate} />
-            {values.showing && <><NewGarden clickSubmit={clickSubmit} clickUpdate={clickUpdate} handleChange={handleChange} handleClickOpen={handleClickOpen} handleClose={handleClose} values={values} open={open} />
+            <MyGarden handleCreate={handleCreate} onRemove={removeGarden} gardens={gardens} />
+            {values.showing && <>
+                <NewGarden clickSubmit={clickSubmit} handleChange={handleChange} handleClickOpen={handleClickOpen} addGarden={addGarden} handleClose={handleClose} values={values} open={open} plants={plants} getPlants={getPlants} />
                 <PlanGarden plants={plants} onDragEnd={onDragEnd} getPlants={getPlants} handleSetPlants={handleSetPlants} /></>}
         </>
     )

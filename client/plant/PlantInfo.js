@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CircularProgress, Divider, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardMedia, CircularProgress, Divider, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { toUpper } from 'lodash';
 // import Highcharts from 'highcharts';
@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1)
     },
     media: {
-        height: 100
+        height: 300
     },
     button: {
         margin: theme.spacing(1),
@@ -152,6 +152,10 @@ export default function PlantLog({ match }) {
         history.goBack()
     }
 
+    const imageUrl = match.params.plantId
+        ? `/api/plants/image/${match.params.plantId}?${new Date().getTime()}`
+        : '/api/plants/defaultphoto'
+
     return (
         // screenWidth &&
         <div className={classes.root}>
@@ -169,6 +173,13 @@ export default function PlantLog({ match }) {
                             <Card className={classes.card}
                             >
                                 <CardContent>
+                                    <div className={classes.photo}>
+                                        <CardMedia
+                                            className={classes.media}
+                                            image={imageUrl}
+                                            title={values.plant.plantname}
+                                        />
+                                    </div>
                                     <Typography className={classes.text}><strong>Status: </strong>{values.plant.active ? "Currently Active" : "Not Currently Active"}
                                     </Typography>
                                     <Typography className={classes.text}><strong>Description: </strong>{values.plant.description}

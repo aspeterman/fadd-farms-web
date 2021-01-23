@@ -1,10 +1,11 @@
-import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles } from '@material-ui/core'
+import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles } from '@material-ui/core'
 import { Create, ExpandLess, ExpandMore, History } from '@material-ui/icons'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import auth from '../auth/auth-helper'
-import { getOne, listGardenSchema } from './api-garden'
+import { getOne, remove } from './api-garden'
 import CurrentGarden from './CurrentGarden'
+import DeleteGarden from './DeleteGarden'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -57,34 +58,23 @@ const useStyles = makeStyles(theme => ({
 export default function MyGarden(props) {
     const classes = useStyles()
     const history = useHistory()
+    const [openDelete, setOpenDelete] = useState(false)
     const [values, setValues] = useState({
         garden: [],
         currentGarden: [],
         gardenId: '',
         loading: true,
-        showing: true
+        showing: true,
+        offset: 0,
+        currentPage: 1,
+        limit: 5,
+        showCurrent: false
     })
 
     const jwt = auth.isAuthenticated()
-    useEffect(() => {
-        const abortController = new AbortController()
-        const signal = abortController.signal
-        listGardenSchema({
-            userId: jwt.user._id,
-        }, { t: jwt.token }, signal).then((data) => {
-            if (data.error)
-                console.log(data.error)
-            else {
-                setValues({ ...values, garden: data })
-                console.log(data)
-            }
-        })
-        return function cleanup() {
-            abortController.abort()
-        }
-    }, [])
 
-    const [open, setOpen] = useState(true);
+
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(!open);
@@ -109,9 +99,41 @@ export default function MyGarden(props) {
             } else {
                 console.log(data)
                 setValues({ ...values, currentGarden: data, loading: false })
+                setOpen(false)
             }
         })
     }
+
+    const clickButton = () => {
+        setOpenDelete(true)
+    }
+
+    const handleRequestClose = () => {
+        setOpenDelete(false)
+    }
+    const deleteGarden = (garden) => {
+        remove({
+            gardenId: garden._id
+        }, {
+            t: jwt.token
+        }).then((data) => {
+            if (data.error) {
+                console.log(data.error)
+            } else {
+                setValues({ ...values, currentGarden: [] })
+                props.onRemove(garden)
+                handleRequestClose()
+            }
+        })
+    }
+
+    const pageUp = () => {
+        setValues({ ...values, offset: values.offset + values.limit, currentPage: values.currentPage + 1 })
+    }
+    const pageDown = () => {
+        setValues({ ...values, offset: values.offset - values.limit, currentPage: values.currentPage - 1 })
+    }
+
     return (
         <>
             <List
@@ -134,12 +156,19 @@ export default function MyGarden(props) {
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        {values.garden && values.garden.map(item => {
+                        {props.gardens.map(item => {
                             return (
                                 <ListItem button className={classes.nested} value={item._id} key={item._id} onClick={() => handleClick(item._id)}>
-                                    {/* <Button value={item._id} key={item._id} onClick={() => handleClick(item._id)}>{item.season}</Button> */}
                                     {item.season} - {item.year}
-                                    <ListItemText primary={item.createdAt} />
+                                    <ListItemSecondaryAction>
+                                        <DeleteGarden
+                                            garden={item}
+                                            gardenId={item._id}
+                                            clickButton={clickButton}
+                                            handleRequestClose={handleRequestClose}
+                                            open={openDelete}
+                                            onRemove={() => deleteGarden(item)} />
+                                    </ListItemSecondaryAction>
                                 </ListItem>
                             )
                         })}
@@ -153,9 +182,7 @@ export default function MyGarden(props) {
                 </ListItem>
             </List>
             <Divider />
-            {/* <div > */}
-            <CurrentGarden values={values} handleClick={handleClick} />
-            {/* </div> */}
+            <CurrentGarden values={values} handleClick={handleClick} pageUp={pageUp} pageDown={pageDown} />
         </>
     )
 }

@@ -10,6 +10,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexGrow: 1,
         margin: 40,
+        // flexWrap: 'wrap'
     },
     gardenGrid: {
         width: '200px',
@@ -42,35 +43,6 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-// fake data generator
-// const getItems = (count, offset = 0) =>
-//     Array.from({ length: count }, (v, k) => k).map(k => ({
-//         id: `item-${k + offset}-${new Date().getTime()}`,
-//         content: `item ${k + offset}`
-//     }));
-
-
-// const reorder = (list, startIndex, endIndex) => {
-//     const result = Array.from(list);
-//     const [removed] = result.splice(startIndex, 1);
-//     result.splice(endIndex, 0, removed);
-
-//     return result;
-// };
-
-// const move = (source, destination, droppableSource, droppableDestination) => {
-//     const sourceClone = Array.from(source);
-//     const destClone = Array.from(destination);
-//     const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-//     destClone.splice(droppableDestination.index, 0, removed);
-
-//     const result = {};
-//     result[droppableSource.droppableId] = sourceClone;
-//     result[droppableDestination.droppableId] = destClone;
-
-//     return result;
-// };
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
@@ -91,59 +63,7 @@ const getListStyle = isDraggingOver => ({
 export default function PlanGarden(props) {
     const classes = useStyles()
     const history = useHistory()
-    // const getPlants = () =>
-    //     props.plants && props.plants.map(k => ({
-    //         id: k._id,
-    //         content: k.plantname
-    //     }));
 
-    // const [state, setPlants] = useState([getPlants()]);
-    // const [plants, setPlants] = useState([])
-    // useEffect(() => {
-    //     const jwt = auth.isAuthenticated()
-    //     const abortController = new AbortController()
-    //     const signal = abortController.signal
-    //     listPlants({
-    //         userId: jwt.user._id,
-    //     }, { t: jwt.token }, signal).then((data) => {
-    //         if (data.error)
-    //             console.log(data.error)
-    //         else {
-    //             setPlants([data.plants])
-    //         }
-    //     })
-    //     getPlants(1)
-    //     return function cleanup() {
-    //         abortController.abort()
-    //     }
-
-    // }, [])
-
-
-
-    // function onDragEnd(result) {
-    //     const { source, destination } = result;
-
-    //     if (!destination) {
-    //         return;
-    //     }
-    //     const sInd = +source.droppableId;
-    //     const dInd = +destination.droppableId;
-
-    //     if (sInd === dInd) {
-    //         const items = reorder(plants[sInd], source.index, destination.index);
-    //         const newPlants = [...plants];
-    //         newPlants[sInd] = items;
-    //         setPlants(newPlants);
-    //     } else {
-    //         const result = move(plants[sInd], plants[dInd], source, destination);
-    //         const newPlants = [...plants];
-    //         newPlants[sInd] = result[sInd];
-    //         newPlants[dInd] = result[dInd];
-
-    //         setPlants(newPlants.filter(group => group.length));
-    //     }
-    // }
 
     const handleGoForward = (id) => {
         history.push(`/plants/${id}`)
@@ -157,7 +77,7 @@ export default function PlanGarden(props) {
                     props.handleSetPlants([...props.plants, []]);
                 }}
             >
-                Add new group
+                Add new row
       </button>
             <div className={classes.root}>
                 <DragDropContext onDragEnd={props.onDragEnd}>

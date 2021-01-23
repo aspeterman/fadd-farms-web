@@ -76,7 +76,8 @@ const listByUser = async (req, res) => {
         let gardens = await Garden.find({ postedBy: req.profile._id })
             .populate('comments.postedBy', '_id name')
             .populate('postedBy', '_id name')
-            .sort('-created')
+            .sort('-year')
+            .sort('season')
             .exec()
         res.json(gardens)
     } catch (err) {
@@ -93,7 +94,8 @@ const listNewsFeed = async (req, res) => {
         let gardens = await Garden.find({ postedBy: { $in: req.profile.following } })
             .populate('comments.postedBy', '_id name')
             .populate('postedBy', '_id name')
-            .sort('-created')
+            .sort('-year')
+            .sort('season')
             .exec()
         res.json(gardens)
     } catch (err) {
