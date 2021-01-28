@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import auth from '../auth/auth-helper';
 import { listPlants } from '../plant/api-plant';
 import { create, listGardenSchema } from './api-garden';
@@ -7,6 +8,7 @@ import NewGarden from './NewGarden';
 import PlanGarden from './PlanGarden';
 
 export default function Garden() {
+    const history = useHistory()
     const jwt = auth.isAuthenticated()
     const [plants, setPlants] = useState([])
     const [gardens, setGardens] = useState([])
@@ -16,7 +18,8 @@ export default function Garden() {
         year: 2021,
         error: false,
         gardenId: '',
-        showing: false
+        showing: false,
+        showNew: false
     })
     const [open, setOpen] = useState(false)
 
@@ -152,7 +155,11 @@ export default function Garden() {
     }
 
     const handleCreate = () => {
-        setValues({ ...values, showing: !values.showing })
+        setValues({ ...values, showNew: true, showing: false })
+    }
+
+    const handleShowGarden = () => {
+        setValues({ ...values, showing: true, showNew: false })
     }
 
     //-----------------------
@@ -173,10 +180,14 @@ export default function Garden() {
 
     return (
         <>
-            <MyGarden handleCreate={handleCreate} onRemove={removeGarden} gardens={gardens} />
-            {values.showing && <>
-                <NewGarden clickSubmit={clickSubmit} handleChange={handleChange} handleClickOpen={handleClickOpen} addGarden={addGarden} handleClose={handleClose} values={values} open={open} plants={plants} getPlants={getPlants} />
-                <PlanGarden plants={plants} onDragEnd={onDragEnd} getPlants={getPlants} handleSetPlants={handleSetPlants} /></>}
+            <MyGarden handleShowGarden={handleShowGarden} handleCreate={handleCreate} handleCreate={handleCreate} onRemove={removeGarden} gardens={gardens} values={values} />
+            {
+                values.showNew &&
+                <>
+                    <NewGarden clickSubmit={clickSubmit} handleChange={handleChange} handleClickOpen={handleClickOpen} addGarden={addGarden} handleClose={handleClose} values={values} open={open} plants={plants} getPlants={getPlants} handleShowGarden={handleShowGarden} />
+                    <PlanGarden plants={plants} onDragEnd={onDragEnd} getPlants={getPlants} handleSetPlants={handleSetPlants} handleCreate={handleCreate} />
+                </>
+            }
         </>
     )
 }

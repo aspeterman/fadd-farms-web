@@ -100,7 +100,7 @@ const remove = async (params, credentials) => {
 
 const like = async (params, credentials, gardenId) => {
     try {
-        let response = await fetch('/api/posts/like/', {
+        let response = await fetch('/api/garden/like/', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -118,7 +118,7 @@ const like = async (params, credentials, gardenId) => {
 
 const unlike = async (params, credentials, gardenId) => {
     try {
-        let response = await fetch('/api/posts/unlike/', {
+        let response = await fetch('/api/gardem/unlike/', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -136,7 +136,7 @@ const unlike = async (params, credentials, gardenId) => {
 
 const comment = async (params, credentials, gardenId, comment) => {
     try {
-        let response = await fetch('/api/posts/comment/', {
+        let response = await fetch('/api/garden/comment/', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -152,16 +152,16 @@ const comment = async (params, credentials, gardenId, comment) => {
 }
 
 
-const uncomment = async (params, credentials, comment) => {
+const uncomment = async (params, credentials, gardenId, comment) => {
     try {
-        let response = await fetch('/api/posts/uncomment/', {
+        let response = await fetch('/api/garden/uncomment/', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + credentials.t
             },
-            body: JSON.stringify({ userId: params.userId, gardenId: params.gardenId, comment: comment })
+            body: JSON.stringify({ userId: params.userId, gardenId: gardenId, comment: comment })
         })
         return await response.json()
     } catch (err) {

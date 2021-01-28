@@ -192,7 +192,7 @@ export default function PlantLog({ match }) {
                                     </Typography>
                                     <Typography className={classes.text}><strong>When Should you Plant: </strong>{values.plant.whenToPlant}
                                     </Typography>
-                                    <Typography className={classes.text}><strong>Common Pests: </strong>{values.plant.pests}
+                                    <Typography className={classes.text}><strong>Spacing: </strong>{values.plant.spacing}
                                     </Typography>
                                     <Typography className={classes.text}>
                                         <strong>Soil Requirements: </strong>{values.plant.soil}

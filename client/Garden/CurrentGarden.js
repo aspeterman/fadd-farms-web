@@ -109,7 +109,6 @@ export default function CurrentGarden(props) {
     }
 
 
-    console.log(props)
 
 
     if (props.values.loading) return <></>

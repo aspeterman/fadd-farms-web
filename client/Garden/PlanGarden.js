@@ -1,5 +1,6 @@
-import { IconButton, makeStyles, Typography } from "@material-ui/core";
+import { Button, IconButton, makeStyles, Typography } from "@material-ui/core";
 import { Delete, Info } from "@material-ui/icons";
+import { indexOf } from "lodash";
 import PropTypes from 'prop-types';
 import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -8,18 +9,40 @@ import { useHistory } from "react-router";
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-        flexGrow: 1,
-        margin: 40,
-        // flexWrap: 'wrap'
+        // flexGrow: 1,
+        // margin: 40,
+        flexWrap: 'wrap',
+        // height: 400,
+        // overflow: 'scroll'
     },
     gardenGrid: {
-        width: '200px',
+        // width: '200px',
         border: '1px solid grey',
-        borderRadius: '25%',
+        // borderRadius: '25%',
         marginBottom: '2 px',
         // backgroundColor: 'green',
         padding: theme.spacing(3),
-        overflow: 'hidden'
+        overflowY: 'scroll',
+        height: 500,
+        // flexWrap: 'wrap'
+        '&::-webkit-scrollbar': {
+            width: '0.4em',
+        },
+        '&::-webkit-scrollbar-track': {
+            // '-webkit-box-shadow': 'inset 0 0 6px #aaaaaa'
+            background: '#ffffff',
+            borderRadius: '10px',
+            boxShadow: 'inset 7px 10px 12px #f0f0f0'
+        },
+        '&::-webkit-scrollbar-thumb': {
+            // backgroundColor: 'rgba(0,0,0,.1)',
+            // outline: '1px solid slategrey'
+            background: 'linear-gradient(13deg, #D4FFEC 14%,#c7ceff 64%)',
+            borderRadius: '10px'
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+            background: `linear-gradient(13deg, #c7ceff 14%,#f9d4ff 64%)`
+        },
     },
     item: {
         display: 'flex',
@@ -71,14 +94,14 @@ export default function PlanGarden(props) {
 
     return (
         <div>
-            <button
-                type="button"
+            <Button
+                variant='outlined'
                 onClick={() => {
                     props.handleSetPlants([...props.plants, []]);
                 }}
             >
                 Add new row
-      </button>
+      </Button>
             <div className={classes.root}>
                 <DragDropContext onDragEnd={props.onDragEnd}>
                     {props.plants.map((el, ind) => (
@@ -88,7 +111,10 @@ export default function PlanGarden(props) {
                                     ref={provided.innerRef}
                                     style={getListStyle(snapshot.isDraggingOver)}
                                     {...provided.droppableProps}
+                                    className={classes.gardenGrid}
                                 >
+                                    <Typography style={{ textAlign: 'center' }}>Row {indexOf(props.plants, el) + 1}</Typography>
+
                                     {el.map((item, index) => (
                                         <Draggable
                                             key={item._id}

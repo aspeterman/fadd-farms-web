@@ -160,9 +160,6 @@ export default function Plant(props) {
           <Typography component="p" className={classes.text} >
             Common Name: {props.plant.plantname}
           </Typography>
-          <Typography component="p" className={classes.text} >
-            Overview: {props.plant.description}
-          </Typography>
         </CardContent>
         <CardActions>
           {values.like

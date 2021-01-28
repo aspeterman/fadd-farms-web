@@ -9,24 +9,12 @@ import { create, update } from './api-garden'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        // backgroundColor: '#efefef',
-        // padding: `${theme.spacing(3)}px 0px 1px`
-    },
-    card: {
-        maxWidth: 600,
-        margin: 'auto',
-        marginBottom: theme.spacing(3),
-        backgroundColor: 'rgba(65, 150, 136, 0.09)',
-        boxShadow: 'none'
-    },
-    cardContent: {
-        backgroundColor: 'white',
-        paddingTop: 0,
-        paddingBottom: 0
-    },
-    cardHeader: {
-        paddingTop: 8,
-        paddingBottom: 8
+        marginBottom: 40,
+        display: 'flex',
+        justifyContent: 'space-around',
+        flexGrow: 1,
+        backgroundColor: '#efefef',
+        padding: `${theme.spacing(3)}px 0px 1px`,
     },
     photoButton: {
         height: 30,
@@ -36,9 +24,9 @@ const useStyles = makeStyles(theme => ({
         display: 'none',
     },
     textField: {
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        width: '90%'
+        // marginLeft: theme.spacing(2),
+        // marginRight: theme.spacing(2),
+        // width: '90%'
     },
     submit: {
         margin: theme.spacing(2)
@@ -55,7 +43,7 @@ export default function NewGarden(props) {
     const classes = useStyles()
     const [values, setValues] = useState({
         year: 2021,
-        season: '',
+        season: 'Fall',
         image: '',
         rows: [],
         error: '',
@@ -104,6 +92,7 @@ export default function NewGarden(props) {
             else {
                 setOpen(false)
                 props.addGarden(data)
+                props.handleShowGarden()
             }
         })
     }
@@ -119,42 +108,46 @@ export default function NewGarden(props) {
 
 
     return (<>
-        <Button variant="outlined" color="primary" className={classes.button} onClick={handleClickOpen}>
-            Save Layout
+        <div style={{ textAlign: 'center' }}>
+            <Button variant="outlined" color="primary" className={classes.button} onClick={handleClickOpen}>
+                Save Layout
       </Button>
-        {/* <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
+        </div>
+        <div className={classes.root}>
+            {/* <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Save</DialogTitle>
             <DialogContent> */}
-        <div className={classes.textField}>
-            <InputLabel id="season-select">Season</InputLabel>
-            <Select value={values.season} labelId="season-select" name='season' onChange={handleChange('season')} >
-                <MenuItem value={'Fall'}>Fall</MenuItem>
-                <MenuItem value={'Spring'}>Spring</MenuItem>
-            </Select>
-        </div>
-        <div className={classes.textField}>
-            <TextField
-                placeholder="Year"
-                type="number"
-                name='year'
-                value={values.year}
-                onChange={handleChange('year')}
-                // className={classes.textField}
-                margin="normal"
-            />
-        </div>
-        <input accept="image/*" onChange={props.handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
-        <label htmlFor="icon-button-file">
-            <Button variant="contained" color="secondary" component="span">
-                Upload Photo
+            <div className={classes.textField}>
+                <InputLabel id="season-select">Season</InputLabel>
+                <Select value={values.season} labelId="season-select" name='season' onChange={handleChange('season')} >
+                    <MenuItem value={'Fall'}>Fall</MenuItem>
+                    <MenuItem value={'Spring'}>Spring</MenuItem>
+                </Select>
+            </div>
+            <div className={classes.textField}>
+                <TextField
+                    placeholder="Year"
+                    type="number"
+                    name='year'
+                    value={values.year}
+                    onChange={handleChange('year')}
+                    // className={classes.textField}
+                    margin="normal"
+                />
+            </div>
+            <input accept="image/*" onChange={props.handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
+            <label htmlFor="icon-button-file">
+                <Button variant="contained" color="secondary" component="span">
+                    Upload Photo
               <FileUpload />
-            </Button>
-        </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span><br />
-        {values.error && (<Typography component="p" color="error">
-            <Icon color="error" className={classes.error}>error</Icon>
-            {values.error}
-        </Typography>)
-        }
+                </Button>
+            </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span><br />
+            {values.error && (<Typography component="p" color="error">
+                <Icon color="error" className={classes.error}>error</Icon>
+                {values.error}
+            </Typography>)
+            }
+        </div>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Save</DialogTitle>
             <DialogContent>

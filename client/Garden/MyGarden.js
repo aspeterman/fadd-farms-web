@@ -6,6 +6,7 @@ import auth from '../auth/auth-helper'
 import { getOne, remove } from './api-garden'
 import CurrentGarden from './CurrentGarden'
 import DeleteGarden from './DeleteGarden'
+import GardenCommentDrawer from './GardenCommentDrawer'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -62,9 +63,9 @@ export default function MyGarden(props) {
     const [values, setValues] = useState({
         garden: [],
         currentGarden: [],
+        comments: [],
         gardenId: '',
         loading: true,
-        showing: true,
         offset: 0,
         currentPage: 1,
         limit: 5,
@@ -78,7 +79,7 @@ export default function MyGarden(props) {
 
     const handleClickOpen = () => {
         setOpen(!open);
-        props.handleCreate()
+        // props.handleCreate()
     };
 
 
@@ -97,11 +98,11 @@ export default function MyGarden(props) {
             if (data & data.error) {
                 setValues({ ...values, error: data.error })
             } else {
-                console.log(data)
-                setValues({ ...values, currentGarden: data, loading: false })
+                setValues({ ...values, currentGarden: data, comments: data.comments, gardenId: data._id, loading: false })
                 setOpen(false)
             }
         })
+        props.handleShowGarden()
     }
 
     const clickButton = () => {
@@ -134,8 +135,13 @@ export default function MyGarden(props) {
         setValues({ ...values, offset: values.offset - values.limit, currentPage: values.currentPage - 1 })
     }
 
+    const updateComments = (comments) => {
+        setValues({ ...values, comments: comments })
+    }
+
     return (
         <>
+
             <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
@@ -182,7 +188,12 @@ export default function MyGarden(props) {
                 </ListItem>
             </List>
             <Divider />
-            <CurrentGarden values={values} handleClick={handleClick} pageUp={pageUp} pageDown={pageDown} />
+            {props.values.showing &&
+                <>
+                    <GardenCommentDrawer updateComments={updateComments} gardenId={values.gardenId} comments={values.comments} />
+                    <CurrentGarden values={values} handleClick={handleClick} pageUp={pageUp} pageDown={pageDown} />
+                </>
+            }
         </>
     )
 }
