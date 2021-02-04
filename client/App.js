@@ -14,7 +14,9 @@ const App = () => {
     }
   }, [])
   return (
-    <BrowserRouter forceRefresh={true}>
+    <BrowserRouter
+    // forceRefresh={true}
+    >
       <ScrollToTop />
       <ThemeProvider theme={theme}>
         <MainRouter />

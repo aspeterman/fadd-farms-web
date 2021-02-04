@@ -61,6 +61,7 @@
     "react-dom": "16.13.1",
     "react-hot-loader": "4.12.20",
     "react-router": "5.1.2",
+    "react-router-config": "^5.1.1",
     "react-router-dom": "5.1.2",
     "recharts": "^1.8.5"
   }

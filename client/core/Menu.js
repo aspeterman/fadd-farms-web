@@ -127,15 +127,19 @@ const MenuBar = withRouter(({ history }, props) => {
                   <HomeIcon />
                 </IconButton>
               </Link>
-              <Link to="/plan">
-                <Button style={isActive(history, "/plan")}>Your Garden</Button>
-              </Link>
-              <Link to="/activity">
-                <Button style={isActive(history, "/activity")}>Recent Activity</Button>
-              </Link>
-              <Link to="/news">
-                <Button style={isActive(history, "/news")}>News</Button>
-              </Link>
+              {auth.isAuthenticated() &&
+                <>
+                  <Link to="/plan">
+                    <Button style={isActive(history, "/plan")}>Your Garden</Button>
+                  </Link>
+                  <Link to="/activity">
+                    <Button style={isActive(history, "/activity")}>Recent Activity</Button>
+                  </Link>
+                  <Link to="/news">
+                    <Button style={isActive(history, "/news")}>News</Button>
+                  </Link>
+                </>
+              }
             </div>
             <div style={{ 'position': 'absolute', 'right': '10px' }}>
               <div style={{ 'float': 'right' }}>

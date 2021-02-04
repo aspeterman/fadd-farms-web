@@ -98,7 +98,9 @@ export default function EditProfile({ match }) {
       if (data && data.error) {
         setValues({ ...values, error: data.error })
       } else {
-        setValues({ ...values, 'redirectToProfile': true })
+        auth.updateUser(data, () => {
+          setValues({ ...values, userId: data._id, redirectToProfile: true })
+        })
       }
     })
   }

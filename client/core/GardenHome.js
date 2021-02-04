@@ -1,7 +1,6 @@
-import { Card, CardMedia, Grid, Typography } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
-import unicornbikeImg from '../assets/images/unicornbike.jpg'
 import auth from '../auth/auth-helper'
 import Garden from '../Garden/Garden'
 import useIsSsr from '../utils/useIsSsr'
@@ -64,7 +63,7 @@ export default function GardenHome({ history }) {
     return (
         screenWidth &&
         <div className={classes.root}>
-            {!defaultPage &&
+            {/* {!defaultPage &&
                 <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <Card className={classes.card}>
@@ -75,7 +74,7 @@ export default function GardenHome({ history }) {
                         </Card>
                     </Grid>
                 </Grid>
-            }
+            } */}
             {defaultPage &&
                 <Grid container spacing={2} className={classes.root}>
                     <Grid container justify='center' spacing={3} >

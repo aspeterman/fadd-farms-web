@@ -25,6 +25,7 @@ const MainRouter = () => {
     <MenuBar />
     <Switch>
       <Route exact path="/" component={Home} />
+      <Route exact path="/page=:page" component={Home} />
       <Route path="/search=:search" component={Search} />
       <Route exact path="/news" component={DiscussionHome} />
       <Route exact path="/activity" component={RecentHome} />

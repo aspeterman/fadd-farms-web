@@ -4,7 +4,7 @@ import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
+import { useHistory } from 'react-router'
 import auth from '../auth/auth-helper'
 import Pagination from '../utils/Pagination'
 import { listCategories, listPlants } from './api-plant'
@@ -88,8 +88,6 @@ export default function Plants() {
   })
 
   const history = useHistory()
-  const paramsHistory = useParams()
-  console.log(paramsHistory)
   const jwt = auth.isAuthenticated()
 
   const getData = (signal, limit, offset) => {
@@ -110,13 +108,13 @@ export default function Plants() {
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
-    if (history.location.state !== undefined) {
-      console.log(history.location.state)
-      setValues({ ...values, displayedPlants: history.location.state.displayedPlants, currentPage: history.location.state.currentPage, offset: history.location.state.offset, perPage: history.location.state.perPage, loading: history.location.state.loading })
-      getData(signal, history.location.state.perPage, history.location.state.offset)
-    } else {
-      getData(signal, values.perPage, values.offset)
-    }
+    // if (history.location.state !== undefined) {
+    //   console.log(history.location.state)
+    //   setValues({ ...values, displayedPlants: history.location.state.displayedPlants, currentPage: history.location.state.currentPage, offset: history.location.state.offset, perPage: history.location.state.perPage, loading: history.location.state.loading })
+    //   getData(signal, history.location.state.perPage, history.location.state.offset)
+    // } else {
+    getData(signal, values.perPage, values.offset)
+    // }
 
     listCategories(signal).then((data) => {
       if (data.error) {
@@ -146,6 +144,8 @@ export default function Plants() {
   const handlePageChange = (e) => {
     const abortController = new AbortController()
     const signal = abortController.signal
+    const url = `/page=${e}`
+    history.push(url)
     setValues({ ...values, displayedPlants: [], currentPage: e, offset: e * values.perPage, loading: true })
     getData(signal, values.perPage, e * values.perPage)
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })

@@ -1,7 +1,6 @@
-import { Card, CardMedia, Grid, Typography } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
-import unicornbikeImg from '../assets/images/unicornbike.jpg'
 import auth from '../auth/auth-helper'
 import NewsFeed from '../post/Newsfeed'
 import useIsSsr from '../utils/useIsSsr'
@@ -54,9 +53,9 @@ export default function PlantHome({ history }) {
     const screenWidth = isSsr ? null : window.innerWidth;
 
     return (
-        // screenWidth &&
+        screenWidth &&
         <div className={classes.root}>
-            {!defaultPage &&
+            {/* {!defaultPage &&
                 <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <Card className={classes.card}>
@@ -67,7 +66,7 @@ export default function PlantHome({ history }) {
                         </Card>
                     </Grid>
                 </Grid>
-            }
+            } */}
             {defaultPage &&
                 <Grid >
                     {/* <Grid item xs={7} sm={7}> */}

@@ -46,7 +46,10 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1)
   },
   media: {
-    height: 100
+    height: 100,
+    '&:hover': {
+      cursor: 'pointer'
+    },
   },
   button: {
     margin: theme.spacing(1),
@@ -155,6 +158,7 @@ export default function Plant(props) {
               className={classes.media}
               image={imageUrl}
               title={props.plant.plantname}
+              onClick={handleGoForward}
             /></div>
           {props.plant.active ? <Typography style={{ color: 'lightgreen', textAlign: 'center' }}>Active</Typography> : <Typography style={{ color: 'red', textAlign: 'center' }}>Inactive</Typography>}
           <Typography component="p" className={classes.text} >
