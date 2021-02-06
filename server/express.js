@@ -65,10 +65,12 @@ app.get('*', (req, res) => {
   //   return res.redirect(303, context.url)
   // }
   const css = sheets.toString()
-  res.status(200).send(Template({
-    markup: markup,
-    css: css
-  }))
+  // res.status(200).send(Template({
+  //   markup: markup,
+  //   css: css
+  // }))
+  const renderedData = Template({ markup: markup, css: css })
+  return res.send(renderedData)
 })
 
 // Catch unauthorised errors

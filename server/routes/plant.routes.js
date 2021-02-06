@@ -20,7 +20,7 @@ router.route('/api/plants/feed/:userId')
     .get(authCtrl.requireSignin, plantCtrl.listNewsFeed)
 
 router.route('/api/plants')
-    .get(plantCtrl.list)
+    .get(authCtrl.requireSignin, plantCtrl.list)
 
 router.route('/api/plants/categories')
     .get(plantCtrl.listCategories)

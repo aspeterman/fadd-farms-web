@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, IconButton } from '@material-ui/core'
+import { Grid, IconButton } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
@@ -59,7 +59,7 @@ export default function Search({ match }) {
             if (data.error) {
                 console.log(data.error)
             } else {
-                setValues({ ...values, displayedPlants: data, searched: true, loading: false })
+                setValues({ ...values, displayedPlants: data.filter(plant => plant.postedBy._id === jwt.user._id), searched: true, loading: false })
             }
         })
 

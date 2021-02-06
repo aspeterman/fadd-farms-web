@@ -4,10 +4,10 @@ import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import auth from '../auth/auth-helper'
 import Pagination from '../utils/Pagination'
-import { listCategories, listPlants } from './api-plant'
+import { listPlants } from './api-plant'
 import NewPlant from './NewPlant'
 import PlantList from './PlantList'
 import PlantSearch from './PlantSearch'
@@ -81,7 +81,7 @@ export default function Plants() {
     pageCount: 0,
     offset: 0,
     perPage: 30,
-    currentPage: 1,
+    currentPage: 0,
     categories: [],
     filtered: '',
     loading: true
@@ -90,39 +90,34 @@ export default function Plants() {
   const history = useHistory()
   const jwt = auth.isAuthenticated()
 
-  const getData = (signal, limit, offset) => {
+  const params = useParams()
+  useEffect(() => {
+    const abortController = new AbortController()
+    const signal = abortController.signal
+    // if (params.page) setValues({ ...values, currentPage: parseInt(params.page), offset: params.page * values.perPage })
+
     listPlants({
       userId: jwt.user._id,
-      limit: limit,
-      offset: offset
     }, { t: jwt.token }, signal).then((data) => {
       if (data.error)
         console.log(data.error)
       else {
-        setPlants(data.plants)
-        setValues({ ...values, displayedPlants: data.plants, totalPages: data.totalPages, perPage: data.perPage, currentPage: data.currentPage, offset: (data.perPage * data.currentPage), loading: false, })
+        setPlants(data)
+        if (params.page) {
+          setValues({ ...values, currentPage: parseInt(params.page), offset: parseInt(params.page) * values.perPage, displayedPlants: data.slice(params.page * values.perPage, (params.page * values.perPage) + values.perPage), loading: false, })
+        } else {
+          setValues({ ...values, displayedPlants: data.slice(values.offset, values.offset + values.perPage), loading: false })
+        }
+        // setValues({ ...values, displayedPlants: data, loading: false })
       }
     })
-  }
-
-  useEffect(() => {
-    const abortController = new AbortController()
-    const signal = abortController.signal
-    // if (history.location.state !== undefined) {
-    //   console.log(history.location.state)
-    //   setValues({ ...values, displayedPlants: history.location.state.displayedPlants, currentPage: history.location.state.currentPage, offset: history.location.state.offset, perPage: history.location.state.perPage, loading: history.location.state.loading })
-    //   getData(signal, history.location.state.perPage, history.location.state.offset)
-    // } else {
-    getData(signal, values.perPage, values.offset)
-    // }
-
-    listCategories(signal).then((data) => {
-      if (data.error) {
-        console.log(data.error)
-      } else {
-        setValues({ ...values, categories: data })
-      }
-    })
+    // listCategories(signal).then((data) => {
+    //   if (data.error) {
+    //     console.log(data.error)
+    //   } else {
+    //     setValues({ ...values, categories: data, loading: false })
+    //   }
+    // })
 
     return function cleanup() {
       abortController.abort()
@@ -136,18 +131,14 @@ export default function Plants() {
   const handlePageSizeChange = (e) => {
     const abortController = new AbortController()
     const signal = abortController.signal
-    setValues({ ...values, perPage: parseInt(e.target.value), loading: true })
-    getData(signal, parseInt(e.target.value), 0)
+    setValues({ ...values, perPage: parseInt(e.target.value), offset: 0, currentPage: 0, displayedPlants: plants.slice(0, e.target.value) })
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
   const handlePageChange = (e) => {
-    const abortController = new AbortController()
-    const signal = abortController.signal
-    const url = `/page=${e}`
+    const url = `/page=${e / values.perPage}`
     history.push(url)
-    setValues({ ...values, displayedPlants: [], currentPage: e, offset: e * values.perPage, loading: true })
-    getData(signal, values.perPage, e * values.perPage)
+    setValues({ ...values, displayedPlants: plants.slice(e, e + values.perPage), offset: e, currentPage: e / values.perPage })
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }
 
@@ -155,22 +146,17 @@ export default function Plants() {
 
 
   const addPlant = (plant) => {
-    setValues({ ...values, loading: true })
-    const abortController = new AbortController()
-    const signal = abortController.signal
-    const url = '/'
-    const state = values
-    history.push(url, state)
-    getData(signal, values.perPage, values.offset)
+    const updatedPlants = [...plants]
+    updatedPlants.unshift(plant)
+    setPlants(updatedPlants)
+    setValues({ ...values, displayedPlants: updatedPlants.sort((a, b) => { return a.plantname < b.plantname }).slice(values.offset, values.offset + values.perPage) })
   }
   const removePlant = (plant) => {
-    setValues({ ...values, loading: true })
-    const abortController = new AbortController()
-    const signal = abortController.signal
-    const url = '/'
-    const state = values
-    history.push(url, state)
-    getData(signal, values.perPage, values.offset)
+    const updatedPlants = [...plants]
+    const index = updatedPlants.indexOf(plant)
+    updatedPlants.splice(index, 1)
+    setPlants(updatedPlants)
+    setValues({ ...values, displayedPlants: updatedPlants.slice(values.offset, values.offset + values.perPage) })
 
   }
   const handleFilter = (e) => {
@@ -210,7 +196,7 @@ export default function Plants() {
         </div>
         <Divider />
         <div className={classes.pagination}>
-          <Pagination handleClick={handlePageChange} totalPages={values.totalPages} currentPage={values.currentPage} values={values} handlePageSizeChange={handlePageSizeChange} />
+          <Pagination handleClick={handlePageChange} values={values} total={plants.length} handlePageSizeChange={handlePageSizeChange} />
           <NewPlant addUpdate={addPlant} onRemove={removePlant} />
         </div>
         {values.loading && <div className={classes.loading}><CircularProgress /></div>}
@@ -223,9 +209,8 @@ export default function Plants() {
           /> : <Typography>You have no plants</Typography>}
       </Card>
       <div className={classes.pagination}>
-        <Pagination handleClick={handlePageChange} totalPages={values.totalPages} currentPage={values.currentPage} values={values} handlePageSizeChange={handlePageSizeChange} />
+        <Pagination handleClick={handlePageChange} values={values} total={plants.length} handlePageSizeChange={handlePageSizeChange} />
       </div>
-      {/* <PlanGarden plants={values.displayedPlants} /> */}
     </>
   )
 }

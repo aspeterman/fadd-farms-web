@@ -44,8 +44,8 @@ export default function Garden() {
             if (data.error)
                 console.log(data.error)
             else {
-                data.plants.map(plant => plant.image = '')
-                setPlants([data.plants])
+                data.map(plant => plant.image = '')
+                setPlants([data])
             }
         })
         listGardenSchema({

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const plantSchema = new Schema({
   plantname: {
     type: String,
-    required: '{PATH} is required!',
+    required: 'Plant name is required!',
     // unique: true
   },
   category: {

@@ -48,14 +48,12 @@
 //     )
 // }
 
-import { Divider, Icon, IconButton, InputBase, MenuItem, Paper } from '@material-ui/core';
+import { Divider, Icon, IconButton, InputBase, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from 'react';
 import { useHistory, withRouter } from 'react-router';
 import auth from '../auth/auth-helper.js';
-import StyledMenu from '../utils/StyledMenu';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -180,7 +178,7 @@ const PlantSearch = withRouter((props) => {
                 <Icon >search</Icon>
             </IconButton>
 
-            <StyledMenu
+            {/* <StyledMenu
                 id="simple-menu"
                 anchorEl={anchorEl}
                 keepMounted
@@ -209,7 +207,7 @@ const PlantSearch = withRouter((props) => {
                         ))}
                     </TextField>
                 </MenuItem>
-            </StyledMenu>
+            </StyledMenu> */}
         </Paper>
     )
 })
