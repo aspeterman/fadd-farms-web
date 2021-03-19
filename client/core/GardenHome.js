@@ -76,13 +76,14 @@ export default function GardenHome({ history }) {
                 </Grid>
             } */}
             {defaultPage &&
-                <Grid container spacing={2} className={classes.root}>
-                    <Grid container justify='center' spacing={3} >
-                        <Grid item xs={10} sm={10} >
-                            <Garden />
-                        </Grid>
-                    </Grid>
-                </Grid>
+                // <Grid container spacing={2} className={classes.root}>
+                //     <Grid container justify='center' spacing={3} >
+                //         <Grid item xs={10} sm={10} >
+                //             <Garden />
+                //         </Grid>
+                //     </Grid>
+                // </Grid>
+                <Grid><Garden /></Grid>
             }
 
         </div>

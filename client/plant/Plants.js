@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    // margin: `${theme.spacing(3)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
     color: theme.palette.openTitle,
     fontSize: '1em'
   },
@@ -54,18 +54,12 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#efefef',
   },
   iconButton: {
-    padding: 10,
+    // padding: 10,
   },
   menu: {
     width: 200,
   },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 130,
-    verticalAlign: 'bottom',
-    marginBottom: '20px'
-  },
+
   loading: {
     textAlign: 'center',
     height: 500

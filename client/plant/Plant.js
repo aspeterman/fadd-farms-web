@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   },
   cardContent: {
     backgroundColor: 'white',
-    padding: `${theme.spacing(2)}px 0px`,
+    // padding: `${theme.spacing(2)}px 0px`,
     height: 250
   },
   cardHeader: {

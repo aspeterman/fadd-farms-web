@@ -4,7 +4,6 @@ import { hot } from 'react-hot-loader'
 import { BrowserRouter } from 'react-router-dom'
 import MainRouter from './MainRouter'
 import theme from './theme'
-import ScrollToTop from './utils/ScrollToTopOnMount'
 
 const App = () => {
   React.useEffect(() => {
@@ -17,7 +16,7 @@ const App = () => {
     <BrowserRouter
     // forceRefresh={true}
     >
-      <ScrollToTop />
+      {/* <ScrollToTop /> */}
       <ThemeProvider theme={theme}>
         <MainRouter />
       </ThemeProvider>

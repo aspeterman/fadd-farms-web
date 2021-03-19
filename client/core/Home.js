@@ -72,14 +72,15 @@ export default function Home({ history }) {
       }
       {defaultPage &&
         <>
-          <Grid container spacing={10} className={classes.root}>
+          {/* <Grid container spacing={10} className={classes.root}>
             <Grid container>
 
               <Grid item xs={10} sm={10}>
                 <Plants />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
+          <Grid><Plants /></Grid>
         </>
       }
     </div>

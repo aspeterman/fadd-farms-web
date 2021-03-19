@@ -156,7 +156,7 @@ const MenuBar = withRouter(({ history }, props) => {
                   </>)
                 }
               </div>
-              <div style={{ 'float': 'right' }}>
+              <div >
                 {
                   auth.isAuthenticated() && (<>
                     <PopupState variant="popover" popupId="demo-popup-menu">
