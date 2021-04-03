@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from './../auth/auth-helper'
-import { comment, uncomment } from './api-garden.js'
+import { comment, uncomment } from './api-gardens.js'
 
 const useStyles = makeStyles(theme => ({
   cardHeader: {

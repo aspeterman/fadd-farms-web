@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import auth from '../auth/auth-helper'
-import Garden from '../Garden/Garden'
+import GardenFeed from '../gardening/GardenFeed'
 import useIsSsr from '../utils/useIsSsr'
 
 const useStyles = makeStyles(theme => ({
@@ -63,27 +63,10 @@ export default function GardenHome({ history }) {
     return (
         screenWidth &&
         <div className={classes.root}>
-            {/* {!defaultPage &&
-                <Grid container spacing={8}>
-                    <Grid item xs={12}>
-                        <Card className={classes.card}>
-                            <Typography variant="h6" className={classes.title}>
-                                Your Gardens
-                </Typography>
-                            <CardMedia className={classes.media} image={unicornbikeImg} title="Unicorn Bicycle" />
-                        </Card>
-                    </Grid>
-                </Grid>
-            } */}
             {defaultPage &&
-                // <Grid container spacing={2} className={classes.root}>
-                //     <Grid container justify='center' spacing={3} >
-                //         <Grid item xs={10} sm={10} >
-                //             <Garden />
-                //         </Grid>
-                //     </Grid>
-                // </Grid>
-                <Grid><Garden /></Grid>
+                <Grid>
+                    <GardenFeed />
+                </Grid>
             }
 
         </div>

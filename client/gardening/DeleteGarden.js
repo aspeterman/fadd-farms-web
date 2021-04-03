@@ -12,10 +12,10 @@ import React from 'react'
 export default function DeleteGarden(props) {
 
   return (<span>
-    <IconButton aria-label="Delete" onClick={props.clickButton} color="secondary">
+    <IconButton aria-label="Delete" onClick={props.handleDeleteOpen} color="secondary">
       <DeleteIcon />
     </IconButton>
-    <Dialog open={props.open} onClose={props.handleRequestClose}>
+    <Dialog open={props.openDelete} onClose={props.handleRequestClose}>
       <DialogTitle>{"Delete this record"}</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -26,7 +26,7 @@ export default function DeleteGarden(props) {
         <Button onClick={props.handleRequestClose} color="primary">
           Cancel
           </Button>
-        <Button onClick={props.onRemove} color="secondary" autoFocus="autoFocus">
+        <Button onClick={() => props.onRemove(props.garden)} color="secondary" autoFocus="autoFocus">
           Confirm
           </Button>
       </DialogActions>

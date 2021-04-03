@@ -70,6 +70,7 @@ const plantSchema = new Schema({
 });
 
 const gardenSchema = new Schema({
+    gardenName: { type: String },
     rows: { type: Array },
     gardenScheme: [],
     season: { type: String },
