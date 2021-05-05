@@ -209,7 +209,7 @@ export default function EditPlot({ match }) {
           <TextField
             label="Transferred On"
             type="date"
-            defaultValue={new Date()}
+            defaultValue={values.seedsTransferred}
             name='seedsTransferredDate'
             onChange={handleChange('seedsTransferredDate')}
             className={classes.textField}

@@ -111,7 +111,7 @@ export default function GardensList(props) {
             return (
               <>
 
-                <ListItem button className={classes.nested} value={value._id} key={value._id} onClick={() => props.handleClick(value._id)}>
+                <ListItem button className={classes.nested} key={value._id} value={value._id} key={value._id} onClick={() => props.handleClick(value._id)}>
                   {value.gardenName} - {value.season} {value.year}
                   <ListItemSecondaryAction>
                     <DeleteGarden
@@ -122,6 +122,11 @@ export default function GardensList(props) {
                       handleDeleteOpen={handleDeleteOpen}
                       openDelete={openDelete}
                     />
+                    {/* <IconButton >
+                      <NavLink to={`/garden/edit/${value._id}`}>
+                        <Edit />
+                      </NavLink>
+                    </IconButton> */}
                   </ListItemSecondaryAction>
                 </ListItem>
 

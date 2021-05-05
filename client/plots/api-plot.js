@@ -59,6 +59,22 @@ const remove = async (params, credentials) => {
     }
 }
 
+const listPlotByUser = async (params, credentials) => {
+    try {
+        let response = await fetch('/api/plots/by/' + params.userId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            }
+        })
+        return await response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 const listByPlant = async (params, signal) => {
     try {
         let response = await fetch('/api/plots/by/' + params.plantId + '/' + params.userId, {
@@ -101,6 +117,7 @@ export {
     read,
     update,
     remove,
+    listPlotByUser,
     listByPlant,
     listLatest,
     list

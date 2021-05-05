@@ -26,17 +26,18 @@ const MainRouter = () => {
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/page=:page" component={Home} />
-      <Route path="/search=:search" component={Search} />
-      <Route exact path="/news" component={DiscussionHome} />
-      <Route exact path="/activity" component={RecentHome} />
-      <Route exact path='/plan' component={GardenHome} />
-      {/* <Route exact path='/garden/:gardenId' component={CurrentGarden} /> */}
-      <Route exact path="/plants/:plantId" component={PlantLog} />
-      <Route path="/plants/:plantId/plots/new" component={NewPlot} />
-      <Route path="/plants/:plantId/:plotId/edit" component={EditPlot} />
-      <Route exact path="/plants/:plantId/:plotId" component={PlotInfo} />
-      <Route path="/plants/:plantId/:plotId/new" component={NewHarvest} />
-      <Route path="/plants/:plantId/:plotId/:harvestId/edit" component={EditHarvest} />
+      <PrivateRoute path="/search=:search" component={Search} />
+      <PrivateRoute exact path="/news" component={DiscussionHome} />
+      {/* <PrivateRoute exact path="/news" component={EventCalendar} /> */}
+      <PrivateRoute exact path="/activity" component={RecentHome} />
+      <PrivateRoute exact path='/plan' component={GardenHome} />
+      {/* <PrivateRoute exact path='/garden/edit/:gardenId' component={EditGarden} /> */}
+      <PrivateRoute exact path="/plants/:plantId" component={PlantLog} />
+      <PrivateRoute path="/plants/:plantId/plots/new" component={NewPlot} />
+      <PrivateRoute path="/plants/:plantId/:plotId/edit" component={EditPlot} />
+      <PrivateRoute exact path="/plants/:plantId/:plotId" component={PlotInfo} />
+      <PrivateRoute path="/plants/:plantId/:plotId/new" component={NewHarvest} />
+      <PrivateRoute path="/plants/:plantId/:plotId/:harvestId/edit" component={EditHarvest} />
       <Route path="/users" component={Users} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={Signin} />

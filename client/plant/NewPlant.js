@@ -122,11 +122,6 @@ export default function NewPlant(props) {
         <Button variant="outlined" color="primary" className={classes.button} onClick={handleClickOpen}>
             New Plant
       </Button>
-        {/* {props.showing === 'active' ?
-            <Button variant="outlined" color="primary" value="all" className={classes.button} onClick={props.handleShowAll}>Show All</Button>
-            :
-            <Button variant="outlined" color="primary" value="active" className={classes.button} onClick={props.handleShowActive}>Show Active</Button>
-        } */}
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">New Plant</DialogTitle>
             <DialogContent>

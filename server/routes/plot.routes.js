@@ -13,6 +13,9 @@ router.route('/api/plots/by/:plantId/:userId')
 router.route('/api/plots/latest/:userId')
     .get(authCtrl.requireSignin, plotCtrl.listLatest)
 
+router.route('/api/plots/by/:userId')
+    .get(authCtrl.requireSignin, plotCtrl.listByUser)
+
 
 router.route('/api/plots/categories')
     .get(plotCtrl.listCategories)

@@ -1,4 +1,4 @@
-import { Card, CircularProgress, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
+import { Card, Divider, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { ExpandMore } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import auth from '../auth/auth-helper'
@@ -29,6 +29,7 @@ const RecentActivity = () => {
     const classes = useStyles()
     const [harvests, setHarvests] = useState([])
     const [showing, setShowing] = useState(5)
+    const [loading, setLoading] = useState(true)
 
     const jwt = auth.isAuthenticated()
 
@@ -43,6 +44,7 @@ const RecentActivity = () => {
                 console.log(data.error)
             } else {
                 setHarvests(data)
+                setLoading(false)
             }
         })
         return function cleanup() {
@@ -60,14 +62,13 @@ const RecentActivity = () => {
         setShowing(showing + 5)
     }
 
-    if (!harvests) return <><CircularProgress /></>
     return (
         <Card className={classes.card}>
             <Typography type="title" className={classes.title}>
                 Recent Activity
           </Typography>
             <Divider />
-            <RecentList removeUpdate={removeHarvest} harvests={harvests.slice(0, showing)} />
+            <RecentList removeUpdate={removeHarvest} harvests={harvests.slice(0, showing)} loading={loading} />
             <Divider />
             <div className={classes.expand} align="center" onClick={showMore} >
                 <IconButton color="secondary" size="small" onClick={showMore}><ExpandMore size="small" disabled={harvests.slice(0, showing).length = harvests.length} /></IconButton>

@@ -52,6 +52,22 @@ const plotById = async (req, res, next, id) => {
     }
 }
 
+const listByUser = async (req, res) => {
+    try {
+        let plots = await Plot.find({ postedBy: req.profile._id })
+            .populate('comments.postedBy', '_id name')
+            .populate('postedBy', '_id name')
+            .populate('plant', '_id plantname')
+            .sort('plantname')
+            .exec()
+        res.json(plots)
+    } catch (err) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(err)
+        })
+    }
+}
+
 const photo = (req, res, next) => {
     if (req.plot.image.data) {
         res.set("Content-Type", req.plot.image.contentType)
@@ -111,7 +127,7 @@ const remove = async (req, res) => {
 const listByPlant = async (req, res) => {
     try {
         let plots = await Plot.find({ plant: req.plant._id })
-            .populate('plant', '_id name')
+            .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
             .select('-image')
         res.json(plots)
@@ -126,7 +142,7 @@ const listLatest = async (req, res) => {
     try {
         let plots = await Plot.find({})
             .sort('-createdAt').limit(5)
-            .populate('plant', '_id name')
+            .populate('plant', '_id plantname')
             .populate('postedBy', '_id name')
             .exec()
         res.json(plots)
@@ -178,6 +194,7 @@ export default {
     update,
     remove,
     listByPlant,
+    listByUser,
     listLatest,
     listCategories,
     list,

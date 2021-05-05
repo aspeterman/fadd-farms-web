@@ -1,13 +1,10 @@
 import { Button, Card, CardContent, CardMedia, CircularProgress, Divider, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { toUpper } from 'lodash';
-import moment from 'moment';
 // import Highcharts from 'highcharts';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import auth from '../auth/auth-helper';
-import { listHarvestFeed } from '../harvest/api-harvest';
-import HarvestChart from '../harvest/HarvestChart';
 import useIsSsr from '../utils/useIsSsr';
 import { getOne } from './api-plant';
 import CommentDrawer from './CommentDrawer';
@@ -100,8 +97,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function PlantLog({ match }) {
     const classes = useStyles()
-    const [chartHarvests, setChartHarvests] = useState([])
-    const [harvests, setHarvests] = useState([])
+    // const [chartHarvests, setChartHarvests] = useState([])
+    // const [harvests, setHarvests] = useState([])
     const [values, setValues] = useState({
         plantId: match.params.plantId,
         plant: [],
@@ -128,18 +125,18 @@ export default function PlantLog({ match }) {
                 setValues({ ...values, plant: data, comments: data.comments, loading: false })
             }
         })
-        listHarvestFeed({
-            userId: jwt.user._id
-        }, { t: jwt.token }, signal).then((data) => {
-            if (data.error) {
-                console.log(data.error)
-            } else {
-                let harvestData = data.map(harvest => harvest.date = new moment(harvest.date).format('YYYY-MM-DD'))
+        // listHarvestFeed({
+        //     userId: jwt.user._id
+        // }, { t: jwt.token }, signal).then((data) => {
+        //     if (data.error) {
+        //         console.log(data.error)
+        //     } else {
+        //         let harvestData = data.map(harvest => harvest.date = new moment(harvest.date).format('YYYY-MM-DD'))
 
-                setHarvests(data)
-                setChartHarvests(data)
-            }
-        })
+        //         setHarvests(data)
+        //         setChartHarvests(data)
+        //     }
+        // })
         return function cleanup() {
             abortController.abort()
         }
@@ -169,18 +166,18 @@ export default function PlantLog({ match }) {
         history.goBack()
     }
 
-    const handleThisYear = () => {
-        let newHarvests = harvests.filter(harvest => parseInt(harvest.date.slice(0, 4)) === new Date().getFullYear())
-        setChartHarvests(newHarvests)
-    }
-    const handleLastYear = () => {
-        console.log(new Date().getFullYear())
-        let newHarvests = harvests.filter(harvest => parseInt(harvest.date.slice(0, 4)) === new Date().getFullYear() - 1)
-        setChartHarvests(newHarvests)
-    }
-    const handleShowAll = () => {
-        setChartHarvests(harvests)
-    }
+    // const handleThisYear = () => {
+    //     let newHarvests = harvests.filter(harvest => parseInt(harvest.date.slice(0, 4)) === new Date().getFullYear())
+    //     setChartHarvests(newHarvests)
+    // }
+    // const handleLastYear = () => {
+    //     console.log(new Date().getFullYear())
+    //     let newHarvests = harvests.filter(harvest => parseInt(harvest.date.slice(0, 4)) === new Date().getFullYear() - 1)
+    //     setChartHarvests(newHarvests)
+    // }
+    // const handleShowAll = () => {
+    //     setChartHarvests(harvests)
+    // }
 
     const imageUrl = match.params.plantId
         ? `/api/plants/image/${match.params.plantId}?${new Date().getTime()}`
@@ -227,13 +224,13 @@ export default function PlantLog({ match }) {
                                     <Typography className={classes.text}>
                                         <strong>Soil Requirements: </strong>{values.plant.soil}
                                     </Typography>
-                                    <div>
+                                    {/* <div>
                                         <HarvestChart harvests={chartHarvests}
                                             handleThisYear={handleThisYear}
                                             handleLastYear={handleLastYear}
                                             handleShowAll={handleShowAll}
                                         />
-                                    </div>
+                                    </div> */}
                                 </CardContent>
                             </Card>
                             <Divider />

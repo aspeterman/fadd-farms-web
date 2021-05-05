@@ -7,7 +7,7 @@ import Harvest from './Harvest';
 export default function RecentList(props) {
     return (
         <List dense>
-            { props.harvests.map((harvest, i) => {
+            {!props.loading && props.harvests.map((harvest, i) => {
                 return (
                     <Harvest removeUpdate={props.removeUpdate} harvest={harvest} key={i} />
                 )

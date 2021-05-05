@@ -95,6 +95,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state'
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import Reminders from '../user/Reminders'
 import ScrollTop from '../utils/ScrollToTop'
 import useIsSsr from '../utils/useIsSsr'
 import auth from './../auth/auth-helper'
@@ -159,13 +160,22 @@ const MenuBar = withRouter(({ history }, props) => {
               <div >
                 {
                   auth.isAuthenticated() && (<>
+                    <Reminders />
                     <PopupState variant="popover" popupId="demo-popup-menu">
                       {(popupState) => (
                         <>
-                          <Button {...bindTrigger(popupState)}>
+                          <Button
+                            getContentAnchorEl={null}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                            {...bindTrigger(popupState)}>
                             <Avatar src={'../images/profile-pic.png'} />
                           </Button>
-                          <Menu {...bindMenu(popupState)}>
+                          <Menu
+                            getContentAnchorEl={null}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                            {...bindMenu(popupState)}>
                             <MenuItem onClick={popupState.close}>
                               <Button>
                                 <Link to={"/user/" + auth.isAuthenticated().user._id}>
