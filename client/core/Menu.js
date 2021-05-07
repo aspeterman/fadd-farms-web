@@ -131,13 +131,13 @@ const MenuBar = withRouter(({ history }, props) => {
               {auth.isAuthenticated() &&
                 <>
                   <Link to="/plan">
-                    <Button style={isActive(history, "/plan")}>Your Garden</Button>
+                    <Button style={isActive(history, "/plan")}>Garden</Button>
                   </Link>
                   <Link to="/activity">
-                    <Button style={isActive(history, "/activity")}>Recent Activity</Button>
+                    <Button style={isActive(history, "/activity")}>Activity</Button>
                   </Link>
-                  <Link to="/news">
-                    <Button style={isActive(history, "/news")}>News</Button>
+                  <Link to="/calendar">
+                    <Button style={isActive(history, "/calendar")}>Calendar</Button>
                   </Link>
                 </>
               }
@@ -165,9 +165,7 @@ const MenuBar = withRouter(({ history }, props) => {
                       {(popupState) => (
                         <>
                           <Button
-                            getContentAnchorEl={null}
-                            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+
                             {...bindTrigger(popupState)}>
                             <Avatar src={'../images/profile-pic.png'} />
                           </Button>

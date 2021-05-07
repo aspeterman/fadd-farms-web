@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import PrivateRoute from './auth/PrivateRoute'
 import Signin from './auth/Signin'
-import DiscussionHome from './core/DiscussionHome'
+import EventCalendar from './core/Calendar'
 import GardenHome from './core/GardenHome'
 import Home from './core/Home'
 import MenuBar from './core/Menu'
@@ -27,8 +27,8 @@ const MainRouter = () => {
       <Route exact path="/" component={Home} />
       <Route exact path="/page=:page" component={Home} />
       <PrivateRoute path="/search=:search" component={Search} />
-      <PrivateRoute exact path="/news" component={DiscussionHome} />
-      {/* <PrivateRoute exact path="/news" component={EventCalendar} /> */}
+      {/* <PrivateRoute exact path="/news" component={DiscussionHome} /> */}
+      <PrivateRoute exact path="/calendar" component={EventCalendar} />
       <PrivateRoute exact path="/activity" component={RecentHome} />
       <PrivateRoute exact path='/plan' component={GardenHome} />
       {/* <PrivateRoute exact path='/garden/edit/:gardenId' component={EditGarden} /> */}

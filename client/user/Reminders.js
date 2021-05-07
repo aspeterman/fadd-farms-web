@@ -80,7 +80,6 @@ export default function Reminders() {
         const index = updatedPlots.indexOf(plot)
         updatedPlots[index].done = true
         setPlots(updatedPlots)
-        console.log(updatedPlots[index])
     }
 
     if (!plots) return (
@@ -105,9 +104,6 @@ export default function Reminders() {
             {(popupState) => (
                 <>
                     <IconButton
-                        getContentAnchorEl={null}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                         {...bindTrigger(popupState)} >
                         <NotificationsActiveOutlined color='secondary' />
                     </IconButton>

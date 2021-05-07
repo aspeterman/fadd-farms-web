@@ -62,7 +62,7 @@ export default function Profile({ match }) {
       } else {
         let following = checkFollow(data)
         setValues({ ...values, user: data, following: following })
-        loadPosts(data._id)
+        // loadPosts(data._id)
         loadPlants(data._id)
       }
     })
