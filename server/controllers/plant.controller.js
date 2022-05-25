@@ -210,6 +210,55 @@ const uncomment = async (req, res) => {
     }
 }
 
+const addPlot = async (req, res, next) => {
+    // let form = new formidable.IncomingForm()
+    // form.keepExtensions = true
+    // form.parse(req, async (err, fields, files) => {
+    //     if (err) {
+    //         return res.status(400).json({
+    //             error: "Plot could not be uploaded"
+    //         })
+    //     }
+    //     let plot = new Plot(fields)
+    //     // let plot = req.body.plot
+    //     plot.postedBy = req.body.userId
+    //     try {
+    //         let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { plots: plot } }, { new: true })
+    //             .populate('plots.postedBy', '_id name')
+    //             .populate('postedBy', '_id name')
+    //             .exec()
+    //         res.json(result)
+    //     } catch (err) {
+    //         return res.status(400).json({
+    //             error: errorHandler.getErrorMessage(err)
+    //         })
+    //     }
+    // })
+    let form = new formidable.IncomingForm()
+    form.keepExtensions = true
+    form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return res.status(400).json({
+                error: "Image could not be uploaded"
+            })
+        }
+        let plot = new Plot(fields)
+        plot.postedBy = req.profile
+        if (files.image) {
+            plot.image.data = fs.readFileSync(files.image.path)
+            plot.image.contentType = files.image.type
+        }
+        try {
+            let result = await Plant.findByIdAndUpdate(req.body.plantId, { $push: { plots: plot } }, { new: true })
+            res.json(result)
+        } catch (err) {
+            return res.status(400).json({
+                error: errorHandler.getErrorMessage(err)
+            })
+        }
+    })
+}
+
 const list = async (req, res) => {
     const query = {}
     if (req.query.search)
@@ -255,6 +304,7 @@ export default {
     defaultPhoto,
     like,
     unlike,
+    addPlot,
     comment,
     uncomment,
     isPoster,

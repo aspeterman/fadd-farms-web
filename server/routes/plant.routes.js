@@ -35,6 +35,9 @@ router.route('/api/plants/comment')
 router.route('/api/plants/uncomment')
     .put(authCtrl.requireSignin, plantCtrl.uncomment)
 
+router.route('/api/plants/:plantId/:userId/new-plot')
+    .put(plantCtrl.addPlot)
+
 // router.route('/api/plants/plot')
 //     .put(authCtrl.requireSignin, plantCtrl.plot)
 // router.route('/api/plants/unplot')

@@ -1,7 +1,7 @@
 import queryString from 'query-string'
 const create = async (params, credentials, plot) => {
     try {
-        let response = await fetch('/api/plots/by/' + params.plantId + '/' + params.userId, {
+        let response = await fetch('/api/plants/' + params.plantId + '/' + params.userId + 'new-plot', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -14,6 +14,21 @@ const create = async (params, credentials, plot) => {
         console.log(err)
     }
 }
+// const create = async (params, credentials, plot) => {
+//     try {
+//         let response = await fetch('/api/plots/by/' + params.plantId + '/' + params.userId, {
+//             method: 'POST',
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Authorization': 'Bearer ' + credentials.t
+//             },
+//             body: plot
+//         })
+//         return response.json()
+//     } catch (err) {
+//         console.log(err)
+//     }
+// }
 
 const read = async (params, signal) => {
     try {

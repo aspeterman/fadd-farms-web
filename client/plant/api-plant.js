@@ -185,6 +185,23 @@ const uncomment = async (params, credentials, plantId, comment) => {
     }
 }
 
+const addPlot = async (params, credentials, plantId, plot) => {
+    try {
+        let response = await fetch(`/api/plants/${plantId}/${params.userId}/new-plot`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            },
+            body: JSON.stringify({ userId: params.userId, plantId: plantId, plot: plot })
+        })
+        return await response.json()
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 const list = async (params, credentials, signal) => {
     const query = queryString.stringify(params)
     try {
@@ -227,6 +244,7 @@ export {
     unlike,
     comment,
     uncomment,
+    addPlot,
     list,
     listCategories
 }

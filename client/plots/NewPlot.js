@@ -11,7 +11,7 @@ import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import auth from '../auth/auth-helper'
-import { create } from './api-plot.js'
+import { addPlot } from '../plant/api-plant'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -81,12 +81,11 @@ export default function NewPlot({ match }) {
     values.seedsTransferred && plotData.append('seedsTransferred', values.seedsTransferred)
     values.seedsTransferredDate && plotData.append('seedsTransferredDate', values.seedsTransferredDate)
 
-    create({
-      plantId: match.params.plantId,
+    addPlot({
       userId: jwt.user._id
     }, {
       t: jwt.token
-    }, plotData).then((data) => {
+    }, match.params.plantId, { plot: plotData }).then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error })
       } else {

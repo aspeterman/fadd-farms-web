@@ -41,21 +41,21 @@ const plantSchema = new Schema({
     type: Boolean,
     default: true
   },
-  // plots: [{
-  //   plotname: { type: String, required: 'Plot Name is Rwquired' },
-  //   season: { type: String },
-  //   description: { type: String },
-  //   prePlantSeeds: { type: String },
-  //   prePlantSeedsDate: String,
-  //   prePlantGerminated: { type: String },
-  //   prePlantGerminatedDate: String,
-  //   seedsTransferred: { type: String },
-  //   seedsTransferredDate: String,
-  //   harvestYieldTally: Number,
-  //   images: { type: [String] },
-  //   created: { type: Date, default: Date.now },
-  //   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
-  // }],
+  plots: [{
+    plotname: { type: String, required: 'Plot Name is Rwquired' },
+    season: { type: String },
+    description: { type: String },
+    prePlantSeeds: { type: String },
+    prePlantSeedsDate: String,
+    prePlantGerminated: { type: String },
+    prePlantGerminatedDate: String,
+    seedsTransferred: { type: String },
+    seedsTransferredDate: String,
+    harvestYieldTally: Number,
+    images: { type: [String] },
+    created: { type: Date, default: Date.now },
+    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+  }],
   // harvests: [{
   //   observations: { type: String },
   //   yield: { type: Number },
